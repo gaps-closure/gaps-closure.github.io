@@ -14,7 +14,7 @@ Perspecta Labs is developing CLOSURE (Cross-domain Language-extensions for Optim
 
 ## Getting Closure
 
-* [Github: github.com/gaps-closure](https://github.com/gaps-closure github.com/gaps-closure)
+* Github: <https://github.com/gaps-closure github.com/gaps-closure>
 * [Instalation Guide](./binary_install.md) (Toolchain)
 * Developer Guide (Developing the toolchain)
 
