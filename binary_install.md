@@ -16,7 +16,7 @@ The following files will be required for the following install
 
 * [LLVM-10.0.1-Linux.sh](https://github.com/gaps-closure/capo/releases/download/v1.1/LLVM-10.0.1-Linux.sh) – LLVM 10.0.1 binary build (production)
 * [opt-debug](https://github.com/gaps-closure/capo/releases/download/v1.1/opt-debug) – Debug build of opt
-* [closure_bin.tar.gz](https://github.com/gaps-closure/build/releases/download/v1.1/closure_bin_v1.1.tar.gz) - Distribution of the closure binaries and scripts
+* [closure_bin_v1.1.tar.gz](https://github.com/gaps-closure/build/releases/download/v1.1/closure_bin_v1.1.tar.gz) - Distribution of the closure binaries and scripts
 
 ## Installing the closure tools
 
@@ -71,7 +71,7 @@ Make a working directory (this document will prsume you are using /opt/tmp)
 $ mkdir /opt/tmp`
 ```
 
-Place the three files (LLVM-10.0.1-Linux.sh, opt-debug, closure_bin.tar.gz)
+Place the three files (LLVM-10.0.1-Linux.sh, opt-debug, closure_bin_v1.1.tar.gz) here.
 
 ## 5. Installing LLVM-10.0.1 (production build)
 
@@ -132,7 +132,7 @@ closure_bin.tar.gz needs to be extracted to /opt/closure
 ```shell
 sudo mkdir -p /opt/closure
 cd /opt/closure
-tar -xzvf /opt/tmp/closure_bin.tar.gz
+tar -xzvf /opt/tmp/closure_bin_v1.1.tar.gz
 ```
 
 ## 9. Move opt-debug into the bin directory
