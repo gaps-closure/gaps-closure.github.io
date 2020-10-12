@@ -1,14 +1,15 @@
-## What Is Gaps-Closure
+## What Is GAPS-CLOSURE
 
-The Gaps Closure toolchain is a utility to aid in the development of cross domain systems (CDS) by providing a set of language extensions to specify the domain requirements of a block of code or variable and verify transitioning between domains is done without leaking data between the domains.
+The GAPS-CLOSURE toolchain is a utility to aid in the development of cross domain systems (CDS) by providing a set of language extensions to specify the domain requirements of a block of code or variable and verify transitioning between domains is done without leaking data between the domains.
 
 When combined with Specialized Gaps hardware this allows for splitting the program from one monolithic binary into separate binaries to be physically separated between difference silicon with CDS guards mediating (and possibly redacting) the communication between the domains.
 
-## Getting Closure
+## Getting CLOSURE
 
-* Github: <https://github.com/gaps-closure github.com/gaps-closure>
-* [Instalation Guide](./binary_install.md) (Toolchain)
-* Developer Guide (Developing the toolchain)
+* [Toolchain Installation Guide](./binary_install.md) (For application developers)
+* Developing CLOSURE (Developing the GAPS-CLOSURE toolchain - **Coming Soon**)
+* Github: <https://github.com/gaps-closure> (The git page)
+     * Start with the [build](https://github.com/gaps-closure/build) project
 
 ## Background
 
@@ -20,7 +21,7 @@ The machinery required to verifiably and securely establish communication betwee
 
 Perspecta Labs is developing CLOSURE (Cross-domain Language-extensions for Optimal SecUre Refactoring and Execution) to address the challenges associated with building cross-domain applications in software. CLOSURE extends existing programming languages by enabling developers the ability to express security intent through overlay annotations and security policies such that an application can be compiled to separable binaries for concurrent execution on physically isolated platforms. The CLOSURE compiler toolchain interprets annotation directives to facilitate this process which consist of: i) verification of source via cross-domain lint-checking and data-flow analysis, ii) program partitioning of the application using the annotation hints to break the application into separate executables to be run in physically isolated memory spaces, iii) automated insertion of remote procedure calls (RPCs) utilizing novel GAPS hardware to enforce redaction, validation, encryption, etc. across levels, and iv) optimization of partitioning decisions to meet programmer objectives (e.g. tradeoffs for partition sizes vs RPC overhead). CLOSURE provides a set of novel co-design tools that extend current software development environments to ease adoption by the development community.
 
-## Research
+<!--## Research-->
 
-## Contacting Us
+<!--## Contacting Us-->
 
