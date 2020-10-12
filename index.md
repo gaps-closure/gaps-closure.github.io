@@ -8,7 +8,7 @@ When combined with Specialized Gaps hardware this allows for splitting the progr
 
 * [Toolchain Installation Guide](./binary_install.md) (For application developers)
 * Developing CLOSURE (Developing the GAPS-CLOSURE toolchain - **Coming Soon**)
-* Github: <https://github.com/gaps-closure> (The git page)
+* Github: <https://github.com/gaps-closure> (The github project page)
      * Start with the [build](https://github.com/gaps-closure/build) project
 
 ## Background
