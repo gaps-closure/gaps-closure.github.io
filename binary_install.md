@@ -1,6 +1,6 @@
-# Gaps-Closure Setup Guide
+# GAPS-CLOSURE Setup Guide
 
-A basic guide to installing the gaps-closure toolchain binaries and scripts required to build projects utilizing gaps-closure
+A basic guide to installing the gaps-closure toolchain binaries and scripts required to build projects utilizing GAPS-CLOSURE
 
 ## System Requiremenst
 
@@ -14,20 +14,20 @@ A basic guide to installing the gaps-closure toolchain binaries and scripts requ
 <a name="file-list"/>
 The following files will be required for the following install
 
-* *LLVM-10.0.1-Linux.sh* – LLVM 10.0.1 binary build (production)
-* *opt-debug* – Debug build of opt
-* *closure_bin.tar.gz* - Distribution of the closure binaries and scripts
+* [LLVM-10.0.1-Linux.sh](https://github.com/gaps-closure/capo/releases/download/v1.1/LLVM-10.0.1-Linux.sh) – LLVM 10.0.1 binary build (production)
+* [opt-debug](https://github.com/gaps-closure/capo/releases/download/v1.1/opt-debug) – Debug build of opt
+* [closure_bin.tar.gz](https://github.com/gaps-closure/build/releases/download/v1.1/closure_bin_v1.1.tar.gz) - Distribution of the closure binaries and scripts
 
 ## Installing the closure tools
 
 
-The following instructions will install the gaps-closure project to run the ERI demo, and potential develop projects using gaps-closure
+The following instructions will install the gaps-closure project to run the ERI demo, and potential develop projects using GAPS-CLOSURE
 
 ## 1. Download git slave
 
-Get and install [git slave](http://gitslave.sourceforge.net/) tool (used to organize the multiple git repositories used by gaps-closure
+Get and install [git slave](http://gitslave.sourceforge.net/) tool (used to organize the multiple git repositories used by GAPS-CLOSURE
 
-```
+```shell
 wget https://sourceforge.net/projects/gitslave/files
 gitslave-2.0.2.tar.gz
 tar -xzvf gitslave-2.0.2.tar.gz
@@ -42,7 +42,7 @@ sudo make install
 
 Clone the entire project into the ~/gaps/build directory
 
-```
+```shell
 cd ~
 mkdir -p gaps
 cd ~/gaps
@@ -53,7 +53,7 @@ gits clone https://github.com/gaps-closure/build
 
 This script prepares an older version of the toolchain, however includes automatically fetching most of the dependencies.
 
-```
+```shell
 cd ~/gaps/build
 ./build.sh
 ```
@@ -67,7 +67,9 @@ Get the provided [files](#file-list)
 
 Make a working directory (this document will prsume you are using /opt/tmp)
 
-> `$ mkdir /opt/tmp`
+```shell
+$ mkdir /opt/tmp`
+```
 
 Place the three files (LLVM-10.0.1-Linux.sh, opt-debug, closure_bin.tar.gz)
 
@@ -75,19 +77,23 @@ Place the three files (LLVM-10.0.1-Linux.sh, opt-debug, closure_bin.tar.gz)
 
 a. Enter the directory with LLVM-10.0.1-Linux.sh
 
-> `cd /opt/tmp`
+```shell
+cd /opt/tmp
+```
 
 b. Run the self extractomg script
 
-> `sudo chmod a+x ./LLVM-10.0.1-Linux.sh`
-
-> `sudo ./LLVM-10.0.1-Linux.sh`
+```shell
+sudo chmod a+x ./LLVM-10.0.1-Linux.sh
+sudo ./LLVM-10.0.1-Linux.sh
+```
 
 c. change into the extacted directory and move the LLVM files into /usr/local
 
-> `cd LLVM-10.0.1-Linux`
-
-> `cp -rv . /usr/local/`
+```shell
+cd LLVM-10.0.1-Linux`
+cp -rv . /usr/local/`
+```
 
 d. Now you should be able to run clang
 ```shell
@@ -139,7 +145,7 @@ chmod a+x /opt/closure/bin/opt-debug
 
 ## 10. Prepare the emulator
 
-At this point you should be able to build the Gaps Closure examples and eri demo, to run it however in the emulator you will also need to run its preperation guide
+At this point you should be able to build the GAPS-CLOSURE examples and eri demo, to run it however in the emulator you will also need to run its preperation guide
 
 See the emulators [README](https://github.com/gaps-closure/emu/blob/master/README.md) for details
 
