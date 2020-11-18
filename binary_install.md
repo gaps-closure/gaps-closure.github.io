@@ -5,6 +5,7 @@ A basic guide to installing the gaps-closure toolchain binaries and scripts requ
 ## System Requiremenst
 
 * Ubuntu 19.10 (Eoan Ermine) (Currently supported/Tested)
+* Centos 7 2009 (Partially supported)
 * KVM (or nested KVM if a VM) required for the Emulator enviroment
 * 40GB or more disk space (recommended)
 * Passwordless sudo access, many scripts currently expect to be able to run sudo without a password
@@ -14,9 +15,15 @@ A basic guide to installing the gaps-closure toolchain binaries and scripts requ
 <a name="file-list"/>
 The following files will be required for the following install
 
-* [LLVM-10.0.1-Linux.sh](https://github.com/gaps-closure/capo/releases/download/v1.1/LLVM-10.0.1-Linux.sh) – LLVM 10.0.1 binary build (production)
-* [opt-debug](https://github.com/gaps-closure/capo/releases/download/v1.1/opt-debug) – Debug build of opt
-* [closure_bin_v1.1.tar.gz](https://github.com/gaps-closure/build/releases/download/v1.1/closure_bin_v1.1.tar.gz) - Distribution of the closure binaries and scripts
+<b>Ubuntu 19.10 x86_64</b>
+* [LLVM-10.0.1-Ubuntu_19.10_x86_64.sh](https://github.com/gaps-closure/capo/releases/download/v1.1/LLVM-10.0.1-Ubuntu_19.10_x86_64.sh) – LLVM 10.0.1 binary build (production)
+* [opt-debug-Ubuntu_19.10_x86_64.sh](https://github.com/gaps-closure/capo/releases/download/v1.1/opt-debug-Ubuntu_19.10_x86_64.sh) – Debug build of opt
+* [closure_bin_v1.1_Ubuntu_19.10_x86_64.tar.gz](https://github.com/gaps-closure/build/releases/download/v1.1/closure_bin_v1.1_Ubuntu_19.10_x86_64.tar.gz) - Distribution of the closure binaries and scripts
+
+<b>Centos 7 2009 x86_64</b>
+* [LLVM-10.0.1-Centos_7_x86_64.sh](https://github.com/gaps-closure/capo/releases/download/v1.1/LLVM-10.0.1-Centos_7_x86_64.sh) – LLVM 10.0.1 binary build (production)
+* [opt-debug-Centos_7_x86_64.sh](https://github.com/gaps-closure/capo/releases/download/v1.1/opt-debug-Centos_7_x86_64.sh) – Debug build of opt
+* [closure_bin_v1.1_Centos_7_x86_64.tar.gz](https://github.com/gaps-closure/build/releases/download/v1.1/closure_bin_v1.1_Centos_7_x86_64.tar.gz) - Distribution of the closure binaries and scripts
 
 ## Installing the closure tools
 
@@ -71,7 +78,7 @@ Make a working directory (this document will prsume you are using /opt/tmp)
 $ mkdir /opt/tmp`
 ```
 
-Place the three files (LLVM-10.0.1-Linux.sh, opt-debug, closure_bin_v1.1.tar.gz) here.
+Place the three files (LLVM-10.0.1-Linux.sh, opt-debug, closure_bin_v1.1.tar.gz) here. Note that file names will differ slightly per target OS.
 
 ## 5. Installing LLVM-10.0.1 (production build)
 
@@ -135,15 +142,15 @@ cd /opt/closure
 tar -xzvf /opt/tmp/closure_bin_v1.1.tar.gz
 ```
 
-## 9. Move opt-debug into the bin directory
+## 9. Move opt-debug-\<Linux Distro\> into the bin directory and rename to opt-debug
 
 The opt-debug binary needs to be in /opt/closure/bin
 ```shell
-sudo mv /opt/tmp/opt-debug /opt/closure/bin/opt-debug
+sudo mv /opt/tmp/opt-debug-<Linux Distro> /opt/closure/bin/opt-debug
 chmod a+x /opt/closure/bin/opt-debug
 ```
 
-## 10. Prepare the emulator
+## 10. Prepare the emulator (Ubuntu only)
 
 At this point you should be able to build the GAPS-CLOSURE examples and eri demo, to run it however in the emulator you will also need to run its preperation guide
 
