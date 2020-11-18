@@ -17,12 +17,12 @@ The following files will be required for the following install
 
 <b>Ubuntu 19.10 x86_64</b>
 * [LLVM-10.0.1-Ubuntu_19.10_x86_64.sh](https://github.com/gaps-closure/capo/releases/download/v1.1/LLVM-10.0.1-Ubuntu_19.10_x86_64.sh) – LLVM 10.0.1 binary build (production)
-* [opt-debug-Ubuntu_19.10_x86_64.sh](https://github.com/gaps-closure/capo/releases/download/v1.1/opt-debug-Ubuntu_19.10_x86_64.sh) – Debug build of opt
+* [opt-debug-Ubuntu_19.10_x86_64](https://github.com/gaps-closure/capo/releases/download/v1.1/opt-debug-Ubuntu_19.10_x86_64) – Debug build of opt
 * [closure_bin_v1.1_Ubuntu_19.10_x86_64.tar.gz](https://github.com/gaps-closure/build/releases/download/v1.1/closure_bin_v1.1_Ubuntu_19.10_x86_64.tar.gz) - Distribution of the closure binaries and scripts
 
 <b>Centos 7 2009 x86_64</b>
 * [LLVM-10.0.1-Centos_7_x86_64.sh](https://github.com/gaps-closure/capo/releases/download/v1.1/LLVM-10.0.1-Centos_7_x86_64.sh) – LLVM 10.0.1 binary build (production)
-* [opt-debug-Centos_7_x86_64.sh](https://github.com/gaps-closure/capo/releases/download/v1.1/opt-debug-Centos_7_x86_64.sh) – Debug build of opt
+* [opt-debug-Centos_7_x86_64](https://github.com/gaps-closure/capo/releases/download/v1.1/opt-debug-Centos_7_x86_64) – Debug build of opt
 * [closure_bin_v1.1_Centos_7_x86_64.tar.gz](https://github.com/gaps-closure/build/releases/download/v1.1/closure_bin_v1.1_Centos_7_x86_64.tar.gz) - Distribution of the closure binaries and scripts
 
 ## Installing the closure tools
