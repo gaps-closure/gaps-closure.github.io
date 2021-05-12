@@ -13,6 +13,7 @@ git clone https://github.com/gaps-closure/dockerfiles
 ```
 
 Availabile images include:
+
 Image  | Description 
 ---------- | ----------------- 
 CLOSURE    | includes CLOSURE toolchain and related dependencies. Use this image for general application development. 
