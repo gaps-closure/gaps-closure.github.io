@@ -1,7 +1,7 @@
 # CLOSURE Instructions for Containerized Toolchain Deployment
 ## Prerequisites
 1. [Docker](https://www.docker.com/) (version 18.06+) 
-2. [VSCode](https://code.visualstudio.com/) with [Remote-Containers Extension](https://code.visualstudio.com/docs/remote/containers)
+2. [VSCode](https://code.visualstudio.com/) with [Remote - Containers Extension](https://code.visualstudio.com/docs/remote/containers)
 3. [Gitslave](http://gitslave.sourceforge.net)
 
 ## CLOSURE Docker Images
