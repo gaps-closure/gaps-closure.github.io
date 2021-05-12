@@ -40,8 +40,8 @@ CLOSURE emulator can be utilized to test CLOSURE-compiled applications when phys
 ```
 sudo mkdir /IMAGES
 cd ~/gaps/build/src/emu/scripts/qemu
-./qemu-build-vm-images.sh -a amd64 -d focal-k focal-s 20G -o /IMAGES
-./qemu-build-vm-images.sh -a amd64 -d focal-k focal-s 20G -o /IMAGES -u
+./qemu-build-vm-images.sh -a amd64 -d focal -k focal -s 20G -o /IMAGES
+./qemu-build-vm-images.sh -a amd64 -d focal -k focal -s 20G -o /IMAGES -u
 ```
 
 ## Notes on VSCode Remote-Container Support
