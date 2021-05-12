@@ -13,11 +13,11 @@ git clone https://github.com/gaps-closure/dockerfiles
 ```
 
 Availabile images include:
-| Image  | Description |
-| ---------- | ----------------- |
-| CLOSURE    | includes CLOSURE toolchain and related dependencies. Use this image for general application development. |
-| EOP1DEV    | additionally adds libraries for EoP1 Mission App (i.e., ActiveMQ, OpenCV, activemq-cpp, etc.). This image should be used if intending to run CLOSURE MDD with VSCode for End of Phase 1 demos. (requires CLOSURE image) |
-| EOP1       | additionally builds EoP1 cases 1-3 for Perspecta demos using CLOSURE toolchain from command line. This image can be used to rapidly deploy and execute EoP1 in a target environment (does not depend on above images). <b>TA1 has independently verified PL's EoP demos using this image</b>. |
+Image  | Description 
+---------- | ----------------- 
+CLOSURE    | includes CLOSURE toolchain and related dependencies. Use this image for general application development. 
+EOP1DEV    | additionally adds libraries for EoP1 Mission App (i.e., ActiveMQ, OpenCV, activemq-cpp, etc.). This image should be used if intending to run CLOSURE MDD with VSCode for End of Phase 1 demos. (requires CLOSURE image)
+EOP1       | additionally builds EoP1 cases 1-3 for Perspecta demos using CLOSURE toolchain from command line. This image can be used to rapidly deploy and execute EoP1 in a target environment (does not depend on above images). <b>TA1 has independently verified PL's EoP demos using this image</b>. 
 
 Build desired images:
 ```
@@ -28,7 +28,7 @@ cd ~/gaps/dockerfiles
 ```
 <b>Note:</b> Docker images can be exported/imported using `docker save` and `docker load`. Consider this mechanism to copy CLOSURE images to unconnected environments.
 
-## Obtain CLOSURE sources
+## Obtain CLOSURE Sources
 ```
 cd ~/gaps
 gits clone https://github.com/gaps-closure/build
