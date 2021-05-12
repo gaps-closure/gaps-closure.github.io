@@ -18,7 +18,7 @@ Image  | Description
 ---------- | ----------------- 
 closure    | includes CLOSURE toolchain and related dependencies. Use this image for general application development. 
 eop1dev    | additionally adds libraries for EoP1 Mission App (i.e., ActiveMQ, OpenCV, activemq-cpp, etc.). This image should be used if intending to run CLOSURE MDD with VSCode for EoP1 demos. (requires closure image)
-eop1       | additionally builds EoP1 cases 1-3 for Perspecta demos using CLOSURE toolchain from command line. This image can be used to rapidly deploy and execute EoP1 in a target environment (does not depend on above images). <b>TA1 has independently verified PL's EoP demos using this image</b>. 
+eop1       | additionally builds EoP1 cases 1-3 automatically using CLOSURE toolchain from command line. This image can be used to rapidly deploy and execute EoP1 in a target environment (does not depend on above images). <b>TA1 has independently verified EoP1 demos using this image</b>. 
 
 Build desired images:
 ```
