@@ -1,11 +1,11 @@
 # CLOSURE Instructions for Containerized Toolchain Deployment
 ## Prerequisites
-1. Docker (version 18.06+) 
-2. VSCode with Remote-Containers Extension
-3. Gitslave (http://gitslave.sourceforge.net)
+1. [Docker](https://www.docker.com/) (version 18.06+) 
+2. [VSCode](https://code.visualstudio.com/) with [Remote-Containers Extension](https://code.visualstudio.com/docs/remote/containers)
+3. [Gitslave](http://gitslave.sourceforge.net)
 
 ## CLOSURE Docker Images
-Obtain CLOSURE Dockerfiles from our repository:
+Obtain CLOSURE Dockerfiles:
 ```
 mkdir ~/gaps
 cd ~/gaps
@@ -16,9 +16,9 @@ Availabile images include:
 
 Image  | Description 
 ---------- | ----------------- 
-CLOSURE    | includes CLOSURE toolchain and related dependencies. Use this image for general application development. 
-EOP1DEV    | additionally adds libraries for EoP1 Mission App (i.e., ActiveMQ, OpenCV, activemq-cpp, etc.). This image should be used if intending to run CLOSURE MDD with VSCode for End of Phase 1 demos. (requires CLOSURE image)
-EOP1       | additionally builds EoP1 cases 1-3 for Perspecta demos using CLOSURE toolchain from command line. This image can be used to rapidly deploy and execute EoP1 in a target environment (does not depend on above images). <b>TA1 has independently verified PL's EoP demos using this image</b>. 
+closure    | includes CLOSURE toolchain and related dependencies. Use this image for general application development. 
+eop1dev    | additionally adds libraries for EoP1 Mission App (i.e., ActiveMQ, OpenCV, activemq-cpp, etc.). This image should be used if intending to run CLOSURE MDD with VSCode for End of Phase 1 demos. (requires CLOSURE image)
+eop1       | additionally builds EoP1 cases 1-3 for Perspecta demos using CLOSURE toolchain from command line. This image can be used to rapidly deploy and execute EoP1 in a target environment (does not depend on above images). <b>TA1 has independently verified PL's EoP demos using this image</b>. 
 
 Build desired images:
 ```
@@ -53,10 +53,9 @@ Each CLOSURE project includes a file `.devcontainer/devcontainer.json` which con
 	]
   # 2 lines mounting /IMAGES and ~/gaps/build/src/emu have been removed in above
 ```
-For more information on remote-container development using VSCode, see https://code.visualstudio.com/docs/remote/containers.
 
 ## Demo: ERI 2020 Examples 1-3
-Navigate to the desired example and launch VSCode. VSCode will prompt user to load the `CLOSURE` containerized environment:
+Navigate to the desired example and launch VSCode. VSCode will prompt user to load the `closure` containerized environment:
 
 For example1:
 ```
@@ -67,7 +66,7 @@ run VSCode Build tasks and follow ERI guidelines for CLE annotations
 ```
 
 ## Demo: End-of-Phase 1
-Navigate to the desired EoP Case (1-3) and launch VSCode. VSCode will prompt user to load the `EOP1DEV` containerized environment:
+Navigate to the desired EoP Case (1-3) and launch VSCode. VSCode will prompt user to load the `eop1dev` containerized environment:
 
 For case1:
 ```
@@ -75,3 +74,4 @@ cd ~/gaps/build/apps/eop1/case1
 code .
 <click VSCode prompts to reload in container>
 Follow EoP instructions per videos on Confluence (essential steps are A6 and BUILD)
+```
