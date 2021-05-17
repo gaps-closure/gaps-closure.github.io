@@ -36,7 +36,7 @@ gits clone https://github.com/gaps-closure/build
 ```
 
 ## CLOSURE Emulator (Optional) -- Ubuntu 20.04 only
-CLOSURE emulator can be utilized to test CLOSURE-compiled applications when physical hardware is not preferred (e.g. rapid T&E). If using the emulator, additional steps are required to prepare the emulated VM instances using QEMU.
+CLOSURE emulator can be utilized to test CLOSURE-compiled applications when physical hardware is not preferred (e.g. rapid T&E). If using the emulator, additional steps are required to prepare the emulated VM instances using QEMU. <b> These commands should be run once to provision the machine </b>. Once `/IMAGES` is populated it can be left alone.
 ```
 sudo mkdir /IMAGES
 cd ~/gaps/build/src/emu/scripts/qemu
