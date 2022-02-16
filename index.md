@@ -6,8 +6,7 @@ When combined with Specialized Gaps hardware this allows for splitting the progr
 
 ## Getting CLOSURE
 
-* [Containerized Toolchain Installation (recommended)](./container_deployment.md) 
-* [Baremetal (Linux server) Toolchain Installation](./binary_install.md) 
+* [Containerized Toolchain Installation](./container_deployment.md) 
 * Github: <https://github.com/gaps-closure> (The github project page)
      * Start with the [build](https://github.com/gaps-closure/build) project
 
