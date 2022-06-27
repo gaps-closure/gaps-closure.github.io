@@ -1,11 +1,16 @@
 PANDOC ?= pandoc
 DOCS != find docs -name '*.md' | sort 
 TITLE = docs/title.txt 
-FLAGS = --standalone --template evisogel.latex --wrap=auto 
+FLAGS = --standalone --wrap=auto 
+SOURCES = $(TITLE) $(DOCS)
 
+all: doc.pdf doc.html 
 
-doc.pdf: $(TITLE) $(DOCS)
-	$(PANDOC) $(FLAGS) -o doc.pdf $(TITLE) $(DOCS) 
+doc.pdf: $(SOURCES)
+	$(PANDOC) $(FLAGS) -o doc.pdf $(SOURCES)
+
+doc.html: $(SOURCES) 
+	$(PANDOC) $(FLAGS) -o doc.html $(SOURCES)
 
 .PHONY: clean
 clean:
