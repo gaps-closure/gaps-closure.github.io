@@ -9,12 +9,7 @@
             buildInputs = [ pkgs.pandoc pkgs.texlive.combined.scheme-full ];
             in
             {
-                devShell = pkgs.mkShell {
-                    inherit buildInputs;
-                    shellHook = ''
-                        export PANDOC=${pkgs.pandoc.out}/bin/pandoc 
-                    '';
-                };
+                devShell = import ./shell.nix { inherit pkgs buildInputs; };
                 defaultPackage = pkgs.stdenv.mkDerivation {
                     name = "CLOSURE C Docs";
                     src = ./.; 

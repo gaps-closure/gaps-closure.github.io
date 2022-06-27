@@ -14,4 +14,4 @@ doc.html: $(SOURCES)
 
 .PHONY: clean
 clean:
-	rm -rf doc.pdf
+	rm -rf doc.pdf doc.html
