@@ -24,4 +24,4 @@
 
 ## HAL configuration (and its input files for device and forwarding rules)
 
-## EMU configurationc
+## EMU configuration
