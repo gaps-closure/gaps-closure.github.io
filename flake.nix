@@ -11,12 +11,12 @@
             {
                 devShell = import ./shell.nix { inherit pkgs buildInputs; };
                 defaultPackage = pkgs.stdenv.mkDerivation {
-                    name = "CLOSURE C Docs";
+                    name = "CLOSURE Docs";
                     src = ./.; 
                     inherit buildInputs;
                     installPhase = ''
                         mkdir -p $out
-                        mv doc.html doc.pdf $out/
+                        mv cdoc.html cdoc.pdf $out/
                     '';
                 };
             }
