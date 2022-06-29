@@ -4,15 +4,66 @@
 
 ### preprocessor
 
+The CLOSURE pre-processor is a source transformer that will:
+* take C/C++ programs annotated with CLE pragmas as input 
+* generate C/C++ programs annotated with toolchain-specific source annotations, specifically new LLVM __attribute__ annotations which we define for the project
+* additionally generate a file containing mappings from each annotation label to the corresponding CLE-JSON specification which contains additional detail to be used by downstream CLOSURE tools
+
+The output C/C++ of the pre-processor will go to a minimally modified LLVM clang that will support the CLOSURE-specific LLVM __attribute__ annotations and pass them down to the LLVM IR level.
+
+The pre-processor requires a C/C++ source parser (but not a full-blown compiler) so that applicable functions, variables, structs, classes, and other language elements can be identified and annotated appropriately based on the pragma which may be specified for the next non-empty, non-comment line or for an entire block of code.  For this purpose, the parser could borrow C/C++ grammar and parsing code from another project ([see notes here](http://www.nobugs.org/developer/parsingcpp/)), or leverage code from an exiting toolchain (e.g., gcc, clang) if needed. 
+
+The ICD for the pre-processor (which we will specify/refine as a team) will be the CLE specification and new annotations attributes we define along with where they need to be placed.  As a starting point, we have a [draft CLE spec](https://github.com/gaps-closure/cle-spec/blob/master/specification.md), and a toy example (we will need to add support for code blocks, structs, functions, classes, et cetera).
+
+Intial source is C file containing:
+```
+int * secretvar = 0;
+```
+Developer annotates the C file as follows:
+```
+#pragma cle def HIGHONE { //CLE-JSON, possibly \-escaped multi-line with whole bunch of constraints } #pragma cle HIGHONE int * secretvar = 0;
+```
+After running the preprocessor, we should get a C file with pragmas removed but with __attribute__ inserted (in all applicable places), e.g.,:
+```
+int * __attribute__(type_annotate("HIGHONE")) secretvar = 0;
+```
+
+Additionally:
+- preprocessor no longer uses lark/libclang, entirely done custom using regex, which is
+fine because its very simple substitution
+- single line `#pragma cle LABEL` now supported, was not previously
+- can be called separately from command line, this functionality is used in later steps
+
 ### opt pass for PDG
 
-**PSU documentation for PDG**
+- called via subprocess in python
+- produces minizinc pdg instance and debug pdg csv
+**PSU documentation for PDG?? How much do we want to include, this doc is huge**
 
 ### input generation and constraint solving using Minizinc
 
+- cle/enclave instance should be a pure function 
+from collated cle json to an encoded minizinc instance 
+- inputs are put in temp files for reference/debugging
+- minizinc called using Gecode solver, with pdg/cle/enclave instance and constraints
+- output parsed and sent back to the console
+- if unsat, then it will run findmus  
+
 ### diagnostics using findMUS
 
+Diagnostic generation produces either commandline output
+containing source and dest node and grouped by constraints 
 
+```
+<constraint_name>: 
+  <source_node_type> @ <file>:<line> -> <dest_node_type> @ <file>:<line>
+``` 
+
+It should also produce a `conflicts.json` which can be ingested by CVI 
+
+***NEEDS FIX: current CA does not produce a conflicts.json***
+
+**Should I include the following?? or just what's in `03-03-02-constraint-mode.md`**
 ### Arguing Correctness of the Model in Partitioning CLE-Annotated C programs (using LLVM and PDG)
 
 The conflict analyzer must provide a satisfying assignment of enclaves to each

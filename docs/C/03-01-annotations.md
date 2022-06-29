@@ -52,7 +52,7 @@ security level, but there is no requirement for an ordering among the levels.
 A single level may correspond to many enclaves, but in most cases they will
 be in a bijection with the enclaves. The level names can be any string.
 
-When applying the `FOO` label to `int bar = 0;`, we effectively pin `bar`
+When applying the `FOO` label to `int bar`, we effectively pin `bar`
 to a single level `"orange"`.
 
 ### An annotation with cdf
@@ -112,4 +112,14 @@ within each cdf, `argtaints`, `codtaints` and `rettaints`.
   ] }
 ```
 
+- taint = label or assigned label
+- explain that function annotation is needed for both callee and in many cases the caller too for xd calls
+- what each taint means and how they are applied
+- non-intuitive weirdness about needing cdf for remotelevel == level
+- explain why taints are specified under cdf 
+
+**TODO: ask Tony/Rajesh about ARQ params**
+
 ### TAGs
+
+
