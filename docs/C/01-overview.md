@@ -6,6 +6,8 @@ The GAPS-CLOSURE toolchain is a utility to aid in the development of cross domai
 
 When combined with Specialized Gaps hardware this allows for splitting the program from one monolithic binary into separate binaries to be physically separated between difference silicon with CDS guards mediating (and possibly redacting) the communication between the domains.
 
+**Replace above with slides**
+
 ### Background
 ### The Problem
 
@@ -32,7 +34,7 @@ Peraton Labs is developing CLOSURE (Cross-domain Language-extensions for Optimal
 cross-domain artifacts, compilation, and verification of partitioned program
 3. Seamless support for heterogeneous GAPS hardware architectures and emulation for pre-deployment testing​​
 
-![arch](docs/C/images/workflow.png)
+![workflow](docs/C/images/workflow.png)
 
 **vspells briefing/poster**
 

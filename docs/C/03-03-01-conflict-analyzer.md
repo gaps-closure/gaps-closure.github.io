@@ -64,6 +64,7 @@ It should also produce a `conflicts.json` which can be ingested by CVI
 ***NEEDS FIX: current CA does not produce a conflicts.json***
 
 **Should I include the following?? or just what's in `03-03-02-constraint-mode.md`**
+
 ### Arguing Correctness of the Model in Partitioning CLE-Annotated C programs (using LLVM and PDG)
 
 The conflict analyzer must provide a satisfying assignment of enclaves to each

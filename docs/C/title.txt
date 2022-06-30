@@ -1,5 +1,5 @@
 ---
-title: CLOSURE C Documentation 
+title: CLOSURE Toolchain User Manual for C Language
 author: Peraton Labs 
 subtitle: Release version 2.0
 date: June 26, 2022 

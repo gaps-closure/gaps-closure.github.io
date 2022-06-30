@@ -117,9 +117,11 @@ within each cdf, `argtaints`, `codtaints` and `rettaints`.
 - what each taint means and how they are applied
 - non-intuitive weirdness about needing cdf for remotelevel == level
 - explain why taints are specified under cdf 
+- pointer to cle schema in appendix 
 
 **TODO: ask Tony/Rajesh about ARQ params**
 
 ### TAGs
 
+- explain what tags are and how they are generated
 

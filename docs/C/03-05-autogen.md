@@ -5,13 +5,48 @@
 - idl_generator.py is used to generate $(PROG).idl for use with HAL Autogen CLOSURE Tool
 - schema/gedl-schema.json describes the JSON schema that the output .gedl file will be validated against during IDL generation
 
+**autogen dir in hal repo forward ref to idl example in appendix**
+
 ### codecs
 
 **Where is this documented?**
 
+- From gedl, we get the signatures of functions that will be called cross domain
+  - in an opt pass inputting divvied code and producing `gedl.json`
+  - Additional metadata about args determined by heuristics (configuration file input into opt pass, with forward pointer to heuristics json) 
+    - in/out or both
+    - array args
+    - array size
+- If the opt pass is unable to infer, then the user has to edit `gedl.json` whereever
+it say `user_input`
+- For each xd function, two structures are generated
+  - request, and response idl
+    - request has all the in and in/out args 
+    - response has all the out, in/out args and return
+  - for each struct in the idl
+    - an encode, decode and print function is also generated
+      - encode/decode functions take care of host/network ordering
+- In addition to the codecs, DFDL description of each serialized request/response is generated
+by the dfdl writer **Forward pointer to DFDL section**
+- The generated codecs are registered in the hal daemon
+- The generated rpc code registers these codecs for use of the xdcomms send/recv functions   
+  - includes a rpc_wrapper/handler for each function called cross domain  
+
+
+```
+divvied code --opt pass-> gedl.json --idl_generator--> idl --codecwriter-> codecs.c/h
+
+idl, gedl.json,  
+
+```
+
+**Update above based on tasks.json/makefiles**
+
 ### RPC
 
 - rpc_generator.py is used to generate *_rpc.c, *_rpc.h, and *.c files for compilation by MBIG CLOSURE tool
+
+**TODO: Have Tony edit below**
 
 RPC Generator Notes (2/22/2022)
  -- located in build/capo/C/gedl
@@ -119,7 +154,10 @@ RPC Generator Notes (2/22/2022)
     conditional compilation (e.g,, Makefile CFLAGS, CLAG_FLAGS or IPC_MODE) or
     by setting the default value (for the ARQ options) in the cle_schema.json 
 
+
 ### DFDL
+
+
 
 **Where is this documented?**
 
