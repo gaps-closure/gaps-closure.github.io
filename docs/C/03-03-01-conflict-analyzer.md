@@ -17,7 +17,11 @@ the minimum unsatisfiable subset (MUS) of constraints if a problem
 instance is unsatisfiable; the output of this tool can be used to
 provide diagnostic feedback to the user to help refactor the program.
 
-The output of the program is described in a json file, called `topology.json`. 
+The output of the program is described in a json file, called `topology.json` which assigns a
+level and enclave to every global variable and function. 
+It can also provide a more elaborated version `artifact.json` which gives label, level and enclave 
+assignments to every program element.
+
 Downstream tools in the CLOSURE toolchain will use the output of the solver to
 physically partition the code, and after further analysis (for example, to
 determine whether each parameter is an input, output, or both, and the size of
