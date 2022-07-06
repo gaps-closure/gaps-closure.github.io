@@ -1,32 +1,68 @@
 ## Phase 2 CLOSURE conflict analyzer based on minizinc constraint solver 
 
+**TODO: write intro for conflict analyzer**
+
+The conflict analyzer takes as input a set of source and header files
+and either outputs an assignment of every global variable and function to an enclave,
+or produces some conflicts which describe inconsistencies of the application 
+of the annotations to the code.
+
+The conflict analyzer uses a constraint solver called [MiniZinc](https://www.minizinc.org/doc-2.5.5/en/index.html)  to perform program analysis and determine a correct-by-construction partition that satifies the constraints
+specified by the developer using CLE annotations. MiniZinc provides a high level
+language abstraction to express constraint solving problems clearly.
+MiniZinc compiles a MiniZinc language specification of a problem for 
+lower level solver such as Gecode. We use an Integer Logic Program (ILP) 
+formulation with MiniZinc. MiniZinc also includes a tool that computes
+the minimum unsatisfiable subset (MUS) of constraints if a problem
+instance is unsatisfiable; the output of this tool can be used to
+provide diagnostic feedback to the user to help refactor the program.
+
+The output of the program is described in a json file, called `topology.json`. 
+Downstream tools in the CLOSURE toolchain will use the output of the solver to
+physically partition the code, and after further analysis (for example, to
+determine whether each parameter is an input, output, or both, and the size of
+the parameter), the downstream tools will autogenerate code for marshalling and
+serialization of input and output/return data for the cross-domain call, as
+well as code for invocation and handling of cross-domain remote-procedure calls
+that wrap the function invocations in the cross-domain cut. 
+
 **whatever readme available in all repos, but will need to be written**
 
-### preprocessor
+### Introduction to the Conflict Analyzer
 
-The CLOSURE pre-processor is a source transformer that will:
-* take C/C++ programs annotated with CLE pragmas as input 
-* generate C/C++ programs annotated with toolchain-specific source annotations, specifically new LLVM __attribute__ annotations which we define for the project
-* additionally generate a file containing mappings from each annotation label to the corresponding CLE-JSON specification which contains additional detail to be used by downstream CLOSURE tools
+### The CLOSURE `preprocessor`
 
-The output C/C++ of the pre-processor will go to a minimally modified LLVM clang that will support the CLOSURE-specific LLVM __attribute__ annotations and pass them down to the LLVM IR level.
+The CLOSURE preprocessor is a source transformer that will
+take a given source or header file with CLE annotations, and produce
 
-The pre-processor requires a C/C++ source parser (but not a full-blown compiler) so that applicable functions, variables, structs, classes, and other language elements can be identified and annotated appropriately based on the pragma which may be specified for the next non-empty, non-comment line or for an entire block of code.  For this purpose, the parser could borrow C/C++ grammar and parsing code from another project ([see notes here](http://www.nobugs.org/developer/parsingcpp/)), or leverage code from an exiting toolchain (e.g., gcc, clang) if needed. 
+1. A modified source or header file with LLVM `__attribute__` annotations 
+2. A cle-json file which contains a mapping from each label to its corresponding definition in JSON form.    
 
-The ICD for the pre-processor (which we will specify/refine as a team) will be the CLE specification and new annotations attributes we define along with where they need to be placed.  As a starting point, we have a [draft CLE spec](https://github.com/gaps-closure/cle-spec/blob/master/specification.md), and a toy example (we will need to add support for code blocks, structs, functions, classes, et cetera).
+The output C of the preprocessor will go to a minimally modified LLVM clang that will support the CLOSURE-specific LLVM `__attribute__` annotations and pass them down to the LLVM IR level.
 
-Intial source is C file containing:
+In addition, the preprocessor performs several well-formedness checks on the cle labels and definitions, using a json schema
+**TODO: link to appendix**.
+
+For example:
+
+With an initial source is C file containing the following:
+```c
+int *secretvar = 0;
 ```
-int * secretvar = 0;
-```
+
 Developer annotates the C file as follows:
+```c
+#pragma cle def HIGHONE { //CLE-JSON, possibly \-escaped multi-line with whole bunch of constraints } 
+#pragma cle HIGHONE 
+int *secretvar = 0;
 ```
-#pragma cle def HIGHONE { //CLE-JSON, possibly \-escaped multi-line with whole bunch of constraints } #pragma cle HIGHONE int * secretvar = 0;
-```
-After running the preprocessor, we should get a C file with pragmas removed but with __attribute__ inserted (in all applicable places), e.g.,:
-```
+
+After running the preprocessor, we should get a C file with pragmas removed but with `__attribute__` inserted (in all applicable places), e.g.,:
+```c
 int * __attribute__(type_annotate("HIGHONE")) secretvar = 0;
 ```
+
+**TODO: use actual output from preprocessor**    
 
 Additionally:
 - preprocessor no longer uses lark/libclang, entirely done custom using regex, which is
@@ -34,13 +70,49 @@ fine because its very simple substitution
 - single line `#pragma cle LABEL` now supported, was not previously
 - can be called separately from command line, this functionality is used in later steps
 
-### opt pass for PDG
+### `opt` pass for the Program Dependence Graph (PDG)
+
+The Program Dependence Graph (PDG) is an abstraction over a C/C++ program which specifies its control and data dependencies
+in a graph data structure. It can be used as a library that can be passed to `opt`, and with
+a LLVM representation of the program, generates an SMT representation of the program in `minizinc` which will 
+be used for conflict analysis.
+
+During the invocation of the conflict analyzer, a subprocess is spawned in python to retrieve this `minizinc` 
+representation of the PDG.
+
+The relevant PDG node types for conflict analysis are Inst (instructions), VarNode (global, static, or module static
+variables), FunctionEntry (function entry points), Param (nodes denoting
+actual and formal parameters for input and output), and Annotation (LLVM IR
+annotation nodes, a subset of which will be CLE labels). The PDG edge types
+include ControlDep (control dependency edges), DataDep (data dependency edges),
+Parameter (parameter edges relating to input params, output params, or
+parameter field edges to encode parameter trees), and Annot (edges that connect
+a non-annotation PDG node to an LLVM annotation node). Each of these node and
+edge types are further divided into subtypes. 
+
+More documentation about the specific nodes and edges in the PDG can be found here. **TODO: include link to PDG doc** 
 
 - called via subprocess in python
 - produces minizinc pdg instance and debug pdg csv
+
 **PSU documentation for PDG?? How much do we want to include, this doc is huge**
+**Include PSU doc in appendix or link to separate doc**
 
 ### input generation and constraint solving using Minizinc
+
+From the cle json outputted by the preprocessor, the conflict analyzer generates
+a `minizinc` representation of the cle json, which describes the annotations
+and enclaves for a given program. The `minizinc` produced from the cle json
+is designed to be used with the PDG `minizinc` representation, and together
+provide a full representation of the program and the constraints provided by the annotations
+in `minizinc` form.
+
+Together, this can be fed, along with a static set of constraints, to `minizinc`
+producing an assignment of every node in the PDG to a label, or a 
+minimally unsatisfied set of constraints. Understanding these constraints is crucial to
+understanding why a certain program cannot pass the conflict analyzer.
+
+From these assignments, the `topology.json` and `artifact.json` can be generated.
 
 - cle/enclave instance should be a pure function 
 from collated cle json to an encoded minizinc instance 
@@ -59,86 +131,9 @@ containing source and dest node and grouped by constraints
   <source_node_type> @ <file>:<line> -> <dest_node_type> @ <file>:<line>
 ``` 
 
-It should also produce a `conflicts.json` which can be ingested by CVI 
+It should also produce a machine readable `conflicts.json` which can be ingested by CVI
+to show these errors in VSCode.
 
 ***NEEDS FIX: current CA does not produce a conflicts.json***
 
 **Should I include the following?? or just what's in `03-03-02-constraint-mode.md`**
-
-### Arguing Correctness of the Model in Partitioning CLE-Annotated C programs (using LLVM and PDG)
-
-The conflict analyzer must provide a satisfying assignment of enclaves to each
-global variable and function, and identify the call invocation edges in the
-cut. A sketch of the arguments for correctness of the constraint model is below
-(needs to be vetted).
-
-#### OUTPUT CONSTRAINTS
-
- * All varnode and function node must be assigned an enclave
- * To be in the cut, endpoints of a call edge must be in different enclaves (control return can be safely ignored)
- * All non-annotation nodes must have their (derived) enclave level match their taint level
- * Only user can apply a function annotation to bless a function
-
-#### ENCLAVE-LEVEL-CONSTRAINTS
- * No non-call edge can leave the enclave
- * No non-return non-param data edge can leave the enclave
- * For each call invocation in the cut, the destination function must be
-   annotated and must have a cdf that accept calls from the source enclave
-   level
- * For each data return over the cut, the taint of the variable returned must
-   allow sharing with destination (caller) function's enclave level
- * For each argument passing in the cut, the taint of the variable going into
-   actual-in must allow sharing with destination function's enclave level
-
-#### LABEL-CONSTRAINTS
-
- * Inside an enclave non-data non-return data edge endpoints must have same
-   taint or be coercible by an annotated function
- * If function is annotated, the taint of destination of the data return edge
-   must be allowed by the rettaints, else the taints across the edge must match
- * If function is annotated, the taint of the variable connected to the actual
-   parameter must be allowed by the argtaints for the parameter, else the
-   taints across the edge must match  
- * All nodes contained in annotated functions must only have taints that are in
-   argtaints, rettaints, and codtaints specified in the corresponding function
-   annotation (as parameter and return edges are handled separately above, we 
-   primarily need to worry about codtaints) 
- * Unannotated functions can handle at most one taint across all invocations
-   that will become the label taint of the function 
-
-Whether the annotations correctly and completely capture data sharing
-constraints is out of scope.
-
-Annotated functions must be audited for correctness and to ensure that the 
-only information leaving can be shared to the output arguments and return values.
-However the program analysis ensures that only these functions (and not the entire
-codebase) needs to be scrutinised.
-
-The input preparer prepares the PDG and CLE information for effcicient processing
-within MinZinc. Nodes and Edges are grouped by subtype and type and laid out in
-sequence so that continguous integer sequences rather than arbitrary sets of IDs
-can be used. For convenience, the function that each instruction and parameter
-is associated with is also computed and stored.  The parameter indices for formal
-in and formal out are also computed and stored.
-
-Note that the input preparer pulls all taints into cleLabel regardless of whether 
-there is a JSON (this primarily includes the `TAG_REQUEST_*` and `TAG_RESPONSE_*`
-labels that will be defined and used in autogenerated code). The input preparer
-also creates a special default label for each enclave without and cdf elements,
-and this is not a function blessing annotation. This allows the model to assign
-every node a label (including data that has no interference with any cross 
-domain interactions).
-
-Only level checking is done on data flowing across the cross-domain functions; 
-the downstream verifier will ensure labels are correctly preserved through the 
-autogenerated code (not available to this analyzer).
-
-Currently the model forces un-annotated functions to handle only a single
-taint across all invocations. As a result, any functions that need to handle
-multiple taints across invocations will either need to be annotated to allow
-those taints (if safe to do so) or moved out to a library and be checked
-separately. [Why: suppose we call an unannotated function with no body taints
-with one LABEL1, it stores the value in an unannotated static variable and
-could pass it later to a fure call with LABEL1 -- so if the function will
-tainted differently across invocations, it needs to be annotated and audited.
-

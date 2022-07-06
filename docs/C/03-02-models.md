@@ -103,10 +103,8 @@ Beyond these boundary conditions, the main constraints are given below:
 
 1. `Forall c i, c.inflows[i].label == c.argtaints[i]`
 2. `Forall c i, c.outflows[i].label == c.argtaints[len(c.inflows) + i]`
-3. `Forall c i, i < len(c.inflows) => c.argtaints[i].remote == c.level &&
-(c.argtaints[i].local == c.level || c.argtaints[i].local == c.remotelevel)`
-4. `Forall c i, i >= len(c.inflows) => c.argtaints[i].local == c.level &&
-(c.argtaints[i].remote == c.level || c.argtaints[i].remote == c.remotelevel)`
+3. `Forall c i, i < len(c.inflows) => c.argtaints[i].remote == c.level && (c.argtaints[i].local == c.level || c.argtaints[i].local == c.remotelevel)`
+4. `Forall c i, i >= len(c.inflows) => c.argtaints[i].local == c.level && (c.argtaints[i].remote == c.level || c.argtaints[i].remote == c.remotelevel)`
 
 #### Deriving a cross-domain message flow policy
 
