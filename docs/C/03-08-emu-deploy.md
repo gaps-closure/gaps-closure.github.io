@@ -1,7 +1,10 @@
 ## Emulator (EMU)
 The CLOSURE project provides a general purpose emulation tool for instantiating virtual cross domain architectures and running partitioned applications within them. The Emulator supports Multi-ISA and has been tested with x86 (Ubuntu focal kernel) and ARM64 (Ubuntu Xenial kernel) Linux. Built on top of QEMU, the emulator is flexible and can easily incoporate a QEMU instance of the target platform if need be. Integrated with the CLOSURE toolchain, the emulator can also be used stand-alone and is not limited to CLOSURE-partitioned applications (though this is the common usage).
+
 ### Topology configuration, Generation and Plumbing using CORE and qemu
+
 ![emu](docs/C/images/emu.png)
+
 Upon running the emulator, several enclaves (indicateed by color) are instantiated per the configuration file. Within each enclave are two types of nodes: i) enclave-gateway node (e.g., orange-enclave-gw-P) which is co-located with emulated cross-domain hardware used for cross-domain communication to a peer enclave, and ii) a local enclave host (e.g., orange-1) within the enclave but without emulated GAPS hardware. Enclave gateways are named using the following convention: ```<local color>-enclave-gw-<first letter of peer enclave in capital letter>```. Between enclave gateways are  cross-domain gateway nodes ```<color1>-<color2>-xd-gw```. The cross-domain gateways faciliate bump-in-the-wire guard configuration described in subsequent sections. The Emulator has been tested with up to 4 enclaves. Note the enclave limit is attributed to the processing capcity of the underlying machine running the emulator (there is no fundamental limit to number of nodes and enclaves otherwise). A node can be accessed by double clicking its icon in the GUI to obtain a terminal to the node.
 
 Each enclave-gateway node runs an instance of QEMU to model the node. The QEMU is configured using socat and netcat such that there is a device (/dev/vcom) with with the node reads/writes to communicate cross domain. Data written to /dev/vcom is passed to the corresponding xd-gw node which either passes the data through or applies redaction (see guard discussion below). The data is then available for reading at the remote enclave-gw QEMU instance upon reading from /dev/vcom. This configuration emulates reading/writing to the guard in the real deployment - no IP-based communication is occuring between the applications (even though under the hood the emulator uses IP transport to move the data). From the applications' perspective they are reading/writing directly to the guard device driver. Note that when double-clicking the enclave-gw node, you are immediately within the QEMU instance (rather than the CORE BSD container wrapping it).
@@ -59,8 +62,11 @@ You should find the golden copy (e.g., ubuntu-amd64-eoan-qemu.qcow2) created in 
 EMU supports both Bump-In-The-Wire (BITW) and Book-Ends (BE) deployments. In BITW configuration, redaction occurs on the xd-gw node. A 'flowspec' can be loaded -- essentiall a python program that performs the redaction function on data passing through the node. In BE configuration, the 'flowspec' is invoked at the enclave-gateway before releasing it to the xd-gw (which is merely passthrough in this case). Note the 'flowspec' is a future feature and not general purpose at this time. 
 
 <b> Bump-In-The-Wire Configuration </b>
+
 ![BITW](docs/C/images/socat-bidirectional-filter-BITW.png)
+
 <b> Bookends Configuration </b>
+
 ![BE](docs/C/images/socat-bidirectional-filter-BOOKEND.png)
 
 ### Scenario Generation: Various Input and Generated Configuration Files
@@ -104,12 +110,31 @@ The above specifies a BITW model. Simply change to the following to use BKND:
 ```
 
 ### Running Scenarios
+To run the emulator, change directory to the emulator install location (emu directory) and run ./start [scenario name], e.g., ./start.sh 2enclave. The standard out will provide feedback on the emulator execution and print errors if any.
 
 ### Deploying on objective hardware
+Additional manual steps are required when deploying the application and associated cross-domain tools (e.g., HAL) on target objective hardware.
 
-**Talk to Tony about what we did for mercury testbed**
-- **describe script that combines xdconf.ini and device.json**
-- **Copy and build each partition on respective hardware**
-- **Install xdcomms/hal on each enclave**
-- **Configure and start hal for each enclave**
-- **Bring up application on each side**
+#### Generating HAL configuration from xdconf.ini and device.json
+The hal confgen directory contains hal_autoconfig.py to auto-generate HAL configuration. The script is called in the CLOSURE toolchain by Makefile.mbig. The tool requires two json formatted inputs:
+- Maps file (in directory map_defs): The CLOSURE GEDL tool, RPCGenerator.py, generates a json map file (when called in Makefile.gedl it is named xdconf.ini). It contains all the information needed for the HAL maps, consistent with the  auto-generated application cross-domain RPCs. 
+	
+- Devices file (in directory devices_defs): File is manually created, consistent with the devices in the scenario. In the CLOSURE toolchain, Makefile.mbig looks for this file in: ~/gaps/build/src/emu/config/$(PROG)/devices.json, where PROG is the name of the application (e.g., example1). 
+
+See the script usage and start of script for example inputs that can be passed as input options.  The code uses the json python library to parse the inputs and the libconf reader/writer to output the HAL configuration files in the libconfig format used by the HAL daemon.  The libconf library can be installed using pip3 install libconf.
+
+#### Copy and build each partition on respective hardware
+For a given application, copy the appropriate partitioned/multithreaded/<color> directory to the target and proceed to build with gcc/clang on the target. Alternatively cross-compile frm a development machine. The project will include a Makefile for the application (developed during the project construction process).
+
+#### Install xdcomms and HAL on Enclaves
+On the target setup, copy the HAL repository or checkout via git. CD into hal and run `make clean;make` to build HAL and the xdcomms static and shared libraries (see ./api and ./daemon directories for binaries). When running HAL and CLOSURE partitioned applications utilizing HAL, these libraries need to be available in the PATH. 
+
+#### Configure and start HAL for each Enclave
+HAL is executed by running the following:
+```
+cd hal
+daemon/hal <configuration file>
+```
+
+#### Run the Application
+Once the application is partitioned, compiled, and HAL is running, the target application may be run on each enlcave.ss
