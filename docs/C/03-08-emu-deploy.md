@@ -117,6 +117,7 @@ Additional manual steps are required when deploying the application and associat
 
 #### Generating HAL configuration from xdconf.ini and device.json
 The hal confgen directory contains hal_autoconfig.py to auto-generate HAL configuration. The script is called in the CLOSURE toolchain by Makefile.mbig. The tool requires two json formatted inputs:
+
 - Maps file (in directory map_defs): The CLOSURE GEDL tool, RPCGenerator.py, generates a json map file (when called in Makefile.gedl it is named xdconf.ini). It contains all the information needed for the HAL maps, consistent with the  auto-generated application cross-domain RPCs. 
 	
 - Devices file (in directory devices_defs): File is manually created, consistent with the devices in the scenario. In the CLOSURE toolchain, Makefile.mbig looks for this file in: ~/gaps/build/src/emu/config/$(PROG)/devices.json, where PROG is the name of the application (e.g., example1). 
