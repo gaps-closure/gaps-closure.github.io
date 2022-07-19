@@ -110,7 +110,15 @@ The above specifies a BITW model. Simply change to the following to use BKND:
 ```
 
 ### Running Scenarios
-To run the emulator, change directory to the emulator install location (emu directory) and run ./start [scenario name], e.g., ./start.sh 2enclave. The standard out will provide feedback on the emulator execution and print errors if any.
+Prior to running the emulator, follow the instructions above to generate the QEMU Golden Images.
+
+In general, the Emulator is best run using the EMULATE build target of a project. This automates several steps such as constructing HAL configuration, preparing application tarballs, installing application depencencies etc. See the tasks.json and Makefile.mbig for respective projects. Furthermore the QEMU and CORE dependencies are all preinstalled in the CLOSURE contanier.
+
+![Running Emulator from CVI](docs/C/images/cviemu.png)
+
+Additionally, the emulator can be run stand-alone outside the container. Change directory to the emulator install location (emu directory) and run ./start [scenario name], e.g., ./start.sh 2enclave. The standard out will provide feedback on the emulator execution and print errors if any.
+
+Note that QEMU images are stored on your local machines and mounted to the container, the VMs persist to simplify startup in subsequent iterations. If necessary, the snapshots can be removed (cd .snapshots; rm *) for clean start up.
 
 ### Deploying on objective hardware
 Additional manual steps are required when deploying the application and associated cross-domain tools (e.g., HAL) on target objective hardware.
