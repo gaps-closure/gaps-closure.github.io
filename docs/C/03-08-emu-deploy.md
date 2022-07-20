@@ -3,11 +3,13 @@ The CLOSURE project provides a general purpose emulation tool for instantiating 
 
 ### Topology configuration, Generation and Plumbing using CORE and qemu
 
-![emu](docs/C/images/emu.png)
+![EMU GUI View, 4-enclave](docs/C/images/emu.png)
 
 Upon running the emulator, several enclaves (indicateed by color) are instantiated per the configuration file. Within each enclave are two types of nodes: i) enclave-gateway node (e.g., orange-enclave-gw-P) which is co-located with emulated cross-domain hardware used for cross-domain communication to a peer enclave, and ii) a local enclave host (e.g., orange-1) within the enclave but without emulated GAPS hardware. Enclave gateways are named using the following convention: ```<local color>-enclave-gw-<first letter of peer enclave in capital letter>```. Between enclave gateways are  cross-domain gateway nodes ```<color1>-<color2>-xd-gw```. The cross-domain gateways faciliate bump-in-the-wire guard configuration described in subsequent sections. The Emulator has been tested with up to 4 enclaves. Note the enclave limit is attributed to the processing capcity of the underlying machine running the emulator (there is no fundamental limit to number of nodes and enclaves otherwise). A node can be accessed by double clicking its icon in the GUI to obtain a terminal to the node.
 
 Each enclave-gateway node runs an instance of QEMU to model the node. The QEMU is configured using socat and netcat such that there is a device (/dev/vcom) with with the node reads/writes to communicate cross domain. Data written to /dev/vcom is passed to the corresponding xd-gw node which either passes the data through or applies redaction (see guard discussion below). The data is then available for reading at the remote enclave-gw QEMU instance upon reading from /dev/vcom. This configuration emulates reading/writing to the guard in the real deployment - no IP-based communication is occuring between the applications (even though under the hood the emulator uses IP transport to move the data). From the applications' perspective they are reading/writing directly to the guard device driver. Note that when double-clicking the enclave-gw node, you are immediately within the QEMU instance (rather than the CORE BSD container wrapping it).
+
+![EMU Architecture](docs/C/images/emudesign.png)
 
 To start the emulator (stand-alone), cd into the emu directory and run ./start [scenario name] where scenario name is that of a directory name in emu/config. Within a scenario configuration are three files:
 - settings.json: basic settings that typically do not need to be modified. `instdir` should be the absolute path of the parent to which emu is located (e.g., /home/user/gaps/build/)
@@ -61,13 +63,9 @@ You should find the golden copy (e.g., ubuntu-amd64-eoan-qemu.qcow2) created in 
 ### Guard Models
 EMU supports both Bump-In-The-Wire (BITW) and Book-Ends (BE) deployments. In BITW configuration, redaction occurs on the xd-gw node. A 'flowspec' can be loaded -- essentiall a python program that performs the redaction function on data passing through the node. In BE configuration, the 'flowspec' is invoked at the enclave-gateway before releasing it to the xd-gw (which is merely passthrough in this case). Note the 'flowspec' is a future feature and not general purpose at this time. 
 
-<b> Bump-In-The-Wire Configuration </b>
+![Bump-In-The-Wire (BITW) Plumbing](docs/C/images/socat-bidirectional-filter-BITW.png)
 
-![BITW](docs/C/images/socat-bidirectional-filter-BITW.png)
-
-<b> Bookends Configuration </b>
-
-![BE](docs/C/images/socat-bidirectional-filter-BOOKEND.png)
+![Bookends (BE) Plumbing](docs/C/images/socat-bidirectional-filter-BOOKEND.png)
 
 ### Scenario Generation: Various Input and Generated Configuration Files
 To generate a scenario, create a directory within emu/config and name it accordingly. Then copy the template configuration files from 2enclave, 3enclave, or 4enclave (depending on which scenario closely matches your intended topology). 
