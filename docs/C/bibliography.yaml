@@ -1,0 +1,21 @@
+---
+nocite: "[@*]"
+references:
+- author:
+  - family: Liu
+    given: Shen
+  - family: Tan
+    given: Gang
+  - family: Jaeger
+    given: Trent
+  doi: 10.1145/3133956.3134066
+  id: LTJ
+  isbn: 978-1-4503-4946-8
+  issued: 2017-10
+  page: 2359-2371
+  title: "PtrSplit: Supporting general pointers in automatic program
+    partitioning"
+  title-short: PtrSplit
+  type: paper-conference
+---
+
