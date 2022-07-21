@@ -1,12 +1,9 @@
-## Example applications
+## Example applications "XXX: to be written"
 
-### Examples 1-3
+** List of examples, one sentence of what they demonstrate **
 
-**Look at partitioning intent for each**
-**Look at ERI summit slides**
+** See ERI and EOP1 slides, you may find the sentence you need for 
+each example and case"
 
-### Test cases for solver
+** do not include examples in appendix"
 
-### EOP1 Cases 1-3 ??
-
-**EOP1 slides**

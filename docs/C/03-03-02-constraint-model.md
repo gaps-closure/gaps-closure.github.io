@@ -1,4 +1,4 @@
-## Detailed MiniZinc constraint model 
+## Detailed MiniZinc constraint model **XXX: Fix folding, otherwise ready**
 
 The following assumes some familiarity with minizinc syntax. More
 about minizinc, it's usage and syntax can be found here **TODO: link minizinc docs**

@@ -1,4 +1,5 @@
-## Phase 2 CLOSURE conflict analyzer based on minizinc constraint solver 
+## Phase 2 CLOSURE conflict analyzer based on minizinc constraint solver **XXX: Fix long lines, otherwise ready*
+
 
 **TODO: write intro for conflict analyzer**
 

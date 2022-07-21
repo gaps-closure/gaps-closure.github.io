@@ -1,6 +1,6 @@
 # CLOSURE Toolchain Overview
 
-## What is CLOSURE and what does it do?
+## What is CLOSURE and what does it do? **XXX: Ready for Review**
 
 DARPA Guaranteed Architecture for Physical Systems (GAPS) is a research program 
 that addresses software and hardware for compartmentalized applications where
@@ -17,11 +17,11 @@ toolchain, developers will express security intent through annotations applied
 to the program, which drive the program analysis, partitioning, and code
 autogeneration required by a GAPS application.
 
-### The Problem
+### The Problem **XXX: Ready for Review**
 
 The machinery required to verifiably and securely establish communication between cross-domain systems (CDS) without jeopardizing data spillage is too complex to implement for many software platforms where such communication would otherwise be desired. To regulate data exchanges between domains, network architects rely on several risk mitigation strategies including human fusion of data, diodes, and hypervisors which are insufficient for future commercial and government needs as they are high overhead, customized to specific setups, prone to misconfiguration, and vulnerable to software/hardware security flaws. To streamline the design, development, and deployment of provably secure CDSs, new hardware and software co-design tools are needed to more effectively build cross-domain support directly into applications and associated hardware early in the development lifecycle.
 
-### Solution
+### Solution **XXX: Ready for Review **
 
 Peraton Labs is developing CLOSURE (Cross-domain Language-extensions for Optimal SecUre Refactoring and Execution) to address the challenges associated with building cross-domain applications in software. CLOSURE extends existing programming languages by enabling developers the ability to express security intent through overlay annotations and security policies such that an application can be compiled to separable binaries for concurrent execution on physically isolated platforms.
 The CLOSURE compiler toolchain interprets annotation directives to facilitate this process which consist of: 
@@ -30,9 +30,7 @@ The CLOSURE compiler toolchain interprets annotation directives to facilitate th
 2. Program partitioning of the application using source level annotations to break the application into separate executables to be run in physically isolated memory spaces
 3. Automated insertion of remote procedure calls (RPCs) utilizing novel GAPS hardware to enforce redaction, validation, encryption, etc. across levels, and iv) optimization of partitioning decisions to meet programmer objectives (e.g. tradeoffs for partition sizes vs RPC overhead). CLOSURE provides a set of novel co-design tools that extend current software development environments to ease adoption by the development community.
 
-**vspells briefing/poster**
-
-## Architecture
+## Architecture **XXX: Needs writeup around figure **
 
 **vspells briefing/poster**
 
@@ -40,7 +38,9 @@ The CLOSURE compiler toolchain interprets annotation directives to facilitate th
 
 - **llvm stack image and add text to describe**
 
-## Workflow
+** A sentence on each component (MULES, CAPO, etc.) **
+
+## Workflow **XXX: Needs writeup **
 
 1. Annotation-driven development for correct-by-construction partitions with interactive feedback for guided refactoring
 2. Automated generation of ​
@@ -51,7 +51,7 @@ cross-domain artifacts, compilation, and verification of partitioned program
 
 **vspells briefing/poster**
 
-### C generation from Message-flow models
+### C generation from Message-flow models **XXX: paraphrase to single paragraph, move text and merge with main section in 03-02-* **
 
 **eop1 briefing addendum (on teams)**
 
@@ -73,10 +73,6 @@ cross-domain artifacts, compilation, and verification of partitioned program
 - Possible transition via mods to RHEL AMQ Interconnect code base
 
 **needs updated message flow workflow figure** 
-
-## Components
-
-**intro and one-to-one mapping to usage section**
 
 ## Limitations and language coverage
 

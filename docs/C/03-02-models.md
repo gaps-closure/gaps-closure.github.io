@@ -1,4 +1,4 @@
-## Model driven C generation and checking
+## Model driven C generation and checking **XXX: Ready for review **
 
 **describe message flow model.json from eop1, needs to be written**
 **README in ect/flowspec**

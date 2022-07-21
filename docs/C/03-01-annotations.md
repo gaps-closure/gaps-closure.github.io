@@ -1,10 +1,9 @@
-## Annotations
+## Annotations **XXX: Ready for Review**
 
 **capo/C/constraints/design.md**
 **mules/preprocessor**
 **forward pointer to cle schema in appendix**
 **add examples**
-
 
 
 The CLOSURE toolchain relies on source level annotations to specify
@@ -87,7 +86,7 @@ a new field called `cdf`, standing for cross-domain flow.
   ] }
 ```
 
-**TODO: Remove "direction" field?**
+The `"direction"` field is currently not used and is ignored by the CLOSURE toolchain. This may be removed in a future version.
 
 Here, the `"remotelevel"` field specifies that the 
 program element the label is applied to can be shared with an enclave

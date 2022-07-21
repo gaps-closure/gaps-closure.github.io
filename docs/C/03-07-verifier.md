@@ -1,4 +1,4 @@
-## Verifier
+## Verifier **XXX: Include paragraphs from paper, then add usage, and document input/output formats in appendix"
 
 ### ECT 
 
@@ -13,5 +13,7 @@ modular, bottom-up proof in the
 checked as the tool proceeds and written out in
 [SMT-LIB](http://smtlib.cs.uiowa.edu/) format, a human- and
 machine-readable format suitable for auditing.
+
+** Old -- does not discuss security compliance **
 
 ### Downstream conflict analyzer 
