@@ -2,8 +2,6 @@
 
 ## Prerequisites
 
-**Ubuntu Linux 20.04 Desktop, Docker (~ 20.10.7), VSCode**
-
 To run the CLOSURE C toolchain, you will need the following prerequisites:
 
 1. Ubuntu Linux 20.04 Desktop
@@ -12,8 +10,6 @@ To run the CLOSURE C toolchain, you will need the following prerequisites:
 
 The dockerfile we publish provisions all other dependencies needed for  
 the CLOSURE toolchain, such as clang, python, and llvm.
-
-**Write one sentence about how dockerfile provisions all other dependencies** 
 
 ## Installation For CLOSURE Users
 The fastest way to get started with the CLOSURE toolchain
@@ -28,8 +24,6 @@ Then, to get a shell with closure installed, enter the following:
 ```bash
 docker run -it gapsclosure/closuredev:latest 
 ```
-
-**gaps-closure/build/README.md**
 
 ## Running example applications
 
@@ -54,7 +48,7 @@ and type `Reopen in Container` and click the corresponding menu item in the drop
 Then you can proceed with the steps in the CLOSURE workflow. If you hit `Ctrl+Shift+B`,
 you should get a tasks dropdown with a list of build steps which should look like the following:
 
-**TODO: image of task dropdown**
+![CLOSURE workflow in VSCode](docs/C/images/cvi.png)
 
 The workflow begins by annotating the original source, which can be found under `plain`.
 Hitting `1 Annotate` under the dropdown will copy from `plain` into `annotated`. You can
@@ -62,8 +56,8 @@ now annotate the program with CLE labels and their definitions. If you are not c
 yet with CLE annotations, or are stuck, there is a solution provided in `.solution/annotated` 
 **TODO: move `.solution/refactored` into `.solution/annotated` in examples?**. 
 
-After annotating, you can start `2 Conflicts` under the tasks dropdown which will start the conflict analyzer. If the conflict analyzer finds no issues, it will produce a `topology.json` file.
-**TODO: state behavior of conflict analyzer when it finds conflicts, mentioning the CLE extension**
+After annotating, you can start `2 Conflicts` under the tasks dropdown which will start the conflict analyzer. If the conflict analyzer finds no issues, it will produce a `topology.json` file. Otherwise, it will print out
+diagnostics.
 
 Then, you can start the `3 Automagic` task, which will partition and build the application, as well
 as start running the application within the emulator.
