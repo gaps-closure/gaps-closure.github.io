@@ -65,14 +65,42 @@ such as `memset`, determine whether a given parameter is a input and output. If 
 to infer whether a parameter is an input or output, then it will leave placeholders in the gedl json, given
 by `user_input`. 
 
+The gedl file format is described in `gedl_schema.json` 
+
 **TODO: add usage from running `opt -load libgedl.so`**
+**TODO: add link to gedl_schema in appendix**
 
 ### IDL 
 
-- idl_generator.py is used to generate $(PROG).idl for use with HAL Autogen CLOSURE Tool
-- schema/gedl-schema.json describes the JSON schema that the output .gedl file will be validated against during IDL generation
+The IDL is a text file with a set of C style struct data type definitions.
+The IDL syntax is based on C; an IDL file contains one or more C struct datatypes. 
 
-**autogen dir in hal repo forward ref to idl example in appendix**
+Datatype tags are assigned numerically in the order the structs are found in the file. Not all valid C struct declarations are supported.
+
+Currently we support the following atomic types: 
+
+1. char (8b) 
+2. unsigned char (8b)
+3. short (16b)
+4. unsigned short (16b)
+5. int (32b)
+6. unsigned int (32b)
+7. long (64b)
+8. unsigned long (64b)
+9. float (4B)
+10. double (8B). 
+
+Fixed-size arrays of any supported primitive type are also supported.
+
+The `idl_generator` script takes a gedl json and produces the idl. The usage is as follows:
+
+```bash
+idl_generator.py [-h] -g GEDL -o OFILE -i {Singlethreaded,Multithreaded} [-s SCHEMA] [-L]
+```
+
+The schema is the gedl schema which validates the input gedl during the IDL generation. 
+`-L` disables this check. `-i` refers to the threading mode which gets used during further
+steps.
 
 ### codecs
 
