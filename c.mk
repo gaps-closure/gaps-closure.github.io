@@ -11,7 +11,7 @@ cdoc.pdf: $(SOURCES)
 	$(PANDOC) $(FLAGS) -o cdoc.pdf $(SOURCES)
 
 cdoc.html: $(SOURCES) 
-	$(PANDOC) $(FLAGS) --self-contained --template=toc-sidebar.html -o cdoc.html $(SOURCES)
+	$(PANDOC) $(FLAGS) --self-contained --template=toc-sidebar.html -B nav -o cdoc.html $(SOURCES)
 
 .PHONY: clean
 clean:
