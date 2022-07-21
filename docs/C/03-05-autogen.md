@@ -1,5 +1,72 @@
 ## Autogeneration
 
+### GEDL
+
+The GEDL is a json document specifying all the cross domain calls, and associated data such as
+the types of arguments/return for each cross domain function, and whether that function parameter
+is an input, output or both. If the argument or return is an array, it will list the size of the parameter.
+
+An example GEDL file would look like:
+```json
+{"gedl": [
+	{
+		"caller": "enclave1",
+		"callee": "enclave2",
+		"calls": [
+			{
+				"func":		"sampleFunc",
+				"return":	{"type": "double"},
+				"clelabel":	"enclave1",
+				"params": [
+					{"type": "int", "name": "sampleInt", "dir": "in"}, 
+					{"type": "double", "name": "sampleDoubleArray", "dir": "inout", "sz":15} 
+				],
+				"occurs": [
+					{"file": "/sample/Enclave1/Path/Enclave1File.c", "lines": [44]},
+                                        {"file": "/sample/Enclave1/Path/Enclave1File2.c", "lines": [15,205]}
+
+				]
+			},
+        {
+				"func":		"sampleFunc2",
+				"return":	{"type": "int"},
+				"clelabel":	"enclave1Extra",
+				"params": [
+				],
+				"occurs": [
+					{"file": "/sample/Enclave1/Path/Enclave1File.c", "lines": 45}
+				]
+			}
+		]
+	},
+        {
+		"caller": "enclave2",
+		"callee": "enclave3",
+		"calls": [
+			{
+				"func":		"sampleFunc3",
+				"return":	{"type": "void"},
+				"clelabel":	"enclave2",
+				"params": [
+					{"type": "uint8", "name": "sampleUInt8", "dir": "in"} 
+				],
+				"occurs": [
+                    {"file": "/sample/Enclave1/Path/Enclave2File.c", "lines": [55,87]}
+				]
+			}
+		]
+	}
+]}
+```
+
+This gedl is generated in an `opt` pass which analyzes the code. Whether a parameter is an input or output is
+given by heuristics which dictates whether certain function calls involving function parameters, 
+such as `memset`, determine whether a given parameter is a input and output. If the `opt` pass is unable
+to infer whether a parameter is an input or output, then it will leave placeholders in the gedl json, given
+by `user_input`. 
+
+**TODO: add usage from running `opt -load libgedl.so`**
+
 ### IDL 
 
 - idl_generator.py is used to generate $(PROG).idl for use with HAL Autogen CLOSURE Tool

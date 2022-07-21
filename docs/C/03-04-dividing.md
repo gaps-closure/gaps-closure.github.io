@@ -22,61 +22,16 @@ Given the refactored, annotated application, and the topology, the divider creat
 
 This `divvied` source becomes the input to the GAPS Enclave Definition Language (GEDL) generator tool. The GEDL drives further code generation and modification needed to build the application binaries for each enclave.
 
-### dividing
+### Dividing
 
-**Whoever wrote the divider should document this section**
+The usage of the program divider is straightforward:
 
-### opt pass for GEDL and configuring heuristics
+```bash
+divider [-h] -f TOPOLOGYJSON [-o OUTPUT_DIR] [-m] [-c CLANG_ARGS]
+```
 
-GEDL will be produced in JSON format as a file named "Enclaves.gedl"
-An example GEDL file would look like:
-{"gedl": [
-	{
-		"caller": "enclave1",
-		"callee": "enclave2",
-		"calls": [
-			{
-				"func":		"sampleFunc",
-				"return":	{"type": "double"},
-				"clelabel":	"enclave1",
-				"params": [
-					{"type": "int", "name": "sampleInt", "dir": "in"}, 
-					{"type": "double", "name": "sampleDoubleArray", "dir": "inout", "sz":15} 
-				],
-				"occurs": [
-					{"file": "/sample/Enclave1/Path/Enclave1File.c", "lines": [44]},
-                                        {"file": "/sample/Enclave1/Path/Enclave1File2.c", "lines": [15,205]}
+The divider will always look in a directory called `refactored` under the working directory for
+any `*.c` or `*.h` files that may comprise the program. The `-m` produces a debug mapping and
+`-c` can be useful because the divider uses clang internally to parse each file.
 
-				]
-			},
-        {
-				"func":		"sampleFunc2",
-				"return":	{"type": "int"},
-				"clelabel":	enclave1Extra,
-				"params": [
-				],
-				"occurs": [
-					{"file": "/sample/Enclave1/Path/Enclave1File.c", "lines": 45}
-				]
-			}
-		]
-	},
-        {
-		"caller": "enclave2",
-		"callee": "enclave3",
-		"calls": [
-			{
-				"func":		"sampleFunc3",
-				"return":	{"type": "void"},
-				"clelabel":	enclave2,
-				"params": [
-					{"type": "uint8", "name": "sampleUInt8", "dir": "in"} 
-				],
-				"occurs": [
-                    {"file": "/sample/Enclave1/Path/Enclave2File.c", "lines": [55,87]}
-				]
-			}
-		]
-	}
-]}
 
