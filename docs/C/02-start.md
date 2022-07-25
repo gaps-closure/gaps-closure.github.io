@@ -1,4 +1,4 @@
-# Installation and Quick Start **XXX: Missing emu **
+# Installation and Quick Start **XXX: Ready for review **
 
 ## Prerequisites
 
@@ -53,19 +53,13 @@ you should get a tasks dropdown with a list of build steps which should look lik
 The workflow begins by annotating the original source, which can be found under `plain`.
 Hitting `1 Annotate` under the dropdown will copy from `plain` into `annotated`. You can
 now annotate the program with CLE labels and their definitions. If you are not comfortable
-yet with CLE annotations, or are stuck, there is a solution provided in `.solution/annotated` 
-**TODO: move `.solution/refactored` into `.solution/annotated` in examples?**. 
+yet with CLE annotations, or are stuck, there is a solution provided in `.solution/refactored` 
 
 After annotating, you can start `2 Conflicts` under the tasks dropdown which will start the conflict analyzer. If the conflict analyzer finds no issues, it will produce a `topology.json` file. Otherwise, it will print out
 diagnostics.
 
 Then, you can start the `3 Automagic` task, which will partition and build the application, as well
 as start running the application within the emulator.
-
-**Mike: document emulator usage**
-**TODO: document possible `xhost +` issue**
-
-**Needs to be written, step by step**
 
 ## Notes For CLOSURE Toolchain Developers
 
@@ -90,11 +84,27 @@ to a local version of a given tool.
 For example, a CLOSURE toolchain developer may want to test out a new feature
 of the `rpc_generator.py` script. In `closure_env.sh` the `RPC_GENERATOR`
 variable can be switched out to point to their own version of the script. Invocation of
-the script through the build process will be identical as before.
+the script through the build process will be identical as before. 
+Here's an excerpt of a `closure_env.sh` where `rpc_generator.py` is switched out for a 
+development version.
 
-**TODO: show example of closure_env.sh**
+```bash
+#!/bin/bash
 
-**More detail about build/what's in the Dockerfile**
+# ...
+
+CLOSURE_TOOLS=/opt/closure
+source /opt/closure/etc/closureenv
+export CLOSURE_BINS=${CLOSURE_TOOLS}/bin
+export CLOSURE_INCLUDES=${CLOSURE_TOOLS}/include
+export CLOSURE_LIBS=${CLOSURE_TOOLS}/lib
+
+# ...
+
+# export RPCGENERATOR=rpc_generator
+export RPC_GENERATOR=path/to/my/rpc_generator
+# ... 
+```
 
 ### Dockerfile notes
 
@@ -103,7 +113,7 @@ Most of these dependencies are given by their corresponding apt/python package,
 and others are installed manually, such as minizinc, haskell and core.
 
 The Dockerfile uses a `COPY` command to copy over the `build` directory
-into the image and builds/installs CLOSURE from within the image. 
+into the image and builds/installs CLOSURE from within the container. 
 
 ### Installing locally
 
@@ -124,20 +134,11 @@ e.g. in your `.bashrc` in order to have command line access to the closure tools
 
 ### Emulator  
 
-**The following needs to be cut down so that quick start is one page**
+The emulator (EMU) uses QEMU instances to represent enclave gateways, the nodes designated for cross-domain transactions via a character device. This allows us to model multi-domain, multi-ISA environments on which the partitioned software will execute. 
 
-EMU uses QEMU instances to represent enclave gateways, the nodes designated for cross-domain transactions via a character device to the SDH. This allows us to model multi-domain, multi-ISA environments on which the partitioned software will execute. As a prerequisite to executing the emulator, it is necessary to build clean VM instances (referred to as the "golden images") from which EMU will generate runtime snapshots per experiment. The snapshots allow EMU to quickly spawn clean VM instances for each experiment as well as support multiple experiments in parallel without interfering among users.
+As a prerequisite to executing the emulator, it is necessary to build clean VM instances (referred to as the "golden images") from which EMU will generate runtime snapshots per experiment. The snapshots allow EMU to quickly spawn clean VM instances for each experiment as well as support multiple experiments in parallel without interfering among users.
 
-VM images can be automatically built using qemu-build-vm-images.sh. The script fetches the kernel, builds and minimally configures the VM disk images, and saves a golden copy of the kernels and images.
+Usually these QEMU images are mounted in the docker container, so that they can be used across containers without rebuilds. 
+By default it mounted from and to `/IMAGES` but can be changed in each project's `.devcontainer/devcontainer.json`
 
-We recommend storing the built images in a common directory accessible to all users (this README assumes that directory is /IMAGES). Ensure sudo group is allowed to work without passwords, otherwise expect scripting to fail on sudo attempts. Note: Pre-built VMs and kernels available under assets in EMU releases. Consider downloading and placing in your image directory to skip the VM build process.
-
-If building your own images, create a virgin image for each architecture for the supported distro (currently eoan):
-
-This will fetch the kernel (e.g., linux-kernel-amd64-eoan), initrd (linux-initrd-amd64-eoan.gz), and build the virgin qemu vm image (e.g., ubuntu-amd64-eoan-qemu.qcow2.virgin) using debootstrap.
-
-Now configure the virgin image to make it usable generally with user networking support (allows host-based NAT-ted access to Internet):
-
-You should find the golden copy (e.g., ubuntu-amd64-eoan-qemu.qcow2) created in the directory specified by the -o argument (e.g. /IMAGES). Note that the Emulator Configuration settings.json file requires you to specify the images directory if not using /IMAGES.
-
-**QEMU doc on github:gaps-closure/emu/...**
+VM images can be automatically built using `qemu-build-vm-images.sh` which is mounted in `/opt/closure/emu` by default in the `.devcontainer/devcontainer.json`. The script fetches the kernel, builds and minimally configures the VM disk images, and saves a golden copy of the kernels and images. This script is run by default if needed in the supported applications during the VSCode task 9E.
