@@ -1,81 +1,41 @@
-## Autogeneration **XXX: Needs rewriting**
+## Autogeneration **XXX: Done minus HALCONF**
 
 ** For where we do not have text, write two sentences on what it does, how it works, then document usage plus forward references to input/output in appendix"
 
-### GEDL
+### GEDL {#gedl}
 
 The GEDL is a json document specifying all the cross domain calls, and associated data such as
 the types of arguments/return for each cross domain function, and whether that function parameter
 is an input, output or both. If the argument or return is an array, it will list the size of the parameter.
 
-An example GEDL file would look like:
-```json
-{"gedl": [
-	{
-		"caller": "enclave1",
-		"callee": "enclave2",
-		"calls": [
-			{
-				"func":		"sampleFunc",
-				"return":	{"type": "double"},
-				"clelabel":	"enclave1",
-				"params": [
-					{"type": "int", "name": "sampleInt", "dir": "in"}, 
-					{"type": "double", "name": "sampleDoubleArray", "dir": "inout", "sz":15} 
-				],
-				"occurs": [
-					{"file": "/sample/Enclave1/Path/Enclave1File.c", "lines": [44]},
-                                        {"file": "/sample/Enclave1/Path/Enclave1File2.c", "lines": [15,205]}
-
-				]
-			},
-        {
-				"func":		"sampleFunc2",
-				"return":	{"type": "int"},
-				"clelabel":	"enclave1Extra",
-				"params": [
-				],
-				"occurs": [
-					{"file": "/sample/Enclave1/Path/Enclave1File.c", "lines": 45}
-				]
-			}
-		]
-	},
-        {
-		"caller": "enclave2",
-		"callee": "enclave3",
-		"calls": [
-			{
-				"func":		"sampleFunc3",
-				"return":	{"type": "void"},
-				"clelabel":	"enclave2",
-				"params": [
-					{"type": "uint8", "name": "sampleUInt8", "dir": "in"} 
-				],
-				"occurs": [
-                    {"file": "/sample/Enclave1/Path/Enclave2File.c", "lines": [55,87]}
-				]
-			}
-		]
-	}
-]}
-```
-
-This gedl is generated in an `opt` pass which analyzes the code. Whether a parameter is an input or output is
+This gedl is generated in an llvm `opt` pass which analyzes the code. Whether a parameter is an input or output is
 given by heuristics which dictates whether certain function calls involving function parameters, 
 such as `memset`, determine whether a given parameter is a input and output. If the `opt` pass is unable
 to infer whether a parameter is an input or output, then it will leave placeholders in the gedl json, given
 by `user_input`. 
 
-The gedl file format is described in `gedl_schema.json` 
+The gedl file format is described in `gedl_schema.json` which can be found in the [appendix](#gedl-appendix)
 
-**TODO: add usage from running `opt -load libgedl.so`**
-**TODO: add link to gedl_schema in appendix**
+The usage of the gedl pass is as follows:
+```bash
+opt -load libgedl.so
+-prog <programName>    Name of partitioned program
+-schema <schemaPath>   Relative path to gedl schema
+-prefix <prefix>       Specify prefix for output
+-he <heuristicPath>    Path to heuristics directory
+-l <level>             Parameter tree expand level
+-d <debugInfo>         use debug information
+-u <uprefix>           Specify prefix for untrusted side
+-t <tprefix>           Specify prefix for trusted side
+-defined <defined>     Specify defined functions file path
+-suffix <suffix>       Specify suffix for code injection
+```
 
 ### IDL 
 
 The IDL is a text file with a set of C style struct data type definitions.
-The IDL syntax is based on C; an IDL file contains one or more C struct datatypes. 
+The IDL syntax is based on C; an IDL file contains one or more C struct datatypes. Two structs are
+generated for each TAG request and response pair, with the in arguments in the request and the out arguments in the response.
 
 Datatype tags are assigned numerically in the order the structs are found in the file. Not all valid C struct declarations are supported.
 
@@ -96,168 +56,139 @@ Fixed-size arrays of any supported primitive type are also supported.
 
 The `idl_generator` script takes a gedl json and produces the idl. The usage is as follows:
 
-```bash
-idl_generator.py [-h] -g GEDL -o OFILE -i {Singlethreaded,Multithreaded} [-s SCHEMA] [-L]
+```
+usage: idl_generator.py [-h] -g GEDL -o OFILE -i {Singlethreaded,Multithreaded} [-s SCHEMA] [-L]
+
+CLOSURE IDL File Generator
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -g GEDL, --gedl GEDL  Input GEDL Filepath
+  -o OFILE, --ofile OFILE
+                        Output Filepath
+  -i {Singlethreaded,Multithreaded}, --ipc {Singlethreaded,Multithreaded}
+                        IPC Type
+  -s SCHEMA, --schema SCHEMA
+                        override the location of the of the schema if required
+  -L, --liberal         Liberal mode: disable gedl schema check
 ```
 
-The schema is the gedl schema which validates the input gedl during the IDL generation. 
-`-L` disables this check. `-i` refers to the threading mode which gets used during further
-steps.
+Note: The schema is the gedl schema which validates the input gedl during the IDL generation. 
+`-L` disables this check. `-i` refers to the ipc threading mode. See the [RPC](#rpc) section for more info.
 
-### codecs
+A sample idl can be found in the [appendix](#idl-appendix).
 
-**Where is this documented?**
+### Codecs {#codecs}
 
-- From gedl, we get the signatures of functions that will be called cross domain
-  - in an opt pass inputting divvied code and producing `gedl.json`
-  - Additional metadata about args determined by heuristics (configuration file input into opt pass, with forward pointer to heuristics json) 
-    - in/out or both
-    - array args
-    - array size
-- If the opt pass is unable to infer, then the user has to edit `gedl.json` whereever
-it say `user_input`
-- For each xd function, two structures are generated
-  - request, and response idl
-    - request has all the in and in/out args 
-    - response has all the out, in/out args and return
-  - for each struct in the idl
-    - an encode, decode and print function is also generated
-      - encode/decode functions take care of host/network ordering
-- In addition to the codecs, DFDL description of each serialized request/response is generated
-by the dfdl writer **Forward pointer to DFDL section**
-- The generated codecs are registered in the hal daemon
-- The generated rpc code registers these codecs for use of the xdcomms send/recv functions   
-  - includes a rpc_wrapper/handler for each function called cross domain  
+For each struct in the IDL, the codecs for each are generated. The codecs consist of
+encode, decode, print functions for each of the structs, which handle byte order 
+conversions between host and network byte order. 
 
+The codecs can be generated using `hal_autogen` which is described in the [DFDL section](#dfdl).
 
-```
-divvied code --opt pass-> gedl.json --idl_generator--> idl --codecwriter-> codecs.c/h
+In addition to the codecs, DFDL description of each serialized request/response is generated
+by the [DFDL writer](#dfdl).
 
-idl, gedl.json,  
+The generated codecs are registered in the 
+hal daemon. The generated rpc code registers these codecs for use of the xdcomms send/recv functions. It includes a rpc_wrapper/handler for each function called cross domain. 
 
-```
+### RPC {#rpc}
 
-**Update above based on tasks.json/makefiles**
+The `rpc_generator.py` is used to generate the `*_rpc.{c,h}` for compilation. The rpc code
+coordinates cross domain function calls and replaces call invocations to cross domain functions
+with ones which marshall and send the data across the network using the generated codecs and IDL. 
 
-### RPC
+The rpc generator has as its input:
+1. Partitioned application code including name of main program,
+2. CLE annotations for each individual function
+3. The generated gedl
+4. Input/output ZMQ uris
+5. Base values for `mux`, `sec`, `typ` parameters 
+6. The cle user annotations for reliability parameters (retries, timeout and idempotence). 
 
-- rpc_generator.py is used to generate *_rpc.c, *_rpc.h, and *.c files for compilation by MBIG CLOSURE tool
+It produces C and header files for CLE-annotated RPC code for each partition including the RPC wrapper and peer call handler. 
+The CLE-annotated RPC code contains the definitions for each `TAG_` request/response pair.
+It also generates the input application code with the following modifications:
 
-**TODO: Have Tony edit below**
-
-RPC Generator Notes (2/22/2022)
- -- located in build/capo/C/gedl
- -- inputs: 
-    CODE:    Partitioned application code including name of main program
-             Also contains CLE annotations for each individual function
-             (e.g, Not oneway or bidirection uniformly to all functions
-    GEDL:    JSON with function signatures of functions to be wrapped 
-             in cross-domain RPC plus information about which parameters
-             are inputs/outputs/both, and size of arrays etc.
-             currently function arguments must be primitive types or 
-             fixed size arrays of primitive types
-    Base:    Value for mux, sec, and typ assignments for this progam
-    ENCLAVE: List and their levels
-    URIs:    To use for HAL configuration
-    CLE:     JSON file with reliability default values 
-    
-    (note: separately an IDL is generated from the GEDL for the
-     cross-domain data types, and from the IDL serialization codecs
-     are genreated for use with HAL API. RPCGenerator must be consistent
-     with the sequence and naming conventions used in the IDL generator 
-     and codec generator. DFDL is also generated from the IDL separately.)
-
- -- outputs:
-    1. C and header files for CLE-annotated RPC code for each partition 
-       (includes ithe RPC wrapper and peer call handler)
-    2. Modifications to the partitioned application code (heuristic, brittle)
-     - add HAL init and RPC headers to main program
-     - replace cross domain calls foo() with _rpc_foo()
-     - on side without the main, create a main program and a handler loop
-    Additionally proto-HAL config is generated (lacks device specific config)
-
-    (note: separate script takes the proto-HAL config plus a user-provided 
-     device.json to generate complete HAL config for each side)
+1. It adds HAL init and RPC headers to main program
+2. It replaces cross domain calls foo() with _rpc_foo()
+3. On the partition without the main, it will create a main program and a handler loop
+with a proto-HAL config is generated. 
   
- -- modes 
-     ***********************************************************************
-     1. Receiver uses singlethreaded vs. multithreaded (default)
-     ***********************************************************************
-      - latter provides one RPC listener/subscriber thread per XD function 
-        RPC protocol is simply get request, run function, send response
-      - former special case for completely singlethreaded programs;
-        Currently adds extra message exchange (NEXT/OKAY) for single listener thread:
-          callee (listener thread) waits for nextrpc message
-          caller first sends nextrpc type
-          callee (listener thread) sends okay
-          callee (listener thread) waits for message specified in prev nextrpc 
-          caller sends actual request
-          callee gets requests, runs function, send response
-          continue looping
-     (note: here because Columbia requested this for ease of analysis, sees 
-      little usage currently, but support for single-threaded apps is nice to
-      have. The oneAPI generated binary may also need)
-
-     ***********************************************************************
-     2. Receive Sockets are 1/APP (legacy) vs. 1/function (my_xdc)
-     ***********************************************************************
-      - original design was based on one persistent listener that handled
-        cross-domain messages -- this thread opened a zeromq socket once
-        and reused it for the life of the program: 0MQ sockets are not
-        thread-safe (0MQ contexts are thread-safe)
-      - original design did not work in the case of secdesk, which used
-        a web application framework that assigned each HTTP request to
-        an arbitrary thread, which had to XD calls. So we needed an 
-        alternative where the socket is opened and closed just in time
-        within the thread in question -- less efficent, but thread-safe
-
-      (note: legacy put the code in hal/api/xdcomms.[ch], however my_xdc 
-       includes a complete alternative thread-safe implementation if
-       xdcomms within the genereated <foo>_rpc[.ch].  Somewhat asymmetric.
-       xdcomms.[ch] is also used by the Java toolchain. Perhaps the best
-       thing is to move my_xdc with conditional compilation into xdcomms.[ch]
-       If this done then RPCGenerator will be simplified. When building the
-       XDCOMMS library build two versions -- one for legacy one for myxdc)
-
-     ***********************************************************************
-      3. Reliability (one vs UPenn ARQ)
-     ***********************************************************************
-      - Integrates UPenn code in 'rpc_merge' branch
-      - Phase 1 RPC genereator is not tolerant to delay/loss -- upon
-        loss, the RPC call will hang forever -- we added a variant of
-        xdc_blocking_recv which allowed timeouts. UPenn uses this and
-        modified each generated RPC wrapper and handler to include 
-        retries. CLE annotations specify timeout value and number of
-        retries.
-      - changes affect the CLE schema used by CLE preprocessor (additional
-        fields in CLE)
-      - additional code in the RPC generator to implement timeout and retry
-      - annotated example application which exercises UPenn features
-      - additional input to RPC generator, namely CLE json
-      - change in invocation syntax in .vscode/build scripts to include 
-        pass the additional input param
-
-     ***********************************************************************
-    4. Request-Response vs One-way RPC 
-     ***********************************************************************
-      - Requestor can send call (with parameters) and either: a) wait for a 
-        response (with results) or b) continue without waiting for a response
-      - In both cases the responder will run the cross-domain function and 
-        will either: a) send the result back to the requestor (for the former 
-        Request-Response mode) or will not send any response (for the latter
-        One way True Diode).
-
-    The modes are currently all instantiated using C preprocessor macros for 
-    conditional compilation (e.g,, Makefile CFLAGS, CLAG_FLAGS or IPC_MODE) or
-    by setting the default value (for the ARQ options) in the cle_schema.json 
+Note: A [separate script](#halconf) takes the generated proto-HAL config and a user-provided `device.json` to generate complete HAL config for each partition. 
+             
+Additionally, there are two IPC modes for the generated rpc code, which either can either generate
+singlethreaded or multithreaded rpc handlers. The multithreaded mode provides one RPC handler thread per cross domain function, while the singlethreaded mode has one global rpc handler for all
+cross domain calls.
 
 
-### DFDL
+The RPC generator usage is as follows:
 
+```
+CLOSURE RPC File and Wrapper Generator
 
+optional arguments:
+  -h, --help            show this help message and exit
+  -a HAL, --hal HAL     HAL Api Directory Path
+  -e EDIR, --edir EDIR  Input Directory
+  -c CLE, --cle CLE     Input Filepath for CLE user annotations
+  -g GEDL, --gedl GEDL  Input GEDL Filepath
+  -i IPC, --ipc IPC     IPC Type (Singlethreaded/Multithreaded)
+  -m MAINPROG, --mainprog MAINPROG
+                        Application program name, <mainprog>.c must exsit
+  -n INURI, --inuri INURI
+                        Input URI
+  -o ODIR, --odir ODIR  Output Directory
+  -s SCHEMA, --schema SCHEMA
+                        override location of cle schema if required
+  -t OUTURI, --outuri OUTURI
+                        Output URI
+  -v, --verbose
+  -x XDCONF, --xdconf XDCONF
+                        Hal Config Map Filename
+  -E ENCLAVE_LIST [ENCLAVE_LIST ...], --enclave_list ENCLAVE_LIST [ENCLAVE_LIST ...]
+                        List of enclaves
+  -M MUX_BASE, --mux_base MUX_BASE
+                        Application mux base index for tags
+  -S SEC_BASE, --sec_base SEC_BASE
+                        Application sec base index for tags
+  -T TYP_BASE, --typ_base TYP_BASE
+                        Application typ base index for tags
+```
 
-**Where is this documented?**
+### DFDL {#dfdl}
 
-### HAL configuration forwarding rules
+[DFDL](https://daffodil.apache.org/docs/dfdl/) is an extension of XSD which provides
+a way to describe binary formats and easily encode/decode from binary to an xml infoset.
+CLOSURE has the ability to create DFDL schemas for each cross domain request/response pair
+with use of the `hal_autogen`. 
 
-**Where is this documented?**
+The `hal_autogen` is additionally used to write the [codecs](#codecs) so it takes as input both
+the idl and the a `typ` base (which must match the one given to the `rpc_generator.py`) and outputs
+both the DFDL and the codecs.
+
+The `hal_autogen` script can be used as follows:
+
+```
+usage: autogen.py [-h] -i IDL_FILE -g GAPS_DEVTYP -d DFDL_OUTFILE [-e ENCODER_OUTFILE] [-T TYP_BASE] [-c CLANG_ARGS]
+
+CLOSURE Autogeneration Utility
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i IDL_FILE, --idl_file IDL_FILE
+                        Input IDL file
+  -g GAPS_DEVTYP, --gaps_devtyp GAPS_DEVTYP
+                        GAPS device type [bw_v1 or be_v1]
+  -d DFDL_OUTFILE, --dfdl_outfile DFDL_OUTFILE
+                        Output DFDL file
+  -e ENCODER_OUTFILE, --encoder_outfile ENCODER_OUTFILE
+                        Output codec filename without .c/.h suffix
+  -T TYP_BASE, --typ_base TYP_BASE
+                        Application typ base index for tags (must match RPC Generator)
+  -c CLANG_ARGS, --clang_args CLANG_ARGS
+                        Arguments for clang
+```
+
+### HAL configuration forwarding rules {#halconf}
+
