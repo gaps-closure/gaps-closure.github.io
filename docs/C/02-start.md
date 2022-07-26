@@ -72,7 +72,7 @@ If within the build directory, all that needs to be done to build
 CLOSURE dockerfile is:
 
 ```
-docker build -f Dockerfile.dev -t gapsclosure/closuredev:latest
+docker build -f Dockerfile.dev -t gapsclosure/closuredev:latest .
 ```
 
 ### Switching out environment variables in projects
