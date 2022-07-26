@@ -1,6 +1,6 @@
 ## Verifier **XXX: Include paragraphs from paper, then add usage, and document input/output formats in appendix"
 
-### ECT 
+### ECT/ParTV 
 
 ECT verifies the equivalence between the refactored program and
 those in the various enclaves by checking, function-by-function, that

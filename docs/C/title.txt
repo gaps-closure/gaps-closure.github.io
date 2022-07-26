@@ -9,8 +9,9 @@ titlepage: true
 documentclass: scrartcl
 toc: true
 toc-own-page: true
-include-before:
-- '`\newpage{}`{=latex}'
 numbersections: true
 colorlinks: true
+header-includes:
+ - \usepackage{fvextra}
+ - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
 ---

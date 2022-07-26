@@ -1,7 +1,4 @@
-## Phase 2 CLOSURE conflict analyzer based on minizinc constraint solver **XXX: Fix long lines, otherwise ready*
-
-
-**TODO: write intro for conflict analyzer**
+## Phase 2 CLOSURE conflict analyzer based on minizinc constraint solver **XXX: Ready for review*
 
 The conflict analyzer takes as input a set of source and header files
 and either outputs an assignment of every global variable and function to an enclave,
@@ -31,8 +28,6 @@ serialization of input and output/return data for the cross-domain call, as
 well as code for invocation and handling of cross-domain remote-procedure calls
 that wrap the function invocations in the cross-domain cut. 
 
-**whatever readme available in all repos, but will need to be written**
-
 ### Introduction to the Conflict Analyzer
 
 ### The CLOSURE `preprocessor`
@@ -45,8 +40,7 @@ take a given source or header file with CLE annotations, and produce
 
 The output C of the preprocessor will go to a minimally modified LLVM clang that will support the CLOSURE-specific LLVM `__attribute__` annotations and pass them down to the LLVM IR level.
 
-In addition, the preprocessor performs several well-formedness checks on the cle labels and definitions, using a json schema
-**TODO: link to appendix**.
+In addition, the preprocessor performs several well-formedness checks on the cle labels and definitions, using a [json schema](#cle-schema).
 
 For example:
 
@@ -57,17 +51,17 @@ int *secretvar = 0;
 
 Developer annotates the C file as follows:
 ```c
-#pragma cle def HIGHONE { //CLE-JSON, possibly \-escaped multi-line with whole bunch of constraints } 
-#pragma cle HIGHONE 
+#pragma cle def ORANGE { /* CLE-JSON, possibly \-escaped multi-line with whole bunch of constraints*/ }  
+#pragma cle ORANGE 
 int *secretvar = 0;
 ```
 
 After running the preprocessor, we should get a C file with pragmas removed but with `__attribute__` inserted (in all applicable places), e.g.,:
 ```c
-int * __attribute__(type_annotate("HIGHONE")) secretvar = 0;
+#pragma clang attribute push (__attribute__((annotate("ORANGE"))), apply_to = any(function,type_alias,record,enum,variable(unless(is_parameter)),field))
+int *secretvar = 0;
+#pragma clang attribute pop
 ```
-
-**TODO: use actual output from preprocessor**    
 
 Additionally:
 - preprocessor no longer uses lark/libclang, entirely done custom using regex, which is
@@ -95,13 +89,7 @@ parameter field edges to encode parameter trees), and Annot (edges that connect
 a non-annotation PDG node to an LLVM annotation node). Each of these node and
 edge types are further divided into subtypes. 
 
-More documentation about the specific nodes and edges in the PDG can be found here. **TODO: include link to PDG doc** 
-
-- called via subprocess in python
-- produces minizinc pdg instance and debug pdg csv
-
-**PSU documentation for PDG?? How much do we want to include, this doc is huge**
-**Include PSU doc in appendix or link to separate doc**
+More documentation about the specific nodes and edges in the PDG can be found [here](#pdg-appendix). 
 
 ### input generation and constraint solving using Minizinc
 
@@ -136,9 +124,5 @@ containing source and dest node and grouped by constraints
   <source_node_type> @ <file>:<line> -> <dest_node_type> @ <file>:<line>
 ``` 
 
-It should also produce a machine readable `conflicts.json` which can be ingested by CVI
+It should also produce a machine readable `conflicts.json` which can be ingested by [CVI](#cvi)
 to show these errors in VSCode.
-
-***NEEDS FIX: current CA does not produce a conflicts.json***
-
-**Should I include the following?? or just what's in `03-03-02-constraint-mode.md`**

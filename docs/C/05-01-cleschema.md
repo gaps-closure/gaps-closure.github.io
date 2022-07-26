@@ -1,4 +1,6 @@
-## CLE Schema
+## CLE Schema {#cle-schema}
+
+CLE schema shown in detail below:
 
 ```json
 {

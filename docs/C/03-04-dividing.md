@@ -2,18 +2,18 @@
 
 Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated application code, and determined that all remaining conflicts are resolvable by RPC-wrapping to result in a security compliant cross-domain partitioned  code, the conflict analyzer will save the code in the refactored directory along with a a topology file (JSON) containing the assignment of every  function and global variable to an enclave/level. A sample topology JSON is provided below.
 
-```
+```json
 {
    "levels": ["orange", "purple"],
    "source_path": ["./refactored"],
    "functions": [
       {"name": "get_a", "level": "orange", "file": "test1_refactored.c", "line": 29},
       {"name": "main",  "level": "purple", "file": "test1_refactored.c", "line": 35},
-      ...
+      // ...
     ],
    "global_scoped_vars": [
       {"name": "globalScopeVarNotFunctionStatic", "level": "purple", "file": "test1_refactored.c", "line": 5},
-      ...
+      // ...
     ],
 }
 ```

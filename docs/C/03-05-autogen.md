@@ -107,20 +107,17 @@ The rpc generator has as its input:
 6. The cle user annotations for reliability parameters (retries, timeout and idempotence). 
 
 It produces C and header files for CLE-annotated RPC code for each partition including the RPC wrapper and peer call handler. 
+Additionally, a `xdconf.ini` is generated, which a [separate script](#halconf) uses to configure [HAL](#hal). 
 The CLE-annotated RPC code contains the definitions for each `TAG_` request/response pair.
 It also generates the input application code with the following modifications:
 
 1. It adds HAL init and RPC headers to main program
 2. It replaces cross domain calls foo() with _rpc_foo()
 3. On the partition without the main, it will create a main program and a handler loop
-with a proto-HAL config is generated. 
-  
-Note: A [separate script](#halconf) takes the generated proto-HAL config and a user-provided `device.json` to generate complete HAL config for each partition. 
              
 Additionally, there are two IPC modes for the generated rpc code, which either can either generate
 singlethreaded or multithreaded rpc handlers. The multithreaded mode provides one RPC handler thread per cross domain function, while the singlethreaded mode has one global rpc handler for all
 cross domain calls.
-
 
 The RPC generator usage is as follows:
 
@@ -192,3 +189,4 @@ optional arguments:
 
 ### HAL configuration forwarding rules {#halconf}
 
+**Document `hal_autoconfig.py` with forward refs to appendix (05-11)**

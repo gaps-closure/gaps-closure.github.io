@@ -164,7 +164,7 @@
 ```
 
 ### hal_orange configuration
-The HAL configuration tool combines the xdconf.ini with selected devices (see closure_env.sh). Example orange enclave configuration for example1 shown below.
+The [HAL configuration tool](#halconf) combines the xdconf.ini with selected devices (see closure_env.sh). Example orange enclave configuration for example1 shown below.
 
 ```
 maps =

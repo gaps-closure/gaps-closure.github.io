@@ -54,7 +54,7 @@ between the program partitions.
 
 ** A sentence on each component (MULES, CAPO, etc.) **
 
-## Workflow **XXX: Needs writeup **
+## Workflow **XXX: Needs writeup**
 
 1. Annotation-driven development for correct-by-construction partitions with interactive feedback for guided refactoring
 2. Automated generation of ​
@@ -65,7 +65,7 @@ cross-domain artifacts, compilation, and verification of partitioned program
 
 **vspells briefing/poster**
 
-### C generation from Message-flow models **XXX: paraphrase to single paragraph, move text and merge with main section in 03-02-* **
+### C generation from Message-flow models **XXX: paraphrase to single paragraph, move text and merge with main section in 03-02-**
 
 **eop1 briefing addendum (on teams)**
 
@@ -88,7 +88,7 @@ cross-domain artifacts, compilation, and verification of partitioned program
 
 **needs updated message flow workflow figure** 
 
-## Limitations and language coverage
+## Limitations and language coverage {#limitations}
 
 - two enclaves??
 - message flow is primarily for json messages over amqp

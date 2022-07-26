@@ -1,11 +1,5 @@
 ## Annotations **XXX: Ready for Review**
 
-**capo/C/constraints/design.md**
-**mules/preprocessor**
-**forward pointer to cle schema in appendix**
-**add examples**
-
-
 The CLOSURE toolchain relies on source level annotations to specify
 the cross domain constraints. Developers annotate programs using CLOSURE Language Extensions (CLE) 
 to specifycross-domain security constraints. Each CLE annotation definition associates
@@ -134,8 +128,6 @@ specifies levels in which enclaves of that level can call a given function.
 Function annotations are also different than node annotations as they contain the 
 three `taints` fields.
 
-**Question: guarddirective on function/node annotations**
-
 A taint simply refers to a label or an assigned label by the conflict analyzer. There are
 three different constraints involving taints in functions, `argtaints`, `codtaints` and `rettaints`.
 `rettaints` constrains which labels the return value of a function may be assigned. Similarly, 
@@ -148,8 +140,7 @@ remotelevel is the same as the level of the annotation, just to perform some coe
 Note: the word taint simply refers to an assigned label, either determined by the conflict analyzer
 or directly assigned by a user.
 
-
-**TODO: ask Tony/Rajesh about ARQ params**
+**XXX: ask Tony/Rajesh about ARQ params**
 
 ### TAGs
 

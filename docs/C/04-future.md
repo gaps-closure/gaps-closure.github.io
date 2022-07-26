@@ -1,6 +1,6 @@
-# CLOSURE C Future work **XXX: Ready for review **
+# CLOSURE C Future work **XXX: Ready for review**
 
-In future work, we will work on relaxing the limitations listed in Section **XXX**.
+In future work, we will work on relaxing the [known limitations](#limitations).
 
 Also in the research pipeline are:
   
@@ -10,4 +10,5 @@ the constraint solver
 3. support for additional languages, in particular, C++ and Java 
 4. support for concurrent (multi-threaded) program
 5. support for analysis and partitioning of distributed components, namely, the analysis of message flow and program partitioning together
+6. Cross domain guard provision-time configuration    
 
