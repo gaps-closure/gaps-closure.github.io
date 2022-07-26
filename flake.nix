@@ -16,7 +16,7 @@
                     inherit buildInputs;
                     installPhase = ''
                         mkdir -p $out
-                        mv cdoc.html cdoc.pdf $out/
+                        INSTALL_PREFIX=$out make install
                     '';
                 };
             }

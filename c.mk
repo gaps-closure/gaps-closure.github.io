@@ -9,7 +9,7 @@ FLAGS = --number-sections \
 		--citeproc \
 		--bibliography=$(BIB) \
 		--pdf-engine=xelatex
-SOURCES = $(TITLE) $(DOCS) 
+SOURCES = $(TITLE) $(DOCS)
 
 cdocs: cdoc.pdf cdoc.html 
 
@@ -19,6 +19,10 @@ cdoc.pdf: $(SOURCES)
 cdoc.html: $(SOURCES) 
 	$(PANDOC) $(FLAGS) --self-contained --template=toc-sidebar.html -B nav -o cdoc.html $(SOURCES)
 
-.PHONY: clean
-clean:
+.PHONY: install-cdoc
+install-cdoc: cdocs
+	cp cdoc.pdf cdoc.html $(INSTALL_PREFIX)
+
+.PHONY: clean-cdoc
+clean-cdoc:
 	rm -rf cdoc.pdf cdoc.html
