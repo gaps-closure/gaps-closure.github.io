@@ -140,7 +140,12 @@ remotelevel is the same as the level of the annotation, just to perform some coe
 Note: the word taint simply refers to an assigned label, either determined by the conflict analyzer
 or directly assigned by a user.
 
-**XXX: ask Tony/Rajesh about ARQ params**
+**XXX: Integrate/cleanup**
+
+- Idempotent: function called cross domain is idempotent and can be called repeatedly (e.g., when messages are lost in the network, you can reissue the request)
+- Number of tries: Upon failure, how many attempts to call a function cross domain before giving up 
+- Timeout: controls the timeout for the cross domain read function (see [`xdc_recv` function](#xdcomms-send-recv)).
+
 
 ### TAGs
 

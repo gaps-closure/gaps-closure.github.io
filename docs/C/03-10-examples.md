@@ -1,4 +1,4 @@
-## Example applications {#examples} "XXX: ready for review"
+## Example applications **XXX: ready for review** {#examples} 
 
 ### Pedagogical Examples (examples 1-3)
 The [pedagoical examples](https://github.com/gaps-closure/build/blob/develop/apps/examples/) are available for basic understanding of the CLOSURE workflow, annotations, and testing via emulation. Each example uses the same [plain source](https://github.com/gaps-closure/build/blob/develop/apps/examples/example1/plain/example1.c), however, the **partitioning objectives** differ for each:

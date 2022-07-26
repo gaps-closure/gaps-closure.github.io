@@ -1,5 +1,7 @@
 ## Constraint Model in MiniZinc
 
+**Check if covered in main text and remove if necessary** 
+
 ### Type declarations  
 
 ```minizinc

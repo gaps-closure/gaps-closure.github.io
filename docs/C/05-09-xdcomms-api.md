@@ -6,8 +6,6 @@ The HAL Data-Plane API abstracts the different hardware APIs used by CDGs, provi
 
 The application needs to perform some initialization steps before it can send and receive data.
 
-Summary of HAL APIs int he following figure, described in detail within the following sections.
-![HAL API Summary](docs/C/images/halapi.png)
 
 #### Configure Socket Addresses and Register ADU coders
 
@@ -43,7 +41,7 @@ extern void *xdc_sub_socket_non_blocking(gaps_tag tag, int timeout);
 The xdc_ctx() function creates the 0MQ context (returning a pointer to the context). The other functions connect to the  [HAL daemon listening 0MQ sockets](#hal-interfaces), in order to send (on the API pub socket) or receive (on the API sub socket) data. In all cases the HAL-connect functions return a (void *) socket pointer. With the two sub sockets, the user specifies which HAL packets it wants to receive, using the HAL tag as a filter (see below). With the non-blocking sub socket, the user specifies a timeout value (in milliseconds). If the timeout value is -1, then an xdc_recv() call will block until a message is available; else, for all positive timeout values, an xdc_recv() call will wait for a message for that amount of time before returning with -1 value.
 
 
-#### Send and Recv ADUs
+#### Send and Recv ADUs {#xdcomms-send-recv}
 
 Once the configuration and socket initialization steps are completed, the application can send and receive data. Since the codecs handle the (de-)serialization, applications can conveniently send and receive data using pointers to in-memory data structures. However, the application must provide the [HAL application tag](#haltag) for the data item to be sent or received.
 

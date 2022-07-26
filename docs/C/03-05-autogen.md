@@ -1,4 +1,4 @@
-## Autogeneration **XXX: Done minus HALCONF**
+## Autogeneration **XXX: Ready for review**
 
 ** For where we do not have text, write two sentences on what it does, how it works, then document usage plus forward references to input/output in appendix"
 

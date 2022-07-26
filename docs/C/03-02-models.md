@@ -1,4 +1,4 @@
-## Model driven C generation and checking **XXX: Needs merge with 1.3.1**
+## Model driven C generation and checking **XXX: Mike working on this**
 
 **describe message flow model.json from eop1, needs to be written**
 **README in ect/flowspec**

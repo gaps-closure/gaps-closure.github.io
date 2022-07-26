@@ -1,5 +1,8 @@
 ## CLE Schema {#cle-schema}
 
+**example cle-json snippet**
+**mention cle preprocessor validates using this schema**
+
 CLE schema shown in detail below:
 
 ```json

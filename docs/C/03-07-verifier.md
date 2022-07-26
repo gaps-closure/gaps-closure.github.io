@@ -1,4 +1,4 @@
-## Verifier **XXX: Include paragraphs from paper, then add usage, and document input/output formats in appendix**
+## Verifier **XXX: Ben working on this** {#verifier}
 
 ### ECT/ParTV
 

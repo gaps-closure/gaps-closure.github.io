@@ -1,0 +1,17 @@
+---
+title: CLOSURE Toolchain User Manual for Java Language
+author: Peraton Labs 
+subtitle: Release version 2.0
+date: June 26, 2022 
+keywords: [books,programming,GAPS,CLOSURE,CLE,partitioning,cross-domain,multi-level-security]
+language: en-US
+titlepage: true
+documentclass: scrartcl
+toc: true
+toc-own-page: true
+numbersections: true
+colorlinks: true
+header-includes:
+ - \usepackage{fvextra}
+ - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+---
