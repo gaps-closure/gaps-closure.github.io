@@ -1,6 +1,6 @@
 ## HAL Configuration Files **XXX: ready for review** {#halconfig}
 
-### devices.json
+### devices.json {#devices-json}
 **devices.json** provides the interfaces for reading/writing to the employed GAPS devices. Note that different devices can be used in the forward and reverse direction between a pair of enclaves. Device settings for BITW(MIND), BKND (ILIP), and Emulator shown.
 
 **Bump-in-the-Wire (MIND device)**
@@ -76,7 +76,7 @@
 }
 ```
 
-### xdconf.ini
+### xdconf.ini {#xdconf}
 **xdconf.ini** is automatically genreated during the automagic stages of the project build. The file appears in partitioned/{single, multi}threaded directory. The file includes the [mux, sec, typ](#haltag) mappings for each data type. The data types are oraganized by enclave with from/to enclave clearly specified so the direction is apparent. Appropriate in/out uri interfaces for where the message is read or written  to and from HAL are also specified. xdconf.ini content ultimately populates the map portion of the HAL config file. 
 ```
 {
@@ -163,7 +163,7 @@
 }
 ```
 
-### hal_orange configuration
+### hal_orange configuration {#hal-orange}
 The [HAL configuration tool](#halconf) combines the xdconf.ini with selected devices (see closure_env.sh). Example orange enclave configuration for example1 shown below.
 
 ```
@@ -236,8 +236,3 @@ devices =
 );
 ```
 
-### Cross-Domain Guard Configuration (future)
-The Cross Domain Guard (CDG) provision-time configuration will include:
-* DFDL schema file describing the framing for each GAPS Device including headers, application datatypes, and trailers.
-* Security policy rules (e.g., pass/allow/filter), based on the DFDL-described data-plane fields (in a device-specific PDU)
-* CDG hardware configuration based on system topology, and optionally, device filter pipeline (for programmable hardware)
