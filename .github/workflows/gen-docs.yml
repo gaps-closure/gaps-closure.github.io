@@ -16,6 +16,7 @@ jobs:
       - uses: cachix/install-nix-action@v15
       
       - run: nix build -o result
+      - run: ls -l
       - uses: actions/upload-artifact@v3
         with:
           name: cdoc.pdf
