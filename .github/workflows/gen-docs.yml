@@ -15,8 +15,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: cachix/install-nix-action@v15
       
-      - run: nix build
+      - run: nix build -o result
       - uses: actions/upload-artifact@v3
         with:
           name: cdoc.pdf
-          path: ${{github.workspace}}/result/cdoc.pdf
+          path: result/cdoc.pdf
