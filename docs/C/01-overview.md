@@ -61,16 +61,12 @@ The key submodules of the toolchain include:
 - **EMU**: Emulator. Enables test and evaluation of cross-domain applications utilizing QEMU.
 
 
-## Workflow **XXX: Needs writeup**
+## Workflow **XXX: Ready for Review**
+The CLOSURE workflow for building cross-domain applications shown in (#fig-workflow) can be viewed at a high-level as three toolchain stages: 1) Annotation-driven development for for correct-by-construction partitions with interactive feedback for guided refactoring, 2) Automated generation of ​cross-domain artifacts, compilation, and verification of partitioned program, and 3) seamless support for heterogeneous GAPS hardware architectures and emulation for pre-deployment testing​​.
 
-1. Annotation-driven development for correct-by-construction partitions with interactive feedback for guided refactoring
-2. Automated generation of ​
-cross-domain artifacts, compilation, and verification of partitioned program
-3. Seamless support for heterogeneous GAPS hardware architectures and emulation for pre-deployment testing​​
+![CLOSURE Workflow](docs/C/images/workflow.png){#fig-workflow}
 
-![workflow](docs/C/images/workflow.png)
-
-**vspells briefing/poster**
+In the first stage, the developer either writes a new application or imports existing source which must be tooled for cross-domain operation. The developer must have knowledge of the intended cross-domain policy - CLOSURE provides means to express this policy in code, but it is the requirements analyst/developer who determines the policy in advance and uses CLE to annotate the program as such. The CLOSURE pre-processor, PDG model, and constraint analysis determine if the annotated partitiong is feasible. If not, feedback and diagnostics are provided back to the developer for guided refactoring towards making the program compliant. Once the program is deemed compliant (via the conflict analyzer), CLOSURE proceeds with automated tooling in which CAPO and associated tools divide the code, generate code for cross-domain Remote Procedure Calls (RPCs), describe the cross-domain data types via DFDL and codec/serialization code, and generates all required configurations for interfacing to the GAPS hardware via the Hardware Abstraction Layer (HAL). In the final stage, the partitioned source trees are compiled for the target host (e.g., x86 or ARM64) and prepared for deployment. 
 
 ### C generation from Message-flow models **XXX: Mike working on this**
 
@@ -96,14 +92,5 @@ cross-domain artifacts, compilation, and verification of partitioned program
 
 **needs updated message flow workflow figure** 
 
-## Limitations and language coverage {#limitations}
-
-- two enclaves??
-- message flow is primarily for json messages over amqp
-- divider is not syntax aware
-
-Most of c99 is covered 
-- function pointers (might work, not tested) 
-- module static functions
-- macro generated functions
-- any fn called xd can only have arguments be primitives or fixed size arrays of primitives
+## Limitations and language coverage **XXX: Ready for Review** {#limitations} 
+CLOSURE toolchain supports most of the c99 standard with the exception of function pointers, module static functions, macro generated functions, and functions called cross-domain that have arguments other than primitives or fixed size arrays of primitives. Each of these exceptions will be lifted in subsequent releases as we expand our PDG analysis and make the divider syntax-aware. Additionally, CLOSURE  message-flow toolchain supports strictly ActiveMQ-based communication, though the approch is general and can easily be extended to other messaging middlewares as needed. Presently, the CLOSURE C toolchain has been exhaustively tested with 2-enclaves, less so with 3-enclaves (manual involvement required in certain stages otherwise automated - to be resolved in future releases).
