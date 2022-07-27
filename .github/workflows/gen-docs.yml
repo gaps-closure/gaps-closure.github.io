@@ -14,10 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: cachix/install-nix-action@v15
-      
-      - run: nix build -o result
-      - run: ls -l
+      - run: nix build
+      - run: echo "UPLOAD_PATH=$(readlink -f result)" >> $GITHUB_ENV
       - uses: actions/upload-artifact@v3
         with:
-          name: cdoc.pdf
-          path: result/cdoc.pdf
+          name: docs
+          path: ${{ env.UPLOAD_PATH }}
