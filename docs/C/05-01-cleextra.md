@@ -1,4 +1,6 @@
-## CLE Schema **Ready for review** {#cle-schema}
+## CLE JSON example and schema **Ready for review** {#cle-extra}
+
+### Example 
 
 Below is an example of `cle-json`. From the source code,
 the [preprocessor](#preprocessor) produces a json with an array of 
@@ -31,6 +33,8 @@ and label definition/json respectively.
   }
 ]
 ```
+
+### Schema #{cle-schema} 
 
 The preprocessor validates cle-json 
 produced from the source code using [jsonschema](http://json-schema.org/draft-07/schema). 

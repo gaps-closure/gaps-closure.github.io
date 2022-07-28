@@ -36,7 +36,8 @@ The CLOSURE preprocessor is a source transformer that will
 take a given source or header file with CLE annotations, and produce
 
 1. A modified source or header file with LLVM `__attribute__` annotations 
-2. A cle-json file which contains a mapping from each label to its corresponding definition in JSON form.    
+2. A cle-json file which contains a mapping from each label to its corresponding definition in JSON form. See appendix for
+an [example cle-json file](#cle-extra).
 
 The output C of the preprocessor will go to a minimally modified LLVM clang that will support the CLOSURE-specific LLVM `__attribute__` annotations and pass them down to the LLVM IR level.
 
