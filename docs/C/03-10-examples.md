@@ -25,7 +25,7 @@ Example 1 is an exercise in applying annotations, example 2 and example 3 are ex
 
 [Example3 Solution](https://github.com/gaps-closure/build/blob/develop/apps/examples/example3/.solution)
 
-### EoP1 Applications (F2T2EA-inspired)
+### EoP1 Applications (F2T2EA-inspired) {#eop1}
 The EoP1 application is a toy application, loosely based on F2T2EA missions. The application source was provided by the TA4 Integration Partners. It consists of a pre-partitioned C++ message-based application using ActiveMQ to send a variety of messages to coordinate the simulated mission.  The components include:
 - MPU: Mission Planner
 - MPX: Mission Executor
@@ -38,9 +38,6 @@ High-level architecture of the application and message flows shown in the follow
 ![Mission Application](docs/C/images/ma.png)
 
 ![Salient Messages](docs/C/images/salient.png)
-
-The EoP1 Application is a problem of message-flow partitioning (as opposed to code partitioning). CLOSURE supports message-flow partitioning by generating a cross-domain communication component (XDCC) from a [message flow specification](https://github.com/gaps-closure/build/blob/develop/apps/eop1/case1/design/design_spec.json). From the spec, CLOSURE tools generate a C program that subscribes to those messages that will be cross-domain and facilitates their transfer over the guard. When a cross-domain message is received on the remote XDCC, the message is reconstructed and published to ActiveMQ for consumption by the remote enclave components. 
-![XDCC concept](docs/C/images/xdcc.png)
 
 Three cases were evaluated during the end-of-phase demonstration:
 
