@@ -1,13 +1,15 @@
 PANDOC ?= pandoc
 DOCS != find docs/C -name '*.md' | sort 
 TITLE = docs/C/title.txt 
-BIB = docs/C/bibliography.yaml
+BIB = docs/C/bibliography.bib
+CSL= docs/C/bibliography.csl 
 FLAGS = --number-sections \
  		--toc --toc-depth=2 \
 		--standalone \
 		--wrap=auto \
 		--citeproc \
 		--bibliography=$(BIB) \
+		--csl=$(CSL) \
 		--pdf-engine=xelatex
 SOURCES = $(TITLE) $(DOCS)
 

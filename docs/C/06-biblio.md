@@ -1,19 +1,24 @@
-@LTJ
+@minizinc_handbook
+@llvm_manual
+@llvm
+@haskell
+@Z3
+@program_mandering
+@kSplit
+@ptrsplit
+@gaps_github
+@CORE
+@QEMU
+@Docker
+@VSCode
+@DFDL
+
+
 
 # References
 
+<!-- ====TODO===
 **WIP columbia paper**
-**Minizinc handbook**
-**Clang/LLVM**
-**Haskell/Z3**
-**Program mandering paper**
-**K-split**
-**Original PDG paper**
-**java toolchain document**
-**github repos**
-**CORE**
-**QEMU**
-**Docker**
-**VSCode**
 **GEDL heuristic reasoning paper?**
 **DFDL**
+**java toolchain document** -->
