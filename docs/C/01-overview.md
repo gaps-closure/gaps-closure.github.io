@@ -64,33 +64,24 @@ The key submodules of the toolchain include:
 ## Workflow **XXX: Ready for Review**
 The CLOSURE workflow for building cross-domain applications shown in (#fig-workflow) can be viewed at a high-level as three toolchain stages: 1) Annotation-driven development for for correct-by-construction partitions with interactive feedback for guided refactoring, 2) Automated generation of ​cross-domain artifacts, compilation, and verification of partitioned program, and 3) seamless support for heterogeneous GAPS hardware architectures and emulation for pre-deployment testing​​.
 
-![CLOSURE Workflow](docs/C/images/workflow.png){#fig-workflow}
+![CLOSURE Workflow](docs/C/images/workflow.png)
 
 In the first stage, the developer either writes a new application or imports existing source which must be tooled for cross-domain operation. The developer must have knowledge of the intended cross-domain policy - CLOSURE provides means to express this policy in code, but it is the requirements analyst/developer who determines the policy in advance and uses CLE to annotate the program as such. The CLOSURE pre-processor, PDG model, and constraint analysis determine if the annotated partitiong is feasible. If not, feedback and diagnostics are provided back to the developer for guided refactoring towards making the program compliant. Once the program is deemed compliant (via the conflict analyzer), CLOSURE proceeds with automated tooling in which CAPO and associated tools divide the code, generate code for cross-domain Remote Procedure Calls (RPCs), describe the cross-domain data types via DFDL and codec/serialization code, and generates all required configurations for interfacing to the GAPS hardware via the Hardware Abstraction Layer (HAL). In the final stage, the partitioned source trees are compiled for the target host (e.g., x86 or ARM64) and prepared for deployment. 
 
-### C generation from Message-flow models **XXX: Mike working on this**
+### C generation from Message-flow models **XXX: Ready for Review**
+CLOSURE can also be used to support partitioning of message-flow based applications, that is, applications that have already been partitioned into components, but use a messaging service such as ActiveMQ to exchange messages via publish/subscribe blackboard. An application of this type was evaluated during the [EoP1](#eop1) exercises. CLOSURE enables message-flow partitioning by generating a cross-domain communication component (XDCC) from a [message flow specification](https://github.com/gaps-closure/build/blob/develop/apps/eop1/case1/design/design_spec.json). Using the spec, CLOSURE tools generate a C program that subscribes to those messages that will be cross-domain and facilitates their transfer over the guard. When a cross-domain message is received on the remote XDCC, the message is reconstructed and published to ActiveMQ for consumption by the remote enclave components. 
+![XDCC concept](docs/C/images/xdcc.png) See [model-driven analysis](#modeldriven) for more details on how the specification is processed.
 
-**short description here, forward ref to 3.2**
-**eop1 briefing addendum (on teams)**
+The model-driven approach is part of a larger workflow shown in the figure. Rapid capture of message flow data through use of sniffer, wildcard-subscriber, or other instrumentation provides listing of message types and field contents (types can be inferred and tweaked by developer if need be). A design-tool can bthen be used to annotate the message flows, structures, and ross-domain security intent in language-agnostic fashion. Automated generation of CLE annotated XDCC in C language is performered. XDCC program isolates per-message code paths facilitating annotationa and compliant cross-domain partitioning, covering a large class of message-based cross-domain applications. We consider this technique releveant and transitionable to REHL AMQ Interconnect for which it could enable cross-domain message routing.
 
-#### Challenges:​
+![Concept for Design-Level Workflow of Message-Based Applications](docs/C/images/modelworkflow.png) 
+
+**Challenges addressed by CLOSURE Model-Driven Design:**
 
 - Abstraction moved up from partitioning control/data flow of a single program to partitioning message flows of a distributed application​
 - Shifts problem from compilers to design tools​
-- Complex application data structures (nested JSON) vs. flat fixed-formats suitable for hardware guards​
-- Increases formatting and marshalling complexity to match current GAPS hardware capability​
-- CLOSURE program analysis tools are currently more mature for C language, but application written in C++​
-
-#### Capabilities:​
-
-- Design tool for message-based applications that capture components, message flows, message structure, and cross-domain security intent in a language-agnostic fashion​
-- Rapid capture of message flow data through use of sniffer, wildcard-subscriber, or other instrumentation​
-- Automated generation of CLE annotated cross-domain communication component (XDCC) in C language ​
-- XDCC program structure isolates per-message code paths facilitating annotation and compliant cross-domain partitioning​
-- Covers large class of message-based cross-domain applications​
-- Possible transition via mods to RHEL AMQ Interconnect code base
-
-**needs updated message flow workflow figure** 
+- Considers complex application data structures (nested JSON) vs. flat fixed-formats suitable for hardware guards​
+- Increases formatting and marshalling complexity testing flexibility of current GAPS hardware capability​
 
 ## Limitations and language coverage **XXX: Ready for Review** {#limitations} 
 CLOSURE toolchain supports most of the c99 standard with the exception of function pointers, module static functions, macro generated functions, and functions called cross-domain that have arguments other than primitives or fixed size arrays of primitives. Each of these exceptions will be lifted in subsequent releases as we expand our PDG analysis and make the divider syntax-aware. Additionally, CLOSURE  message-flow toolchain supports strictly ActiveMQ-based communication, though the approch is general and can easily be extended to other messaging middlewares as needed. Presently, the CLOSURE C toolchain has been exhaustively tested with 2-enclaves, less so with 3-enclaves (manual involvement required in certain stages otherwise automated - to be resolved in future releases).

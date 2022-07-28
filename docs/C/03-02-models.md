@@ -1,10 +1,120 @@
-## Model driven C generation and checking **XXX: Mike working on this**
+## Model-Driven Analysis **XXX: Needs Review** 
 
-**describe message flow model.json from eop1, needs to be written**
-**README in ect/flowspec**
-**examples in appendix**
+### Specification Format
+A snippet of [EoP1 Message Specification](https://github.com/gaps-closure/build/blob/develop/apps/eop1/case1/design/design_spec.json) is reproduced below. The structure of the specification is as follows:
 
-### How it works
+- **comments**: for human readable purposes, the component, and message types are listed with their unique numbers for easy identification in rest of the file. FlowIDs are formed by combining src/dst component identifiers with message id
+- **topology**: lists the application components, CLE label for the component, and the inflows and outflows.
+- **flows**: listing of all flows, message that traverses the flow, and associated label
+- **messages**: listing of all message types and associated schema
+- **cles**: definition of all CLE labels in the model
+
+```json
+{
+    "comment": [
+      "Case 1: TA3-proposed PEST",
+      "Components [MPU:1,MPX:2,ISRM:3,RDR:5] in orange:1",
+      "Components [EOIR:4, External:6] in green:2",
+      "Messages: ",
+      "component_heartbeats:01",
+      "updateMissionPlan:02",
+      "pnt:03",
+      "requestISRMDetections:04",
+      "recieveISRMDetections:05",
+      "requestEOIRDetections:06",
+      "recieveEOIRDetections:07",
+      "requestRDRDetections:08",
+      "recieveRDRDetections:09",
+      "groundMovers:10",
+      "FlowID (encodes mux and typ): PQMM component P->Q, message MM"
+    ],
+    "topology": [
+        {
+            "component": "MPU",
+            "label": "MPU_CLE_LABEL",
+            "inFlows":  [ 2101, 3101, 4101, 5101 ],
+            "outFlows": [ 1201, 1301, 1401, 1501, 
+                          1202, 1302, 1402, 1502 ]
+        }
+        
+    ],
+    "flows": [
+        {"flowId": 1201,"message":"component_heartbeats","label":"ALLOW_ORANGE_ORANGE"},
+        {"flowId": 1301,"message":"component_heartbeats","label":"ALLOW_ORANGE_ORANGE"},
+        {"flowId": 1401,"message":"component_heartbeats","label":"ALLOW_ORANGE_GREEN"}
+    ],
+    "messages": [
+        {
+            "name": "component_heartbeats",
+            "topic": true,
+            "schemaType": "JSONSchema",
+            "schemaFile": "schema/component_heartbeats_schema.json"
+        },
+        {
+            "name": "updateMissionPlan",
+            "topic": true,
+            "schemaType": "JSONSchema",
+            "schemaFile": "schema/updateMissionPlan_schema.json"
+        }
+        
+    ],    
+    "cles": [
+        {
+            "cle-label": "MPU_CLE_LABEL",
+            "cle-json": {
+                "level": "orange",
+                "cdf": [
+                    {
+                        "remotelevel": "green",
+                        "direction": "egress",
+                        "guarddirective": {
+                            "operation": "allow"
+                        },
+                        "argtaints": [
+                            [ "ALLOW_ORANGE_ORANGE" ],
+                            [ "ALLOW_ORANGE_ORANGE" ],
+                            [ "ALLOW_GREEN_ORANGE" ],
+                            [ "ALLOW_ORANGE_ORANGE" ],
+                            [ "ALLOW_ORANGE_ORANGE" ],
+                            [ "ALLOW_ORANGE_ORANGE" ],
+                            [ "ALLOW_ORANGE_GREEN" ],
+                            [ "ALLOW_ORANGE_ORANGE" ],
+                            [ "ALLOW_ORANGE_ORANGE" ],
+                            [ "ALLOW_ORANGE_ORANGE" ],
+                            [ "ALLOW_ORANGE_GREEN" ],
+                            [ "ALLOW_ORANGE_ORANGE" ]
+                        ],
+                        "codtaints": [
+                        ],
+                        "rettaints": [
+                        ]
+                    }
+                ]
+            }
+        }        
+        {
+            "cle-label": "ALLOW_ORANGE_ORANGE",
+            "cle-json": {
+               "level":"orange",
+               "cdf":[
+                  {
+                     "remotelevel":"orange",
+                     "direction":"egress",
+                     "guarddirective":{
+                        "operation":"allow",
+                        "oneway":true
+                     }
+                  }
+               ]
+            }
+        }
+    ]
+}
+```
+
+### Analyzing the Specification {#modeldriven}
+
+![Flow Solver Workflow](docs/C/images/flowsolver.png)
 
 This is a z3-backed solver/verifier for GAPS-CLOSURE application design
 specifications. It verifies that specifications are self-consistent and can
@@ -23,7 +133,7 @@ english explanation of what went wrong.
 ### Assumptions
 
 The solver currently makes a number of simplifying assumptions about the
-specification, as it is currently in development. I document those assumptions
+specification, as it is currently in development. We document those assumptions
 here.
 
 The simplified specification, explained below, has the following form:
