@@ -8,7 +8,7 @@ The GEDL is a json document specifying all the cross domain calls, and associate
 the types of arguments/return for each cross domain function, and whether that function parameter
 is an input, output or both. If the argument or return is an array, it will list the size of the parameter.
 
-This gedl is generated in an llvm `opt` pass which analyzes the code. Whether a parameter is an input or output is
+This gedl is generated in an llvm `opt` pass which analyzes the divvied code. Whether a parameter is an input or output is
 given by heuristics which dictates whether certain function calls involving function parameters, 
 such as `memset`, determine whether a given parameter is a input and output. If the `opt` pass is unable
 to infer whether a parameter is an input or output, then it will leave placeholders in the gedl json, given
@@ -32,7 +32,7 @@ opt -load libgedl.so
 -suffix <suffix>       Specify suffix for code injection
 ```
 
-### IDL 
+### IDL {#idl}
 
 The IDL is a text file with a set of C style struct data type definitions.
 The IDL syntax is based on C; an IDL file contains one or more C struct datatypes. Two structs are
