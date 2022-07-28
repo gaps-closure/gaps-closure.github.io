@@ -30,7 +30,7 @@ that wrap the function invocations in the cross-domain cut.
 
 ### Introduction to the Conflict Analyzer
 
-### The CLOSURE `preprocessor`
+### The CLOSURE `preprocessor` {#preprocessor}
 
 The CLOSURE preprocessor is a source transformer that will
 take a given source or header file with CLE annotations, and produce

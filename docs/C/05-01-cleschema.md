@@ -1,9 +1,40 @@
-## CLE Schema {#cle-schema}
+## CLE Schema **Ready for review** {#cle-schema}
 
-**example cle-json snippet**
-**mention cle preprocessor validates using this schema**
+Below is an example of `cle-json`. From the source code,
+the [preprocessor](#preprocessor) produces a json with an array of 
+label-json pairs, which are objects with two fields 
+`"cle-label"` and `"cle-json"` for the label name
+and label definition/json respectively. 
 
-CLE schema shown in detail below:
+```json
+[
+  {
+    "cle-label": "PURPLE",
+    "cle-json": {
+      "level": "purple"
+    }
+  },
+  {
+    "cle-label": "ORANGE",
+    "cle-json": {
+      "level": "orange",
+      "cdf": [
+        {
+          "remotelevel": "purple",
+          "direction": "egress",
+          "guarddirective": {
+            "operation": "allow"
+          }
+        }
+      ]
+    }
+  }
+]
+```
+
+The preprocessor validates cle-json 
+produced from the source code using [jsonschema](http://json-schema.org/draft-07/schema). 
+The schema for cle-json is shown in detail below: 
 
 ```json
 {
