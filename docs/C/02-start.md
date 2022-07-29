@@ -2,13 +2,13 @@
 
 ## Prerequisites
 
-To run the CLOSURE C toolchain, you will need the following prerequisites:
+To run the CLOSURE C toolchain @gaps_github, you will need the following prerequisites:
 
 1. Ubuntu Linux 20.04 Desktop
 2. Docker verion 20.10 
 3. Visual Studio Code with Remote Containers Extension
 
-The dockerfile we publish provisions all other dependencies needed for  
+The dockerfile @Docker we publish provisions all other dependencies needed for  
 the CLOSURE toolchain, such as clang, python, and llvm.
 
 ## Installation For CLOSURE Users

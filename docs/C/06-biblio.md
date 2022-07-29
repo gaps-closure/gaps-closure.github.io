@@ -1,4 +1,4 @@
-@minizinc_handbook
+<!-- @minizinc_handbook
 @llvm_manual
 @llvm
 @haskell
@@ -11,14 +11,13 @@
 @QEMU
 @Docker
 @VSCode
-@DFDL
+@DFDL -->
 
-<!-- The above should not be needed once they are all included in the main body of the text     -->
+
 
 # References
 
 <!-- ====TODO===
 **WIP columbia paper**
 **GEDL heuristic reasoning paper?**
-**DFDL**
 **java toolchain document** -->

@@ -53,9 +53,9 @@ Shown on the left of the figure is the Global Security Policy Specification (GSP
 
 The key submodules of the toolchain include:
 
-- **CVI**: CLOSURE Visual Interface. The editor built on top of VSCode. Provides the IDE and co-design tools for cross-domain software development.
+- **CVI**: CLOSURE Visual Interface. The editor built on top of VSCode @VSCode. Provides the IDE and co-design tools for cross-domain software development.
 - **MULES**: Multi-Level Security Source Tools. Source tools containing the CLOSURE Language extensions and CLE schema. Includes a preprocessor which converts CLE annotations to LLVM attributes for clang processing.
-- **CAPO**: Conflict Analyzer Partition Optimizor. CAPO includes the constraint-based conflict analysis tools to determine if a partitioning is feasible. Additional tools in CAPO auto-generate the additional logic needed to make a program cross-domain enabled (i.e., data type marshalling/serialization, RPCs for cross-domain data exchange, interfacing to the device drivers of cross-domain guards, DFDL and rule generation, among others).
+- **CAPO**: Conflict Analyzer Partition Optimizor. CAPO includes the constraint-based conflict analysis tools to determine if a partitioning is feasible. Additional tools in CAPO auto-generate the additional logic needed to make a program cross-domain enabled (i.e., data type marshalling/serialization, RPCs for cross-domain data exchange, interfacing to the device drivers of cross-domain guards, DFDL @DFDL and rule generation, among others).
 - **MBIG**: Multi-Target Binary Generation. Supports compilation to x86 and ARM targets as well as packaging of applications.
 - **HAL**: Hardware-Abstraction-layer. 0MQ based middleware for interopperating with the cross-domain guards.
 - **EMU**: Emulator. Enables test and evaluation of cross-domain applications utilizing QEMU.

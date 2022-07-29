@@ -5,7 +5,7 @@ and either outputs an assignment of every global variable and function to an enc
 or produces some conflicts which describe inconsistencies of the application 
 of the annotations to the code.
 
-The conflict analyzer uses a constraint solver called [MiniZinc](https://www.minizinc.org/doc-2.5.5/en/index.html)  to perform program analysis and determine a correct-by-construction partition that satifies the constraints
+The conflict analyzer uses a constraint solver called [MiniZinc @minizinc_handbook ](https://www.minizinc.org/doc-2.5.5/en/index.html)  to perform program analysis and determine a correct-by-construction partition that satifies the constraints
 specified by the developer using CLE annotations. MiniZinc provides a high level
 language abstraction to express constraint solving problems clearly.
 MiniZinc compiles a MiniZinc language specification of a problem for 
@@ -72,7 +72,7 @@ fine because its very simple substitution
 
 ### `opt` pass for the Program Dependence Graph (PDG)
 
-The Program Dependence Graph (PDG) is an abstraction over a C/C++ program which specifies its control and data dependencies
+The Program Dependence Graph (PDG)@program_mandering @kSplit @ptrsplit is an abstraction over a C/C++ program which specifies its control and data dependencies
 in a graph data structure. It can be used as a library that can be passed to `opt`, and with
 a LLVM representation of the program, generates an SMT representation of the program in `minizinc` which will 
 be used for conflict analysis.
