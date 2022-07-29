@@ -34,7 +34,7 @@ and label definition/json respectively.
 ]
 ```
 
-### Schema #{cle-schema} 
+### Schema {#cle-schema} 
 
 The preprocessor validates cle-json 
 produced from the source code using [jsonschema](http://json-schema.org/draft-07/schema). 

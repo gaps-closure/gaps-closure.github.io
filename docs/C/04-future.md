@@ -1,4 +1,4 @@
-# CLOSURE C Future work **XXX: Ready for review**
+# Future Work **XXX: Ready for review**
 
 In future work, we will work on relaxing the [known limitations](#limitations).
 

@@ -1,7 +1,5 @@
 ## Autogeneration **XXX: Ready for review**
 
-** For where we do not have text, write two sentences on what it does, how it works, then document usage plus forward references to input/output in appendix"
-
 ### GEDL {#gedl}
 
 The GEDL is a json document specifying all the cross domain calls, and associated data such as
