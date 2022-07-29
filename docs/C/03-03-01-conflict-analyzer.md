@@ -117,13 +117,7 @@ from collated cle json to an encoded minizinc instance
 
 ### diagnostics using findMUS
 
-Diagnostic generation produces either commandline output
-containing source and dest node and grouped by constraints 
-
-```
-<constraint_name>: 
-  <source_node_type> @ <file>:<line> -> <dest_node_type> @ <file>:<line>
-``` 
-
-It should also produce a machine readable `conflicts.json` which can be ingested by [CVI](#cvi)
+Diagnostic generation produces commandline output
+containing source and dest node and grouped by the constraints violated in minizinc.
+When given `--output-json` it should also produce a machine readable `conflicts.json` which can be ingested by [CVI](#cvi)
 to show these errors in VSCode.
