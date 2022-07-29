@@ -1,4 +1,4 @@
-## EMU configuration 
+## EMU configuration **Review: Ben** 
 
 ### enclaves.json
 Configuration file that specifies the cross-doamin elments of the scenario nodes and associated topology. Example1 enclaves.json shown below. Key elements include:

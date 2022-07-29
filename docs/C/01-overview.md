@@ -1,6 +1,6 @@
 # CLOSURE Toolchain Overview
 
-## What is CLOSURE? **XXX: Review**
+## What is CLOSURE? **XXX: Review: Rajesh**
 
 DARPA's Guaranteed Architecture for Physical Systems (GAPS) is a research program 
 that addresses software and hardware for compartmentalized applications where

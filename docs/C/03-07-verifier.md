@@ -1,4 +1,4 @@
-## Verifier **XXX: Ben working on this** {#verifier}
+## Verifier **XXX: Review: Max, Rob** {#verifier}
 
 ### ECT/ParTV
 

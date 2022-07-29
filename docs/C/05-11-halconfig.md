@@ -1,4 +1,4 @@
-## HAL Configuration Files **XXX: ready for review** {#halconfig}
+## HAL Configuration Files **Review: Ben** {#halconfig}
 
 ### devices.json {#devices-json}
 **devices.json** provides the interfaces for reading/writing to the employed GAPS devices. Note that different devices can be used in the forward and reverse direction between a pair of enclaves. Device settings for BITW(MIND), BKND (ILIP), and Emulator shown.

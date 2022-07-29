@@ -1,4 +1,4 @@
-## Cross-Domain Communications API **XXX:ready for review** {#xdcommsapi}
+## Cross-Domain Communications API **Review: Tony** {#xdcommsapi}
 
 ### HAL Data-Plane Client API (send/recv API)
 

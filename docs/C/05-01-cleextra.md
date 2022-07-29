@@ -1,4 +1,4 @@
-## CLE JSON example and schema **Ready for review** {#cle-extra}
+## CLE JSON example and schema **Review: Ta** {#cle-extra}
 
 ### Example 
 

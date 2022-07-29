@@ -1,4 +1,4 @@
-## Code Dividing and Refactoring {#divider} **XXX: Ready for Review**
+## Code Dividing and Refactoring {#divider} **XXX: Review: Rob**
 
 Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated application code, and determined that all remaining conflicts are resolvable by RPC-wrapping to result in a security compliant cross-domain partitioned  code, the conflict analyzer will save the code in the refactored directory along with a a topology file (JSON) containing the assignment of every  function and global variable to an enclave/level. A sample topology JSON is provided below. 
 

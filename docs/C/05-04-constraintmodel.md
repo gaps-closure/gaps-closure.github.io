@@ -1,4 +1,4 @@
-## Constraint Model in MiniZinc
+## Constraint Model in MiniZinc **Review: Rob** 
 
 The following contains type declarations
 for the minizinc model used within the [conflict analyzer](#conflict-analyzer).

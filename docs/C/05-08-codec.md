@@ -1,4 +1,4 @@
-## Serialization CODECs **Ready for review**
+## Serialization CODECs **Review: Tony**
 
 Below is a codec.c that is generated from the [`rpc_generator`](#rpc) 
 during autogeneration. The codec contains a print, encode and decode
