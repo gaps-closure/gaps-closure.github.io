@@ -2,3 +2,355 @@
 
 **example of generated RPC showing client main, handler, and rpc-wrapper functions**
 
+The following is the [rpc generated](#rpc) functions for `example1`. Reall that in `example1` 
+there is a single function `get_a` with no arguments in level orange that is called from an enclave in 
+level purple. 
+
+In `example1.c` for purple code, the call to `get_a` is replaced with an rpc call
+
+```c
+
+// ... 
+#pragma cle begin EWMA_MAIN 
+int ewma_main() {
+#pragma cle end EWMA_MAIN 
+  double x;
+  double y;
+#pragma cle begin PURPLE
+  double ewma;
+#pragma cle end PURPLE
+  for (int i=0; i < 10; i++) {
+    x = _err_handle_rpc_get_a(); // was get_a()
+    y = get_b();
+    ewma = calc_ewma(x,y);
+    printf("%f\n", ewma);
+  }
+  return 0;
+}
+// ...
+```
+
+In `purple_rpc.c`, this function has the following definition, which makes a call onto
+the network using 0mq.
+
+```c
+
+#pragma cle begin RPC_GET_A
+double _rpc_get_a(int *error) {
+#pragma cle end RPC_GET_A
+    gaps_tag t_tag;
+    gaps_tag o_tag;
+#ifndef __LEGACY_XDCOMMS__
+    my_tag_write(&t_tag, MUX_REQUEST_GET_A, SEC_REQUEST_GET_A, DATA_TYP_REQUEST_GET_A);
+#else
+    tag_write(&t_tag, MUX_REQUEST_GET_A, SEC_REQUEST_GET_A, DATA_TYP_REQUEST_GET_A);
+#endif /* __LEGACY_XDCOMMS__ */
+#ifndef __LEGACY_XDCOMMS__
+    my_tag_write(&o_tag, MUX_RESPONSE_GET_A, SEC_RESPONSE_GET_A, DATA_TYP_RESPONSE_GET_A);
+#else
+    tag_write(&o_tag, MUX_RESPONSE_GET_A, SEC_RESPONSE_GET_A, DATA_TYP_RESPONSE_GET_A);
+#endif /* __LEGACY_XDCOMMS__ */
+    static int req_counter = INT_MIN;
+    static double last_processed_result = 0;
+    static int last_processed_error = 0;
+    static int inited = 0;
+#ifndef __LEGACY_XDCOMMS__
+    void *psocket;
+    void *ssocket;
+#else
+    static void *psocket;
+    static void *ssocket;
+#endif /* __LEGACY_XDCOMMS__ */
+    #pragma cle begin TAG_REQUEST_GET_A
+    request_get_a_datatype request_get_a;
+    #pragma cle end TAG_REQUEST_GET_A
+    #pragma cle begin TAG_RESPONSE_GET_A
+    response_get_a_datatype response_get_a;
+    #pragma cle end TAG_RESPONSE_GET_A
+    double result;
+#ifndef __LEGACY_XDCOMMS__
+    codec_map  mycmap[DATA_TYP_MAX];
+    for (int i=0; i < DATA_TYP_MAX; i++)  mycmap[i].valid=0;
+    my_xdc_register(request_get_a_data_encode, request_get_a_data_decode, DATA_TYP_REQUEST_GET_A, mycmap);
+    my_xdc_register(response_get_a_data_encode, response_get_a_data_decode, DATA_TYP_RESPONSE_GET_A, mycmap);
+#endif /* __LEGACY_XDCOMMS__ */
+#ifndef __LEGACY_XDCOMMS__
+    void * ctx = zmq_ctx_new();
+    psocket = my_xdc_pub_socket(ctx, (char *)OUTURI);
+    ssocket = my_xdc_sub_socket_non_blocking(o_tag, ctx, 1000, (char*)INURI);
+    sleep(1); /* zmq socket join delay */
+#else
+    if (!inited) {
+        inited = 1;
+        psocket = xdc_pub_socket();
+        ssocket = xdc_sub_socket_non_blocking(o_tag, 1000);
+        sleep(1); /* zmq socket join delay */
+    }
+#endif /* __LEGACY_XDCOMMS__ */
+    request_get_a.dummy = 0;
+    request_get_a.trailer.seq = req_counter;
+#ifndef __LEGACY_XDCOMMS__
+    if (req_counter == INT_MIN) {
+        int tries_remaining = 30;
+        while(tries_remaining != 0){
+            my_xdc_asyn_send(psocket, &request_get_a, &t_tag , mycmap);
+#ifndef __ONEWAY_RPC__
+            *error = my_xdc_recv(ssocket, &response_get_a, &o_tag , mycmap);
+            fprintf(stderr, "REQU get_a: ReqId=%d error=%d tries=%d ", request_get_a.trailer.seq, *error, tries_remaining);
+            if (*error > 0) fprintf(stderr, "ResId=%d Reserr=%d ", response_get_a.trailer.seq >> 2, (response_get_a.trailer.seq >> 1) & 0x01);
+            fprintf(stderr, "t_tag=<%02u, %02u, %02u>, ", t_tag.mux, t_tag.sec, t_tag.typ);
+            fprintf(stderr, "o_tag=<%02u, %02u, %02u>\n", o_tag.mux, o_tag.sec, o_tag.typ);
+            if (*error == -1){
+                tries_remaining--;
+                continue;
+            }
+#else
+            *error = 0;
+            fprintf(stderr, "REQU get_a: ReqId=%d error=%d tries=%d ", request_get_a.trailer.seq, *error, tries_remaining);
+            if (*error > 0) fprintf(stderr, "ResId=%d Reserr=%d ", response_get_a.trailer.seq >> 2, (response_get_a.trailer.seq >> 1) & 0x01);
+            fprintf(stderr, "t_tag=<%02u, %02u, %02u>, ", t_tag.mux, t_tag.sec, t_tag.typ);
+            fprintf(stderr, "o_tag=<%02u, %02u, %02u>\n", o_tag.mux, o_tag.sec, o_tag.typ);
+#endif /* __ONEWAY_RPC__ */
+            break;  /* Reach here if received a response or __ONEWAY_RPC__ */
+        }
+#ifndef __ONEWAY_RPC__
+        if (*error >= 0) req_counter = 1 + (response_get_a.trailer.seq >> 2);
+#else
+        req_counter++;
+#endif /* __ONEWAY_RPC__ */
+    }
+#else /* __LEGACY_XDCOMMS__ */
+    if (req_counter == INT_MIN) {
+        int tries_remaining = 30;
+        while(tries_remaining != 0){
+            xdc_asyn_send(psocket, &request_get_a, &t_tag);
+#ifndef __ONEWAY_RPC__
+            *error = xdc_recv(ssocket, &response_get_a, &o_tag);
+            fprintf(stderr, "REQU get_a: ReqId=%d error=%d tries=%d ", request_get_a.trailer.seq, *error, tries_remaining);
+            if (*error > 0) fprintf(stderr, "ResId=%d Reserr=%d ", response_get_a.trailer.seq >> 2, (response_get_a.trailer.seq >> 1) & 0x01);
+            fprintf(stderr, "t_tag=<%02u, %02u, %02u>, ", t_tag.mux, t_tag.sec, t_tag.typ);
+            fprintf(stderr, "o_tag=<%02u, %02u, %02u>\n", o_tag.mux, o_tag.sec, o_tag.typ);
+            if (*error == -1){
+                tries_remaining--;
+                continue;
+            }
+#else
+            *error = 0;
+            fprintf(stderr, "REQU get_a: ReqId=%d error=%d tries=%d ", request_get_a.trailer.seq, *error, tries_remaining);
+            if (*error > 0) fprintf(stderr, "ResId=%d Reserr=%d ", response_get_a.trailer.seq >> 2, (response_get_a.trailer.seq >> 1) & 0x01);
+            fprintf(stderr, "t_tag=<%02u, %02u, %02u>, ", t_tag.mux, t_tag.sec, t_tag.typ);
+            fprintf(stderr, "o_tag=<%02u, %02u, %02u>\n", o_tag.mux, o_tag.sec, o_tag.typ);
+#endif /* __ONEWAY_RPC__ */
+            break;  /* Reach here if received a response or __ONEWAY_RPC__ */
+        }
+#ifndef __ONEWAY_RPC__
+        if (*error >= 0) req_counter = 1 + (response_get_a.trailer.seq >> 2);
+#else
+        req_counter++;
+#endif /* __ONEWAY_RPC__ */
+    }
+#endif /* __LEGACY_XDCOMMS__ */
+    request_get_a.dummy = 0;
+    request_get_a.trailer.seq = req_counter;
+#ifndef __LEGACY_XDCOMMS__
+    int tries_remaining = 30;
+    while(tries_remaining != 0){
+        my_xdc_asyn_send(psocket, &request_get_a, &t_tag , mycmap);
+#ifndef __ONEWAY_RPC__
+        *error = my_xdc_recv(ssocket, &response_get_a, &o_tag , mycmap);
+        fprintf(stderr, "REQU get_a: ReqId=%d error=%d tries=%d ", request_get_a.trailer.seq, *error, tries_remaining);
+        if (*error > 0) fprintf(stderr, "ResId=%d Reserr=%d ", response_get_a.trailer.seq >> 2, (response_get_a.trailer.seq >> 1) & 0x01);
+        fprintf(stderr, "t_tag=<%02u, %02u, %02u>, ", t_tag.mux, t_tag.sec, t_tag.typ);
+        fprintf(stderr, "o_tag=<%02u, %02u, %02u>\n", o_tag.mux, o_tag.sec, o_tag.typ);
+        if (*error == -1){
+            tries_remaining--;
+            continue;
+        }
+#else
+        *error = 0;
+        fprintf(stderr, "REQU get_a: ReqId=%d error=%d tries=%d ", request_get_a.trailer.seq, *error, tries_remaining);
+        if (*error > 0) fprintf(stderr, "ResId=%d Reserr=%d ", response_get_a.trailer.seq >> 2, (response_get_a.trailer.seq >> 1) & 0x01);
+        fprintf(stderr, "t_tag=<%02u, %02u, %02u>, ", t_tag.mux, t_tag.sec, t_tag.typ);
+        fprintf(stderr, "o_tag=<%02u, %02u, %02u>\n", o_tag.mux, o_tag.sec, o_tag.typ);
+#endif /* __ONEWAY_RPC__ */
+        break;  /* Reach here if received a response or __ONEWAY_RPC__ */
+    }
+    zmq_close(psocket);
+    zmq_close(ssocket);
+    zmq_ctx_shutdown(ctx);
+#else /* __LEGACY_XDCOMMS__ */
+    int tries_remaining = 30;
+    while(tries_remaining != 0){
+        xdc_asyn_send(psocket, &request_get_a, &t_tag);
+#ifndef __ONEWAY_RPC__
+        *error = xdc_recv(ssocket, &response_get_a, &o_tag);
+        fprintf(stderr, "REQU get_a: ReqId=%d error=%d tries=%d ", request_get_a.trailer.seq, *error, tries_remaining);
+        if (*error > 0) fprintf(stderr, "ResId=%d Reserr=%d ", response_get_a.trailer.seq >> 2, (response_get_a.trailer.seq >> 1) & 0x01);
+        fprintf(stderr, "t_tag=<%02u, %02u, %02u>, ", t_tag.mux, t_tag.sec, t_tag.typ);
+        fprintf(stderr, "o_tag=<%02u, %02u, %02u>\n", o_tag.mux, o_tag.sec, o_tag.typ);
+        if (*error == -1){
+            tries_remaining--;
+            continue;
+        }
+#else
+        *error = 0;
+        fprintf(stderr, "REQU get_a: ReqId=%d error=%d tries=%d ", request_get_a.trailer.seq, *error, tries_remaining);
+        if (*error > 0) fprintf(stderr, "ResId=%d Reserr=%d ", response_get_a.trailer.seq >> 2, (response_get_a.trailer.seq >> 1) & 0x01);
+        fprintf(stderr, "t_tag=<%02u, %02u, %02u>, ", t_tag.mux, t_tag.sec, t_tag.typ);
+        fprintf(stderr, "o_tag=<%02u, %02u, %02u>\n", o_tag.mux, o_tag.sec, o_tag.typ);
+#endif /* __ONEWAY_RPC__ */
+        break;  /* Reach here if received a response or __ONEWAY_RPC__ */
+    }
+#endif /* __LEGACY_XDCOMMS__ */
+    req_counter++;
+#ifndef __ONEWAY_RPC__
+    result = response_get_a.ret;
+    return (result);
+#else
+    return 0;
+#endif /* __ONEWAY_RPC__ */
+}
+
+#pragma cle begin ERR_HANDLE_RPC_GET_A
+double _err_handle_rpc_get_a(){
+#pragma cle end ERR_HANDLE_RPC_GET_A
+	int err_num;
+	double res = _rpc_get_a(&err_num);
+	// err handling code goes here
+	return res;
+}
+```
+
+On the orange side, the `main` function is replaced with one which 
+waits for requests from purple repeatedly:
+
+```c
+int main(int argc, char *argv[]) {
+  return _slave_rpc_loop();
+}
+```
+
+The slave rpc loop is defined as follows in a multithreaded environment. It will
+create a separate thread for handling requests for `get_a`   
+
+```c
+#define WRAP(X) void *_wrapper_##X(void *tag) { while(1) { _handle_##X(); } }
+WRAP(request_get_a)
+
+int _slave_rpc_loop() {
+    _hal_init((char *)INURI, (char *)OUTURI);
+    pthread_t tid[NXDRPC];
+    pthread_create(&tid[0], NULL, _wrapper_request_get_a, NULL);
+    for (int i = 0; i < NXDRPC; i++) pthread_join(tid[i], NULL);
+    return 0;
+}
+
+```
+
+These requests are handled by the `_handle_rpc_get_a` function, which calls
+`get_a` internally and sends the response back to purple over the wire. 
+The definition of `_handle_rpc_get_a` is as follows:
+
+```c
+#pragma cle begin HANDLE_REQUEST_GET_A
+void _handle_request_get_a() {
+#pragma cle end HANDLE_REQUEST_GET_A
+    gaps_tag t_tag;
+    gaps_tag o_tag;
+#ifndef __LEGACY_XDCOMMS__
+    my_tag_write(&t_tag, MUX_REQUEST_GET_A, SEC_REQUEST_GET_A, DATA_TYP_REQUEST_GET_A);
+#else
+    tag_write(&t_tag, MUX_REQUEST_GET_A, SEC_REQUEST_GET_A, DATA_TYP_REQUEST_GET_A);
+#endif /* __LEGACY_XDCOMMS__ */
+#ifndef __LEGACY_XDCOMMS__
+    my_tag_write(&o_tag, MUX_RESPONSE_GET_A, SEC_RESPONSE_GET_A, DATA_TYP_RESPONSE_GET_A);
+#else
+    tag_write(&o_tag, MUX_RESPONSE_GET_A, SEC_RESPONSE_GET_A, DATA_TYP_RESPONSE_GET_A);
+#endif /* __LEGACY_XDCOMMS__ */
+    static int res_counter = 0;
+    static double last_processed_result = 0;
+    static int last_processed_error = 0;
+    static int inited = 0;
+#ifndef __LEGACY_XDCOMMS__
+    void *psocket;
+    void *ssocket;
+#else
+    static void *psocket;
+    static void *ssocket;
+#endif /* __LEGACY_XDCOMMS__ */
+    #pragma cle begin TAG_REQUEST_GET_A
+    request_get_a_datatype request_get_a;
+    #pragma cle end TAG_REQUEST_GET_A
+    #pragma cle begin TAG_RESPONSE_GET_A
+    response_get_a_datatype response_get_a;
+    #pragma cle end TAG_RESPONSE_GET_A
+#ifndef __LEGACY_XDCOMMS__
+    codec_map  mycmap[DATA_TYP_MAX];
+    for (int i=0; i < DATA_TYP_MAX; i++)  mycmap[i].valid=0;
+    my_xdc_register(request_get_a_data_encode, request_get_a_data_decode, DATA_TYP_REQUEST_GET_A, mycmap);
+    my_xdc_register(response_get_a_data_encode, response_get_a_data_decode, DATA_TYP_RESPONSE_GET_A, mycmap);
+#endif /* __LEGACY_XDCOMMS__ */
+#ifndef __LEGACY_XDCOMMS__
+    void * ctx = zmq_ctx_new();
+    psocket = my_xdc_pub_socket(ctx, (char *)OUTURI);
+    ssocket = my_xdc_sub_socket(t_tag, ctx, (char*)INURI);
+    sleep(1); /* zmq socket join delay */
+#else
+    if (!inited) {
+        inited = 1;
+        psocket = xdc_pub_socket();
+        ssocket = xdc_sub_socket(t_tag);
+        sleep(1); /* zmq socket join delay */
+    }
+#endif /* __LEGACY_XDCOMMS__ */
+#ifndef __LEGACY_XDCOMMS__
+    int proc_error = 1;
+    while (proc_error == 1) {
+        my_xdc_blocking_recv(ssocket, &request_get_a, &t_tag, mycmap);
+        int req_counter = request_get_a.trailer.seq;
+        if(req_counter > res_counter){
+            proc_error = 0;
+            res_counter = req_counter;
+            last_processed_result = get_a();
+            response_get_a.ret = last_processed_result;
+            last_processed_error = proc_error;
+        }
+#ifndef __ONEWAY_RPC__
+        response_get_a.trailer.seq = res_counter << 2 | last_processed_error << 1;
+        my_xdc_asyn_send(psocket, &response_get_a, &o_tag, mycmap);
+#else /* __ONEWAY_RPC__ */
+        res_counter = req_counter;
+#endif /* __ONEWAY_RPC__ */
+        fprintf(stderr, "RESP get_a: ReqId=%d ResId=%d err=%d (seq=0x%x) ", req_counter, res_counter, proc_error, last_processed_error);
+        fprintf(stderr, "t_tag=<%02u, %02u, %02u>, ", t_tag.mux, t_tag.sec, t_tag.typ);
+        fprintf(stderr, "o_tag=<%02u, %02u, %02u>\n", o_tag.mux, o_tag.sec, o_tag.typ);
+    }
+    zmq_close(psocket);
+    zmq_close(ssocket);
+    zmq_ctx_shutdown(ctx);
+#else
+    int proc_error = 1;
+    while (proc_error == 1) {
+        xdc_blocking_recv(ssocket, &request_get_a, &t_tag);
+        int req_counter = request_get_a.trailer.seq;
+        if(req_counter > res_counter){
+            proc_error = 0;
+            res_counter = req_counter;
+            last_processed_result = get_a();
+            response_get_a.ret = last_processed_result;
+            last_processed_error = proc_error;
+        }
+#ifndef __ONEWAY_RPC__
+        response_get_a.trailer.seq = res_counter << 2 | last_processed_error << 1;
+        xdc_asyn_send(psocket, &response_get_a, &o_tag);
+#else /* __ONEWAY_RPC__ */
+        res_counter = req_counter;
+#endif /* __ONEWAY_RPC__ */
+        fprintf(stderr, "RESP get_a: ReqId=%d ResId=%d err=%d (seq=0x%x) ", req_counter, res_counter, proc_error, last_processed_error);
+        fprintf(stderr, "t_tag=<%02u, %02u, %02u>, ", t_tag.mux, t_tag.sec, t_tag.typ);
+        fprintf(stderr, "o_tag=<%02u, %02u, %02u>\n", o_tag.mux, o_tag.sec, o_tag.typ);
+    }
+#endif /* __LEGACY_XDCOMMS__ */
+}
+```
+
