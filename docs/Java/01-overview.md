@@ -53,4 +53,4 @@ between the program partitions.
 
 
 ## Limitations and language coverage **Needs to be rewritten for java** {#limitations} 
-
+CLOSURE currently supports subset Java version 8. Notable current limitations are a lack of support for multi-threading applications and annotating lambda functions. Additionally, some underlying toolchains used have limited support for large program. Lastly, we currently do not support Android applications. These language limitations are currently being addressed and we plan on supporting them in future releases. The CLOSURE Java tool chain has been demonstrated to support up to 3 enclaves, and can conceptually reason about an arbitrary number of enclaves. 
