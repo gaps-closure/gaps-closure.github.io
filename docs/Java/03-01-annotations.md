@@ -1,4 +1,6 @@
-## Annotations **Virtually the same for Java**
+## Annotations **XXX: Rob**
+
+**Add field  and method annotation example**
 
 The CLOSURE toolchain relies on source level annotations to specify
 the cross domain constraints. Developers annotate programs using CLOSURE Language Extensions (CLE) 

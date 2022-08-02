@@ -1,5 +1,7 @@
 ## CLE JSON example and schema **Should be similar for Java** {#cle-extra}
 
+** Could point to C for CLE JSON Schema **
+
 ### Example 
 
 Below is an example of `cle-json`. From the source code,

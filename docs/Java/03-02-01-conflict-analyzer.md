@@ -1,4 +1,4 @@
-## Phase 2 CLOSURE conflict analyzer based on minizinc constraint solver **Parts of this section can be reused** {#conflict-analyzer}  
+## Phase 2 CLOSURE conflict analyzer based on minizinc constraint solver **XXX: Rob** {#conflict-analyzer}  
 
 The conflict analyzer takes as input a set of source and header files
 and either outputs an assignment of every global variable and function to an enclave,

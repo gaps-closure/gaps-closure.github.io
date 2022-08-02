@@ -1,4 +1,4 @@
-# Installation and Quick Start For Java Closure**Brought in readme for generating cut.json. Needs to be updated with steps after cut.json is generated**
+# Installation and Quick Start For Java Closure **XXX: Ta**
 ## Contents:
 
 * [`Setup`](#Setup)

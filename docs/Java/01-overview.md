@@ -1,4 +1,4 @@
-# CLOSURE Toolchain Overview
+# CLOSURE Toolchain Overview **XXX: Rob rough import then Rajesh Review/Refactor**
 
 ## What is CLOSURE? **XXX: Can be largely reused**
 
@@ -44,7 +44,7 @@ partition if feasible. CLOSURE automatically generates and inserts serialization
 marshalling, and remote-procedure call code for cross-domain interactions
 between the program partitions.
 
-## Architecture **XXX: Requires rewrite for java**
+## Architecture **Requires rewrite for java**
 
 
 

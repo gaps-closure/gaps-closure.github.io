@@ -1,4 +1,4 @@
-### Detailed MiniZinc constraint model **Needs to be updated for Java, flow largely will be the same** {#constraints}
+### Detailed MiniZinc constraint model **XXX: Rob** {#constraints}
 
 The following assumes some familiarity with minizinc syntax. More
 about minizinc, it's usage and syntax can be found [here](https://www.minizinc.org/).
