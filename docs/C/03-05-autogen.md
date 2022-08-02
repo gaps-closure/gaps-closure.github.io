@@ -1,16 +1,12 @@
-## Autogeneration **XXX: Review: Mike**
-
+## Autogeneration **XXX: Done**
+ 
 ### GEDL {#gedl}
 
-The GEDL is a json document specifying all the cross domain calls, and associated data such as
-the types of arguments/return for each cross domain function, and whether that function parameter
-is an input, output or both. If the argument or return is an array, it will list the size of the parameter.
+The GEDL is a JSON document specifying all the cross domain calls and their associated data including the arguments and return type. For function arguments, the directional assignment of that argument is indicated: `input` (a source argument, the function is reading in this value), `output` (a destination argument, the function is writing data to this argument), `both` (the argument is used as both an input and output argument in the function). This specification enables the RPC logic to auto-generate the required code to marshall the data accordingly.
 
-This gedl is generated in an llvm `opt` pass which analyzes the divvied code. Whether a parameter is an input or output is
-given by heuristics which dictates whether certain function calls involving function parameters, 
-such as `memset`, determine whether a given parameter is a input and output. If the `opt` pass is unable
-to infer whether a parameter is an input or output, then it will leave placeholders in the gedl json, given
-by `user_input`. 
+This gedl is generated in an llvm `opt` pass which analyzes the divvied code. Whether a parameter is an input or an output is
+determined using heuristics based on function signatures, for example, in `memset` the first argument is an output. If the `opt` pass is unable
+to infer whether a parameter is an input or output, then it will leave placeholders in the gedl JSON, given by `user_input`. 
 
 The gedl file format is described in `gedl_schema.json` which can be found in the [appendix](#gedl-appendix)
 
@@ -32,7 +28,7 @@ opt -load libgedl.so
 
 ### IDL {#idl}
 
-The IDL is a text file with a set of C style struct data type definitions.
+The IDL is a text file with a set of C style struct data type definitions, used to facilitate subsequent serialization and marshalling of data types.
 The IDL syntax is based on C; an IDL file contains one or more C struct datatypes. Two structs are
 generated for each TAG request and response pair, with the in arguments in the request and the out arguments in the response.
 
@@ -51,9 +47,9 @@ Currently we support the following atomic types:
 9. float (4B)
 10. double (8B). 
 
-Fixed-size arrays of any supported primitive type are also supported.
+Fixed-size arrays of the supported atomic types are also supported.
 
-The `idl_generator` script takes a gedl json and produces the idl. The usage is as follows:
+The `idl_generator` script takes a gedl JSON and produces the idl. The usage is as follows:
 
 ```text
 usage: idl_generator.py [-h] -g GEDL -o OFILE -i {Singlethreaded,Multithreaded} [-s SCHEMA] [-L]
@@ -75,29 +71,28 @@ optional arguments:
 Note: The schema is the gedl schema which validates the input gedl during the IDL generation. 
 `-L` disables this check. `-i` refers to the ipc threading mode. See the [RPC](#rpc) section for more info.
 
-A sample idl can be found in the [appendix](#idl-appendix).
+A sample .idl can be found in the [appendix](#idl-appendix).
 
 ### Codecs {#codecs}
 
-For each struct in the IDL, the codecs for each are generated. The codecs consist of
-encode, decode, print functions for each of the structs, which handle byte order 
-conversions between host and network byte order. 
+For each struct in the IDL, a codecs is generated to faciliate serialization to the remote enclave. The codecs consist of
+encode, decode, print functions for each of the structs, which handle byte order conversions between host and network byte order. 
 
 The codecs can be generated using `hal_autogen` which is described in the [DFDL section](#dfdl).
 
 In addition to the codecs, DFDL description of each serialized request/response is generated
 by the [DFDL writer](#dfdl).
 
-The generated codecs are registered in the 
-hal daemon. The generated rpc code registers these codecs for use of the xdcomms send/recv functions. It includes a rpc_wrapper/handler for each function called cross domain. 
+The generated codecs are registered in the HAL daemon. The generated RPC code registers these codecs for use of the 
+xdcomms send/recv functions. It includes a rpc_wrapper/handler for each function called cross domain. 
 
-### RPC {#rpc}
+### Remote Procedure Call (RPC) {#rpc}
 
 The `rpc_generator.py` is used to generate the `*_rpc.{c,h}` for compilation. The rpc code
-coordinates cross domain function calls and replaces call invocations to cross domain functions
-with ones which marshall and send the data across the network using the generated codecs and IDL. 
+automates cross domain function invocation and replaces calls to those functions
+with ones that additionally marshall and send the data across the network using the generated codecs and IDL. 
 
-The rpc generator has as its input:
+The rpc generator takes as input:
 1. Partitioned application code including name of main program,
 2. CLE annotations for each individual function
 3. The generated gedl
@@ -105,14 +100,14 @@ The rpc generator has as its input:
 5. Base values for `mux`, `sec`, `typ` parameters 
 6. The cle user annotations for reliability parameters (retries, timeout and idempotence). 
 
-It produces C and header files for CLE-annotated RPC code for each partition including the RPC wrapper and peer call handler. 
+It produces C source and header files for CLE-annotated RPC code for each partition including the RPC wrapper and peer call handler. 
 Additionally, a `xdconf.ini` is generated, which a [separate script](#halconf) uses to configure [HAL](#hal). 
 The CLE-annotated RPC code contains the definitions for each `TAG_` request/response pair.
 It also generates the input application code with the following modifications:
 
 1. It adds HAL init and RPC headers to main program
-2. It replaces cross domain calls foo() with _rpc_foo()
-3. On the partition without the main, it will create a main program and a handler loop
+2. It renames cross domain calls in original source from foo() to _rpc_foo()
+3. On the partition without the main, it will create a main program and a handler loop awaiting the RPC calls
              
 Additionally, there are two IPC modes for the generated rpc code, which either can either generate
 singlethreaded or multithreaded rpc handlers. The multithreaded mode provides one RPC handler thread per cross domain function, while the singlethreaded mode has one global rpc handler for all
@@ -188,7 +183,7 @@ optional arguments:
 
 ### HAL configuration forwarding rules {#halconf}
 
-The `hal_autoconfig.py` script takes a [`xdconf.ini`](#xdconf) generated by the [rpc generator](#rpc) and a [`devices.json`](#devices-json) and combines them to produce a hal configuration, the format of which is described in the [next section](#Hal-Configuration). 
+The `hal_autoconfig.py` script takes a [`xdconf.ini`](#xdconf) generated by the [rpc generator](#rpc) and a [`devices.json`](#devices-json) and combines them to produce a HAL configuration, the format of which is described in the [next section](#Hal-Configuration). 
 
 ```text
 usage: hal_autoconfig.py [-h] [-d JSON_DEVICES_FILE] [-o OUTPUT_DIR] [-p OUTPUT_FILE_PREFIX] [-v]
@@ -210,4 +205,4 @@ optional arguments:
 ```
 
 Here, the `-d` refers to the device config and the `-x` refers to the `xdconf.ini` file.
-An example hal configuration can be found in the [appendix](#hal-orange).
+An example HAL configuration can be found in the [appendix](#hal-orange).
