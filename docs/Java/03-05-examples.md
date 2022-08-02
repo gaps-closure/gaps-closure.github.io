@@ -1,5 +1,5 @@
 ## Example applications **XXX: Rob** {#examples} 
-
+ 
 
 ### EoP1 Applications (F2T2EA-inspired) {#eop1}
 The EoP1 application is a toy application, loosely based on F2T2EA missions. The application source was provided by the TA4 Integration Partners. It consists of a pre-partitioned C++ message-based application using ActiveMQ to send a variety of messages to coordinate the simulated mission.  The components include:
