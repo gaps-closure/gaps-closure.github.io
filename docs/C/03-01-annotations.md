@@ -1,8 +1,8 @@
-## Annotations **XXX: Review: Mike**
+## Annotations **XXX: Needs more discussion about label coercion**
 
 The CLOSURE toolchain relies on source level annotations to specify
 the cross domain constraints. Developers annotate programs using CLOSURE Language Extensions (CLE) 
-to specifycross-domain security constraints. Each CLE annotation definition associates
+to specify cross-domain security constraints. Each CLE annotation definition associates
 a _CLE label_ (a symbol) with a _CLE JSON_ which provides detailed specification
 of cross-domain data sharing and function invocation constraints.
 
@@ -17,10 +17,10 @@ Typically, these annotations are only applied to a subset of the program
 and a separate tool called the _conflict analyzer_ is able infer the CLE labels 
 of the rest of the program elements given this subset.
 
-### A simple annotation  
+### A Simple Annotation
 
-We can associate a _label_ with some json which describes constraints
-the cross domain properties of program elements, forming 
+We can associate a _label_ with some JSON which describes constraints
+on the cross domain properties of program elements, forming 
 a CLE definition. This is done using a custom `#pragma cle` 
 within the C source:
 
@@ -29,7 +29,7 @@ within the C source:
 ```
 
 The example above provides a minimal cle definition which can 
-constraint a global variable. In order to apply such a definition
+constrain a global variable. In order to apply such a definition
 to some global variable you can use `#pragma cle begin/end`:
 
 ```c
@@ -45,13 +45,13 @@ or more simply
 int bar = 0;
 ```
 
-Now look at the json in the label definition more closely:
+Now look at the JSON in the label definition more closely:
 
 ```c
 #pragma cle def FOO { "level": "orange" } 
 ```
 
-The json specifies a `"level"` field set to `"orange"`. The level is like 
+The JSON specifies a `"level"` field set to `"orange"`. The level is like 
 security level, but there is no requirement for an ordering among the levels.
 A single level may correspond to many enclaves, but in most cases they will
 be in a bijection with the enclaves. The level names can be any string.
@@ -66,7 +66,7 @@ within the GAPS program).
 When applying the `FOO` label to `int bar`, we effectively pin `bar`
 to a single level `"orange"`.
 
-### An annotation with cdf
+### An Annotation with Cross-Domain Flow (cdf) Definition
 
 The next example shows another label definition, this time with
 a new field called `cdf`, standing for cross-domain flow.
@@ -80,24 +80,26 @@ a new field called `cdf`, standing for cross-domain flow.
   ] }
 ```
 
-The `"direction"` field is currently not used and is ignored by the CLOSURE toolchain. This may be removed in a future version.
-
 Here, the `"remotelevel"` field specifies that the 
 program element the label is applied to can be shared with an enclave
 so long as its level is `"purple"`. The `"guarddirective": { "operation": "allow"}}`
 defines how data gets transformed as it goes across enclaves. 
-In this case, `{ "operation": "allow" }` simply allows the data to pass uninhibited.
+In this case, `{ "operation": "allow" }` simply allows the data to pass uninhibited. 
+The `"direction"` field is currently not used and is ignored by the CLOSURE toolchain (may be removed in future release).
 
 The `cdf` is an array, and data can be released into more than one enclave. 
 Each object within the `cdf` array is called a `cdf`.
 
-### Function annotations  
 
-Broadly there are two types of annotations, which are node annotations and function
-annotations. The previous examples showcased node annotations, but function annotations
-allows for functions to be called cross domain, and data to be passed between them.  
 
-Function annotations look similar to node annotations, but contain three extra fields
+
+### Function Annotations  
+
+Broadly there are two types of annotations: 1) data annotations and 2) function
+annotations. The previous examples showcased data annotations, but function annotations
+allow for functions to be called cross domain, and data to be passed between them.  
+
+Function annotations look similar to data annotations, but contain three extra fields
 within each cdf, `argtaints`, `codtaints` and `rettaints`.
 
 ```c
@@ -123,13 +125,13 @@ within each cdf, `argtaints`, `codtaints` and `rettaints`.
   ] }
 ```
 
-A function annotation works similarly to a node annotation, except now, the `cdf` field
-specifies levels in which enclaves of that level can call a given function. 
-Function annotations are also different than node annotations as they contain the 
-three `taints` fields.
+In a function annotation, the `cdf` field
+specifies remote levels permitted to call the annotated function. 
+Function annotations are also different from data annotations as they contain  
+`taints` fields.
 
-A taint simply refers to a label or an assigned label by the conflict analyzer. There are
-three different constraints involving taints in functions, `argtaints`, `codtaints` and `rettaints`.
+A taint refers to a label or an assigned label by the conflict analyzer for a given data element. There are
+three different taint types to describe the inputs, body, and outputs of a function: `argtaints`, `codtaints` and `rettaints` respectively. Each portion of the function may only touch data tainted with the label(s) specified by the function annotation:
 `rettaints` constrains which labels the return value of a function may be assigned. Similarly, 
 `argtaints` constrains the assigned labels for each argument. This field is a 2D-array, mapping each argument of the function to a list of assignable labels. 
 `codtaints` includes any other additional labels that may appear in the body. 
@@ -137,26 +139,24 @@ Function annotations can coerce between labels of the same level, so it is expec
 these functions are to be audited by the developer. Often, the developer will add a cdf where the 
 remotelevel is the same as the level of the annotation, just to perform some coercion.
 
-Note: the word taint simply refers to an assigned label, either determined by the conflict analyzer
-or directly assigned by a user.
 
-**XXX: Integrate/cleanup**
+Optional fields in function annotations include
+- idempotent: indicates function can be called repeatedly (e.g., when messages are lost in the network, you RPC logic can reissue the request)
+- num_tries: Upon failure, how many attempts to call a function cross domain before giving up 
+- timeout: controls the timeout for the cross domain read function (see [`xdc_recv` function](#xdcomms-send-recv)).
 
-- Idempotent: function called cross domain is idempotent and can be called repeatedly (e.g., when messages are lost in the network, you can reissue the request)
-- Number of tries: Upon failure, how many attempts to call a function cross domain before giving up 
-- Timeout: controls the timeout for the cross domain read function (see [`xdc_recv` function](#xdcomms-send-recv)).
 
+### Label Coercion
+**XXX: TODO: discussion**
 
 ### TAGs
 
-In the `XDLINKAGE_GET_A` label, there is `TAG_RESPONSE_GET_A` label. This is a specialized label
-name which does not have a definition. 
-The definitions for these `TAG_` labels are generated automatically with the autogenerated code, and assign mux/sec/typ parameters to the data before it's sent cross domain. 
-For every cross domain call there are two `TAG_` labels generated for receiving and transmitting data, called `TAG_REQUEST_` and `TAG_RESPONSE_`. Each generated tag label has a suffix which is the name of the function it is being applied to in capital letters.  
+In the `XDLINKAGE_GET_A` label, there is `TAG_RESPONSE_GET_A` label. This is a reserved label
+name which does not require a user-provided definition. The definitions for these `TAG_` labels are generated automatically by the toolchain; for every cross domain call there are two `TAG_` labels generated for receiving and transmitting data, called `TAG_REQUEST_` and `TAG_RESPONSE_`. Each generated tag label has a suffix which is the name of the function it is being applied to in capital letters. The label indicates associated data is the result if incoming or outgoing data specific to the RPC logic. This supports verification of data types involved in the cross-domain cut and that only intended data crosses the associated RPC. 
 
 ### Example cross domain function
 
-Let's say there are two functions `double foo(double x, double y);` which resides in level `purple`
+Consider `double foo(double x, double y);` which resides in level `purple`
 and `void bar()` which resides in level `orange`, and the intent is that `bar` will call `foo`
 cross domain. A full specification of this interaction using CLE annotations is presented as follows:
 
@@ -214,10 +214,7 @@ double bar(double x, double y) {
 }
 ```
 
-Here there are two label coercions being done. One from the caller side from `ORANGE` to the tags of `foo` 
-and the other on the callee side from the tags of `bar` to `PURPLE` and back again. These coercions
+In this examlpe there are two label coercions. One from the caller side from `ORANGE` to the tags of `foo` 
+and the other on the callee side from the tags of `bar` to `PURPLE` and back. These coercions
 are needed because the autogenerated code only works on data cross domain with the tag labels.
-In the future, the user will be able to specify these tag labels, so that less coercion is needed.
-
-
-
+Future releases may permit users to specify these tag labels, so that less coercion is needed.
