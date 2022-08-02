@@ -1,21 +1,269 @@
 ---
-nocite: "[@*]"
 references:
-- author:
+- id: minizinc_handbook
+  type: no-type
+  author:
+  - family: Stuckey
+    given: Peter J.
+  - family: Marriott
+    given: Kim
+  - family: Tack
+    given: Guido
+  issued:
+  - year: 2022
+  title: The minizinc handbook
+  container-title: The MiniZinc Handbook - The MiniZinc Handbook 2.5.5
+  URL: https://www.minizinc.org/doc-2.5.5/en/index.html
+
+- id: llvm_manual
+  type: no-type
+  issued:
+  - year: 2022
+    month: 7
+  title: LLVM language reference manual
+  container-title: LLVM Language Reference Manual
+  publisher: LLVM Project
+  URL: https://llvm.org/docs/LangRef.html
+
+- id: llvm
+  type: paper-conference
+  author:
+  - family: Lattner
+    given: C.
+  - family: Adve
+    given: V.
+  issued:
+  - year: 2004
+  title: 'LLVM: A compilation framework for lifelong program analysis & transformation'
+  title-short: LLVM
+  container-title: International symposium on code generation and optimization, 2004.
+    CGO 2004.
+  page: 75-86
+  DOI: 10.1109/CGO.2004.1281665
+
+- id: haskell
+  type: article-journal
+  author:
+  - family: Marlow
+    given: Simon
+  - literal: others
+  issued:
+  - year: 2010
+  title: Haskell 2010 language report
+  container-title: Available online http://www.haskell.org/(May 2011)
+
+- id: Z3
+  type: paper-conference
+  author:
+  - family: De Moura
+    given: Leonardo
+  - family: Bjørner
+    given: Nikolaj
+  issued:
+  - year: 2008
+  title: 'Z3: An efficient smt solver'
+  title-short: Z3
+  container-title: Proceedings of the theory and practice of software, 14th international
+    conference on tools and algorithms for the construction and analysis of systems
+  collection-title: TACAS’08/etaps’08
+  publisher: Springer-Verlag
+  publisher-place: Berlin, Heidelberg
+  page: 337-340
+  abstract: 'Satisfiability Modulo Theories (SMT) problem is a decision problem for
+    logical first order formulas with respect to combinations of background theories
+    such as: arithmetic, bit-vectors, arrays, and uninterpreted functions. Z3 is a
+    new and efficient SMT Solver freely available from Microsoft Research. It is used
+    in various software verification and analysis applications.'
+  ISBN: '3540787992'
+
+- id: program_mandering
+  type: paper-conference
+  author:
+  - family: Liu
+    given: Shen
+  - family: Zeng
+    given: Dongrui
+  - family: Huang
+    given: Yongzhe
+  - family: Capobianco
+    given: Frank
+  - family: McCamant
+    given: Stephen
+  - family: Jaeger
+    given: Trent
+  - family: Tan
+    given: Gang
+  issued:
+  - year: 2019
+  title: 'Program-mandering: Quantitative privilege separation'
+  title-short: Program-mandering
+  container-title: Proceedings of the 2019 acm sigsac conference on computer and communications
+    security
+  collection-title: CCS ’19
+  publisher: Association for Computing Machinery
+  publisher-place: New York, NY, USA
+  page: 1023-1040
+  abstract: 'Privilege separation is an effective technique to improve software security.
+    However, past partitioning systems do not allow programmers to make quantitative
+    tradeoffs between security and performance. In this paper, we describe our toolchain
+    called PM. It can automatically find the optimal boundary in program partitioning.
+    This is achieved by solving an integer-programming model that optimizes for a
+    user-chosen metric while satisfying the remaining security and performance constraints
+    on other metrics. We choose security metrics to reason about how well computed
+    partitions enforce information flow control to: (1) protect the program from low-integrity
+    inputs or (2) prevent leakage of program secrets. As a result, functions in the
+    sensitive module that fall on the optimal partition boundaries automatically identify
+    where declassification is necessary. We used PM to experiment on a set of real-world
+    programs to protect confidentiality and integrity; results show that, with moderate
+    user guidance, PM can find partitions that have better balance between security
+    and performance than partitions found by a previous tool that requires manual
+    declassification.'
+  keyword: integer programming, automatic program partitioning, privilege separation
+  URL: https://doi.org/10.1145/3319535.3354218
+  DOI: 10.1145/3319535.3354218
+  ISBN: '9781450367479'
+
+- id: kSplit
+  type: paper-conference
+  author:
+  - family: Huang
+    given: Yongzhe
+  - family: Narayanan
+    given: Vikram
+  - family: Detweiler
+    given: David
+  - family: Huang
+    given: Kaiming
+  - family: Tan
+    given: Gang
+  - family: Jaeger
+    given: Trent
+  - family: Burtsev
+    given: Anton
+  issued:
+  - year: 2022
+    month: 7
+  title: 'KSplit: Automating device driver isolation'
+  title-short: KSplit
+  container-title: 16th usenix symposium on operating systems design and implementation
+    (osdi 22)
+  publisher: USENIX Association
+  publisher-place: Carlsbad, CA
+  page: 613-631
+  URL: https://www.usenix.org/conference/osdi22/presentation/huang-yongzhe
+  ISBN: 978-1-939133-28-1
+
+- id: ptrsplit
+  type: paper-conference
+  author:
   - family: Liu
     given: Shen
   - family: Tan
     given: Gang
   - family: Jaeger
     given: Trent
-  doi: 10.1145/3133956.3134066
-  id: LTJ
-  isbn: 978-1-4503-4946-8
-  issued: 2017-10
-  page: 2359-2371
-  title: "PtrSplit: Supporting general pointers in automatic program
-    partitioning"
+  issued:
+  - year: 2017
+  title: 'PtrSplit: Supporting general pointers in automatic program partitioning'
   title-short: PtrSplit
-  type: paper-conference
----
+  container-title: Proceedings of the 2017 acm sigsac conference on computer and communications
+    security
+  collection-title: CCS ’17
+  publisher: Association for Computing Machinery
+  publisher-place: New York, NY, USA
+  page: 2359-2371
+  abstract: Partitioning a security-sensitive application into least-privileged components
+    and putting each into a separate protection domain have long been a goal of security
+    practitioners and researchers. However, a stumbling block to automatically partitioning
+    C/C++ applications is the presence of pointers in these applications. Pointers
+    make calculating data dependence, a key step in program partitioning, difficult
+    and hard to scale; furthermore, C/C++ pointers do not carry bounds information,
+    making it impossible to automatically marshall and unmarshall pointer data when
+    they are sent across the boundary of partitions. In this paper, we propose a set
+    of techniques for supporting general pointers in automatic program partitioning.
+    Our system, called PtrSplit, constructs a Program Dependence Graph (PDG) for tracking
+    data and control dependencies in the input program and employs a parameter-tree
+    approach for representing data of pointer types; this approach is modular and
+    avoids global pointer analysis. Furthermore, it performs selective pointer bounds
+    tracking to enable automatic marshalling/unmarshalling of pointer data, even when
+    there is circularity and arbitrary aliasing. As a result, PtrSplit can automatically
+    generate executable partitions for C applications that contain arbitrary pointers.
+  keyword: data marshalling, automatic program partitioning, bounds tracking
+  URL: https://doi.org/10.1145/3133956.3134066
+  DOI: 10.1145/3133956.3134066
+  ISBN: '9781450349468'
 
+- id: gaps_github
+  type: no-type
+  issued:
+  - year: 2022
+  title: Gaps closure project
+  publisher: GitHub
+  URL: https://github.com/gaps-closure
+
+- id: CORE
+  type: no-type
+  issued:
+  - year: 2022
+  title: Common open research emulator (core)
+  publisher: U.S. Naval Research Laboratory
+  URL: https://www.nrl.navy.mil/Our-Work/Areas-of-Research/Information-Technology/NCS/CORE/
+
+- id: QEMU
+  type: paper-conference
+  author:
+  - family: Bellard
+    given: Fabrice
+  issued:
+  - year: 2005
+  title: QEMU, a fast and portable dynamic translator
+  container-title: Proceedings of the annual conference on usenix annual technical
+    conference
+  collection-title: ATEC ’05
+  publisher: USENIX Association
+  publisher-place: USA
+  page: '41'
+  abstract: We present the internals of QEMU, a fast machine emulator using an original
+    portable dynamic translator. It emulates several CPUs (x86, PowerPC, ARM and Sparc)
+    on several hosts (x86, PowerPC, ARM, Sparc, Alpha and MIPS). QEMU supports full
+    system emulation in which a complete and unmodified operating system is run in
+    a virtual machine and Linux user mode emulation where a Linux process compiled
+    for one target CPU can be run on another CPU.
+
+- id: Docker
+  type: article-journal
+  author:
+  - family: Merkel
+    given: Dirk
+  issued:
+  - year: 2014
+  title: 'Docker: Lightweight linux containers for consistent development and deployment'
+  title-short: Docker
+  container-title: Linux journal
+  page: '2'
+  volume: '2014'
+  issue: '239'
+
+- id: VSCode
+  type: no-type
+  issued:
+  - year: 2022
+  title: Visual studio code
+  container-title: Visual Studio Code - Code editing. Redefined.
+  publisher: Microsoft
+  URL: https://code.visualstudio.com/
+
+- id: DFDL
+  type: no-type
+  author:
+  - family: Beckerle
+    given: Michael J
+  - family: Hanson
+    given: Stephen M
+  issued:
+  - year: 2022
+  title: Data format description language (dfdl) v1.0 specification
+  container-title: Data Format Description Language (DFDL) v1.0 Specification
+  publisher: The Apache Software Foundation
+  URL: https://daffodil.apache.org/docs/dfdl/
+...
