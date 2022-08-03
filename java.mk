@@ -3,6 +3,7 @@ DOCS != find docs/Java -name '*.md' | sort
 TITLE = docs/Java/title.txt 
 BIB = docs/Java/bibliography.yaml
 FLAGS = --number-sections \
+		--resource-path docs/Java \
  		--toc --toc-depth=2 \
 		--standalone \
 		--wrap=auto \

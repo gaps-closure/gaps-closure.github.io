@@ -4,6 +4,7 @@ TITLE = docs/C/title.txt
 BIB = docs/C/bibliography.bib
 CSL= docs/C/bibliography.csl 
 FLAGS = --number-sections \
+		--resource-path docs/C \
  		--toc --toc-depth=2 \
 		--standalone \
 		--wrap=auto \
