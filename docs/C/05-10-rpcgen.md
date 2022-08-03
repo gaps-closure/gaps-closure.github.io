@@ -13,7 +13,7 @@ The RPC generator creates:
 - **RPC CODE** for each enclave. For example it may create orange_rpc.{c,h} for the orange enclave and purple_rpc.{c,h} for the purple enclave. The rpc code in each enclave communicates with remote enclave using the HAL API, with the addition of custom ARQ to support more reliable RPC request and reply communications. 
 - **HAL Cross Domain Configuration File** (xdconf.ini), which contains the information the assignment of tags <mux, sec, type> for each functions unidirectional flow between enclave pairs.
 
-The RPC generator has modes of operation instantiated using C preprocessor macros for conditional compilation (e.g,, vscode Makefile CFLAGS, CLAG_FLAGS or IPC_MODE). The three modes of operation select between two configuration options: 
+The RPC generator has modes of operation instantiated using C preprocessor macros for conditional compilation (e.g,, vscode Makefile CFLAGS, CLAG_FLAGS or IPC_MODE). Each of the three modes of operation select between two RPC generator configuration options: 
 1) **singlethreaded vs. multithreaded (default) Receiver**
     - *multithreaded* provides one RPC listener/subscriber thread per XD function. The RPC protocol is simply get request, run function, send response
     - *singlethreaded* is a special case for completely singlethreaded programs. It adds an extra message exchange (NEXT/OKAY) for single listener thread:
