@@ -3,8 +3,6 @@
 The following assumes some familiarity with minizinc syntax. More
 about minizinc, it's usage and syntax can be found [here](https://www.minizinc.org/).
 
-#### Role of the Contraint Solver
-
 In the model below, the `nodeEnclave` decision variable stores the enclave
 assignment for each node, the `taint` decision variable stores the label
 assignment for each node, and the `xdedge` decision variable stores whether a
@@ -13,11 +11,7 @@ edge are in different enclaves. Several other auxiliary decision variables are
 used in the constraint model to express the constraints or for efficient
 compilation. They are described later in the model.
 
-The solver will assign a node annotation label (rather than a function
-annotation which only the user can assign) to functions not annotated by the
-user. Such functions cannot be invoked cross-domain, and across all
-invocations, they must be singly tainted. In other words, arguments, return,
-and function body can contain or touch nodes that match the taint.  
+The solver will attempt to assign a node annotation label to all nodes except a user annotated function. Only user annotated functions may have a function annotation. Functions lacking a function annotation cannot be invoked cross-domain and can only have exactly one taint accross all invocations. This ensures that the arguments, return and function body only touch the same taint. 
 
 #### General Constraints on Output and Setup of Auxiliary Decision Variables
 
