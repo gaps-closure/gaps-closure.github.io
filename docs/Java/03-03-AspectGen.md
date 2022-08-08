@@ -202,11 +202,18 @@ The following diagram depicts both the process of object instantiation and metho
 
 ![CLOSURE architecture](docs/Java/images/methodInvoke.png){#invoke}
 
+To build CodeGenJava from source, do the following
+
+```bash
+$ cd CodeGenJava
+$ ant
+```
+If successful, it will create a directory named code-gen conaining a jar file, code-gen.jar and a subdirectory named resources. In addition, for convenience, a zip file, code-gen.zip, is also generated. It contains the same contents as the code-gen directory.
 
 The usage of the program CodeGenJava is straightforward:
 
 ```bash
-$ java -jar code-gen.jar -h
+$ java -jar code-gen/code-gen.jar -h
 GAPS/Closure Java Code Generator
   -h/--help                    this help
   -c/--cutJson <cut.json>      cut JSON file (test/cut.json)

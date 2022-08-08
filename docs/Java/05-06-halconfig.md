@@ -3,7 +3,6 @@
 ### devices.json {#devices-json}
 **devices.json** provides the interfaces for reading/writing to the employed GAPS devices. Note that different devices can be used in the forward and reverse direction between a pair of enclaves. Device settings for BITW(MIND), BKND (ILIP), and Emulator shown.
 
-**Bump-in-the-Wire (MIND device)**
 ```
 {
   "devices": [
@@ -16,61 +15,32 @@
     {
       "model":          "sdh_bw_v1",
       "path":           "lo",
-      "comms":          "udp",
-      "enclave_name_1": "orange",
-      "listen_addr_1":  "10.0.0.1",
-      "listen_port_1":  6788,
-      "enclav_name_2":  "purple",
-      "listen_addr_2":  "10.0.1.1",
-      "listen_port_2":  6788
-    }
-  ]
-}
-```
-
-**Bookends (ILIP Device)**
-```
-{
-  "devices": [
-    {
-      "model":    "sdh_ha_v1",
-      "comms":    "zmq",
-      "mode_in":  "sub",
-      "mode_out": "pub"
+      "comms":          "tcp",
+      "enclave_name_1": "purple_E",
+      "listen_addr_1":  "127.0.0.1",
+      "listen_port_1":  6789,
+      "connect_addr_1": "127.0.0.1",
+      "connect_port_1": 6788,
+      "enclave_name_2":  "orange_E",
+      "listen_addr_2":  "127.0.0.1",
+      "listen_port_2":  6788,
+      "connect_addr_2": "127.0.0.1",
+      "connect_port_2": 6789
     },
     {
-      "model":          "sdh_be_v3",
-      "path":           "/dev/gaps_ilip_0_root",
-      "comms":          "ilp",
-      "enclave_name_1": "green",
-      "path_r_1":       "/dev/gaps_ilip_2_read",
-      "path_w_1":       "/dev/gaps_ilip_2_write",
-      "from_mux_1":     11,
-      "init_at_1":      1,
-      "enclave_name_2": "orange",
-      "path_r_2":       "/dev/gaps_ilip_2_read",
-      "path_w_2":       "/dev/gaps_ilip_2_write",
-      "from_mux_2":     12,
-      "init_at_2":      1
-    }
-  ]
-}
-```
-
-**Emulator (socat device)**
-```
-{
-  "devices": [
-    {
-      "model":    "sdh_ha_v1",
-      "comms":    "zmq",
-      "mode_in":  "sub",
-      "mode_out": "pub"
-    },
-    {
-      "model":    "sdh_socat_v1",
-      "path":     "/dev/vcom",
-      "comms":    "tty"
+      "model":          "sdh_bw_v1",
+      "path":           "lo",
+      "comms":          "tcp",
+      "enclave_name_1": "purple_E",
+      "listen_addr_1":  "127.0.0.1",
+      "listen_port_1":  6791,
+      "connect_addr_1": "127.0.0.1",
+      "connect_port_1": 6790,
+      "enclave_name_2":  "green_E",
+      "listen_addr_2":  "127.0.0.1",
+      "listen_port_2":  6790,
+      "connect_addr_2": "127.0.0.1",
+      "connect_port_2": 6791
     }
   ]
 }
@@ -82,80 +52,215 @@
 {
   "enclaves": [
     {
-      "enclave": "orange",
-      "inuri": "ipc:///tmp/sock_suborange",
-      "outuri": "ipc:///tmp/sock_puborange",
+      "enclave": "green_E",
+      "inuri": "ipc:///tmp/tchalsubgreen_e",
+      "outuri": "ipc:///tmp/tchalpubgreen_e",
       "halmaps": [
         {
-          "from": "purple",
-          "to": "orange",
-          "mux": 2,
-          "sec": 2,
-          "typ": 1,
-          "name": "nextrpc_purple_orange"
-        },
-        {
-          "from": "orange",
-          "to": "purple",
-          "mux": 1,
-          "sec": 1,
-          "typ": 2,
-          "name": "okay_purple_orange"
-        },
-        {
-          "from": "purple",
-          "to": "orange",
-          "mux": 2,
-          "sec": 2,
+          "from": "purple_E",
+          "to": "green_E",
+          "mux": 3,
+          "sec": 3,
           "typ": 3,
-          "name": "request_get_a"
+          "name": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.start.int.java.lang.String"
         },
         {
-          "from": "orange",
-          "to": "purple",
+          "from": "green_E",
+          "to": "purple_E",
           "mux": 1,
           "sec": 1,
           "typ": 4,
-          "name": "response_get_a"
+          "name": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.start.int.java.lang.String_rsp"
+        },
+        {
+          "from": "purple_E",
+          "to": "green_E",
+          "mux": 3,
+          "sec": 3,
+          "typ": 7,
+          "name": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.getRequest"
+        },
+        {
+          "from": "green_E",
+          "to": "purple_E",
+          "mux": 1,
+          "sec": 1,
+          "typ": 8,
+          "name": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.getRequest_rsp"
+        },
+        {
+          "from": "purple_E",
+          "to": "green_E",
+          "mux": 3,
+          "sec": 3,
+          "typ": 11,
+          "name": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.send.java.lang.String.byte[]"
+        },
+        {
+          "from": "green_E",
+          "to": "purple_E",
+          "mux": 1,
+          "sec": 1,
+          "typ": 12,
+          "name": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.send.java.lang.String.byte[]_rsp"
         }
       ]
     },
     {
-      "enclave": "purple",
-      "inuri": "ipc:///tmp/sock_subpurple",
-      "outuri": "ipc:///tmp/sock_pubpurple",
+      "enclave": "purple_E",
+      "inuri": "ipc:///tmp/tchalsubpurple_e",
+      "outuri": "ipc:///tmp/tchalpubpurple_e",
       "halmaps": [
         {
-          "from": "purple",
-          "to": "orange",
-          "mux": 2,
-          "sec": 2,
+          "from": "purple_E",
+          "to": "orange_E",
+          "mux": 4,
+          "sec": 4,
           "typ": 1,
-          "name": "nextrpc_purple_orange"
+          "name": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.start.int.java.lang.String"
         },
         {
-          "from": "orange",
-          "to": "purple",
-          "mux": 1,
-          "sec": 1,
+          "from": "orange_E",
+          "to": "purple_E",
+          "mux": 6,
+          "sec": 6,
           "typ": 2,
-          "name": "okay_purple_orange"
+          "name": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.start.int.java.lang.String_rsp"
         },
         {
-          "from": "purple",
-          "to": "orange",
-          "mux": 2,
-          "sec": 2,
+          "from": "purple_E",
+          "to": "green_E",
+          "mux": 3,
+          "sec": 3,
           "typ": 3,
-          "name": "request_get_a"
+          "name": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.start.int.java.lang.String"
         },
         {
-          "from": "orange",
-          "to": "purple",
+          "from": "green_E",
+          "to": "purple_E",
           "mux": 1,
           "sec": 1,
           "typ": 4,
-          "name": "response_get_a"
+          "name": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.start.int.java.lang.String_rsp"
+        },
+        {
+          "from": "purple_E",
+          "to": "orange_E",
+          "mux": 4,
+          "sec": 4,
+          "typ": 5,
+          "name": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.getRequest"
+        },
+        {
+          "from": "orange_E",
+          "to": "purple_E",
+          "mux": 6,
+          "sec": 6,
+          "typ": 6,
+          "name": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.getRequest_rsp"
+        },
+        {
+          "from": "purple_E",
+          "to": "green_E",
+          "mux": 3,
+          "sec": 3,
+          "typ": 7,
+          "name": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.getRequest"
+        },
+        {
+          "from": "green_E",
+          "to": "purple_E",
+          "mux": 1,
+          "sec": 1,
+          "typ": 8,
+          "name": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.getRequest_rsp"
+        },
+        {
+          "from": "purple_E",
+          "to": "orange_E",
+          "mux": 4,
+          "sec": 4,
+          "typ": 9,
+          "name": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.send.java.lang.String.byte[]"
+        },
+        {
+          "from": "orange_E",
+          "to": "purple_E",
+          "mux": 6,
+          "sec": 6,
+          "typ": 10,
+          "name": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.send.java.lang.String.byte[]_rsp"
+        },
+        {
+          "from": "purple_E",
+          "to": "green_E",
+          "mux": 3,
+          "sec": 3,
+          "typ": 11,
+          "name": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.send.java.lang.String.byte[]"
+        },
+        {
+          "from": "green_E",
+          "to": "purple_E",
+          "mux": 1,
+          "sec": 1,
+          "typ": 12,
+          "name": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.send.java.lang.String.byte[]_rsp"
+        }
+      ]
+    },
+    {
+      "enclave": "orange_E",
+      "inuri": "ipc:///tmp/tchalsuborange_e",
+      "outuri": "ipc:///tmp/tchalpuborange_e",
+      "halmaps": [
+        {
+          "from": "purple_E",
+          "to": "orange_E",
+          "mux": 4,
+          "sec": 4,
+          "typ": 1,
+          "name": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.start.int.java.lang.String"
+        },
+        {
+          "from": "orange_E",
+          "to": "purple_E",
+          "mux": 6,
+          "sec": 6,
+          "typ": 2,
+          "name": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.start.int.java.lang.String_rsp"
+        },
+        {
+          "from": "purple_E",
+          "to": "orange_E",
+          "mux": 4,
+          "sec": 4,
+          "typ": 5,
+          "name": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.getRequest"
+        },
+        {
+          "from": "orange_E",
+          "to": "purple_E",
+          "mux": 6,
+          "sec": 6,
+          "typ": 6,
+          "name": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.getRequest_rsp"
+        },
+        {
+          "from": "purple_E",
+          "to": "orange_E",
+          "mux": 4,
+          "sec": 4,
+          "typ": 9,
+          "name": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.send.java.lang.String.byte[]"
+        },
+        {
+          "from": "orange_E",
+          "to": "purple_E",
+          "mux": 6,
+          "sec": 6,
+          "typ": 10,
+          "name": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.send.java.lang.String.byte[]_rsp"
         }
       ]
     }
@@ -163,44 +268,44 @@
 }
 ```
 
-### hal_orange configuration {#hal-orange}
+### hal_purple configuration {#hal-purple}
 The [HAL configuration tool](#halconf) combines the xdconf.ini with selected devices (see closure_env.sh). Example orange enclave configuration for example1 shown below.
 
 ```
 maps =
 (
     {
-        from_mux = 2;
-        to_mux = 2;
-        from_sec = 2;
-        to_sec = 2;
+        from_mux = 4;
+        to_mux = 4;
+        from_sec = 4;
+        to_sec = 4;
         from_typ = 1;
         to_typ = 1;
-        codec = "NULL";
-        to_dev = "xdd0";
-        from_dev = "xdd1";
-    },
-    {
-        from_mux = 1;
-        to_mux = 1;
-        from_sec = 1;
-        to_sec = 1;
-        from_typ = 2;
-        to_typ = 2;
         codec = "NULL";
         to_dev = "xdd1";
         from_dev = "xdd0";
     },
     {
-        from_mux = 2;
-        to_mux = 2;
-        from_sec = 2;
-        to_sec = 2;
-        from_typ = 3;
-        to_typ = 3;
+        from_mux = 6;
+        to_mux = 6;
+        from_sec = 6;
+        to_sec = 6;
+        from_typ = 2;
+        to_typ = 2;
         codec = "NULL";
         to_dev = "xdd0";
         from_dev = "xdd1";
+    },
+    {
+        from_mux = 3;
+        to_mux = 3;
+        from_sec = 3;
+        to_sec = 3;
+        from_typ = 3;
+        to_typ = 3;
+        codec = "NULL";
+        to_dev = "xdd2";
+        from_dev = "xdd0";
     },
     {
         from_mux = 1;
@@ -210,8 +315,96 @@ maps =
         from_typ = 4;
         to_typ = 4;
         codec = "NULL";
+        to_dev = "xdd0";
+        from_dev = "xdd2";
+    },
+    {
+        from_mux = 4;
+        to_mux = 4;
+        from_sec = 4;
+        to_sec = 4;
+        from_typ = 5;
+        to_typ = 5;
+        codec = "NULL";
         to_dev = "xdd1";
         from_dev = "xdd0";
+    },
+    {
+        from_mux = 6;
+        to_mux = 6;
+        from_sec = 6;
+        to_sec = 6;
+        from_typ = 6;
+        to_typ = 6;
+        codec = "NULL";
+        to_dev = "xdd0";
+        from_dev = "xdd1";
+    },
+    {
+        from_mux = 3;
+        to_mux = 3;
+        from_sec = 3;
+        to_sec = 3;
+        from_typ = 7;
+        to_typ = 7;
+        codec = "NULL";
+        to_dev = "xdd2";
+        from_dev = "xdd0";
+    },
+    {
+        from_mux = 1;
+        to_mux = 1;
+        from_sec = 1;
+        to_sec = 1;
+        from_typ = 8;
+        to_typ = 8;
+        codec = "NULL";
+        to_dev = "xdd0";
+        from_dev = "xdd2";
+    },
+    {
+        from_mux = 4;
+        to_mux = 4;
+        from_sec = 4;
+        to_sec = 4;
+        from_typ = 9;
+        to_typ = 9;
+        codec = "NULL";
+        to_dev = "xdd1";
+        from_dev = "xdd0";
+    },
+    {
+        from_mux = 6;
+        to_mux = 6;
+        from_sec = 6;
+        to_sec = 6;
+        from_typ = 10;
+        to_typ = 10;
+        codec = "NULL";
+        to_dev = "xdd0";
+        from_dev = "xdd1";
+    },
+    {
+        from_mux = 3;
+        to_mux = 3;
+        from_sec = 3;
+        to_sec = 3;
+        from_typ = 11;
+        to_typ = 11;
+        codec = "NULL";
+        to_dev = "xdd2";
+        from_dev = "xdd0";
+    },
+    {
+        from_mux = 1;
+        to_mux = 1;
+        from_sec = 1;
+        to_sec = 1;
+        from_typ = 12;
+        to_typ = 12;
+        codec = "NULL";
+        to_dev = "xdd0";
+        from_dev = "xdd2";
     }
 );
 devices =
@@ -223,16 +416,32 @@ devices =
         comms = "zmq";
         mode_in = "sub";
         mode_out = "pub";
-        addr_in = "ipc:///tmp/sock_puborange";
-        addr_out = "ipc:///tmp/sock_suborange";
+        addr_in = "ipc:///tmp/tchalpubpurple_e";
+        addr_out = "ipc:///tmp/tchalsubpurple_e";
     },
     {
         enabled = 1;
         id = "xdd1";
-        path = "/dev/vcom";
-        model = "sdh_socat_v1";
-        comms = "tty";
+        path = "lo";
+        model = "sdh_bw_v1";
+        comms = "tcp";
+        addr_in = "127.0.0.1";
+        port_in = 6789;
+        addr_out = "127.0.0.1";
+        port_out = 6788;
+    },
+    {
+        enabled = 1;
+        id = "xdd2";
+        path = "lo";
+        model = "sdh_bw_v1";
+        comms = "tcp";
+        addr_in = "127.0.0.1";
+        port_in = 6791;
+        addr_out = "127.0.0.1";
+        port_out = 6790;
     }
 );
+
 ```
 
