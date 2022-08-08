@@ -110,7 +110,7 @@ export RPC_GENERATOR=path/to/my/rpc_generator
 
 A list of the dependencies can be found in the Dockerfile in `build`.
 Most of these dependencies are given by their corresponding apt/python package,
-and others are installed manually, such as minizinc, haskell and core.
+and others are installed manually, such as MiniZinc, Haskell and CORE.
 
 The Dockerfile uses a `COPY` command to copy over the `build` directory
 into the image and builds/installs CLOSURE from within the container. 

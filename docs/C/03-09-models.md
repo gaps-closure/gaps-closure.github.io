@@ -1,4 +1,12 @@
-## Model-Driven Analysis **XXX: Review: Rajesh** 
+## Partitioning of Message-Flow Model{#message-model-analysis}
+
+CLOSURE supports the partitioning of models of message-flow based applications, that is, applications that have already been partitioned into components, but use a messaging service such as ActiveMQ to exchange messages via publish/subscribe blackboard. In this section, we describe an application that was evaluated during the [EoP1](#eop1) exercises. 
+
+The process begins with the developer specifying a topological model of components and messages along with 
+the schema of the messages. The developer also specifies cross-domain concerns using CLE annotations.
+We describe the subsequent steps involved including the model specification and model format details, 
+analysis and partitioning of the annotated model, and auto generation of CLE-annotated C code from 
+the partitioned model. The generated C code is then processed using the CLOSURE toolchain for C as described earlier.
 
 ### Specification Format
 A snippet of [EoP1 Message Specification](https://github.com/gaps-closure/build/blob/develop/apps/eop1/case1/design/design_spec.json) is reproduced below. The structure of the specification is as follows:
@@ -114,13 +122,13 @@ A snippet of [EoP1 Message Specification](https://github.com/gaps-closure/build/
 
 ### Analyzing the Specification {#modeldriven}
 
-![Flow Solver Workflow](docs/C/images/flowsolver.png)
-
-This is a z3-backed solver/verifier for GAPS-CLOSURE application design
+The Flow Solver is a z3-backed solver/verifier for GAPS-CLOSURE application design
 specifications. It verifies that specifications are self-consistent and can
 find satisfying values for fields which are omitted from the specification,
 such as component levels or flow labels. It automatically derives and outputs
 a minimal cross-domain message flow policy for the specification.
+
+![Flow Solver Workflow](docs/C/images/flowsolver.png)
 
 If the command-line option is specified, it will also constrain the solution to
 a provided cross-domain message policy, and report on whether the policy is
@@ -128,7 +136,7 @@ overly permissive.
 
 If there is a problem with the provided specification such that it is not
 consistent with itself or the provided policy, the solver will output a simple
-english explanation of what went wrong.
+English explanation of what went wrong.
 
 ### Assumptions
 
@@ -230,7 +238,7 @@ The function is defined in the solver as follows:
 `cdf_allowed(MessageID m, ColorID c1, ColorID c2) ==
 Exists (Flow f), f.label.local == c1 && f.label.remote == c2 && f.msg == m`
 
-### Testing
+### Testing the Model Partitioner
 
 Several example application design specs, and the results given by the solver,
 are provided in the `examples` folder, with descriptions in the respective
@@ -252,3 +260,33 @@ To see all options, use:
 
 `python3 FlowSolver.py -h`
 
+### Auto-generating Annotated C code 
+
+From the output of the model partitioner (`FlowSolver.py`), the `xdcc_gen` tool generates CLE-annotated 
+C programs on which the rest of the CLOSURE toolchain for the C language can be applied to get partitioned
+binary executables.
+
+The `xdcc_gen` tool produces two programs per pair of enclaves, one each per message flow direction. Each
+program when partitioned acts in a "pitcher-catcher" pair, with the pitcher subscribing to the ActiveMQ 
+broker on its side to message types that must be sent to the other side, and generates an RPC invocation 
+for each such message instance.  The catcher receives the message and sends it to the local message broker.
+In order to prevent loops (due to the same message type being generated both locally as well as being
+received from the remote side), the catcher adds a field to mark the message as received from remote side.
+The RPC is one-way and no response is expected. 
+
+The usage summary of 'xdcc_gen' is provided below.
+
+
+```
+$ ./xdcc_gen --help
+./xdcc_gen
+  -e/--egress 	 egress output directory
+  -i/--ingress 	 ingress output directory
+  -k/--echo 	 echo output directory
+  -f/--design 	 design JSON file
+  -n/--enclave 	 enclave (e.g. purple)
+  -c/--config 	 configuration file
+  -h/--help 	 print this message and exit
+```
+
+For more information about its usage, see one of the included [EoP1 examples](https://github.com/gaps-closure/build/tree/develop/apps/eop1).
