@@ -1,4 +1,4 @@
-## Partitioning of Message-Flow Model{#message-model-analysis}
+## Partitioning of Message-Flow Model {#message-model-analysis}
 
 CLOSURE supports the partitioning of models of message-flow based applications, that is, applications that have already been partitioned into components, but use a messaging service such as ActiveMQ to exchange messages via publish/subscribe blackboard. In this section, we describe an application that was evaluated during the [EoP1](#eop1) exercises. 
 

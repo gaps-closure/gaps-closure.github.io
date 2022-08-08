@@ -1,4 +1,4 @@
-## EMU configuration **Review: Ben** 
+## EMU configuration {#emu-config}
 
 ### `enclaves.json`
 `enclaves.json` is a configuration file that specifies the cross-doamin elments of the scenario nodes and associated topology. Example1 enclaves.json shown below. Key elements include:

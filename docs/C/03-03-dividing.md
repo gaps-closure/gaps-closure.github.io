@@ -1,4 +1,4 @@
-## Code Dividing and Refactoring {#divider} **XXX: Review: Rob**
+## Code Dividing and Refactoring {#divider} 
 
 Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated application code, and determined that all remaining conflicts are resolvable by RPC-wrapping to result in a security compliant cross-domain partitioned  code, the conflict analyzer will save the code in the refactored directory along with a a topology file (JSON) containing the assignment of every  function and global variable to an enclave/level. A sample topology JSON is provided below. 
 
@@ -23,7 +23,6 @@ Given the refactored, annotated application, and the topology, the divider creat
 
 This `divvied` source becomes the input to the GAPS Enclave Definition Language (GEDL) generator tool. The GEDL drives further code generation and modification needed to build the application binaries for each enclave.
 
-### Dividing 
 
 The usage of the program divider is straightforward:
 
