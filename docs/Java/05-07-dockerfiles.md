@@ -1,0 +1,86 @@
+## Dockerfile **Requires update for Java** {#dockerfile}
+
+### Dockerfile for Source release {#src-docker}
+The following dockerfile is used to build a source release from scratch.
+
+```
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV HOME /home/closure
+ENV TZ="America/New_York"
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
+ENV PATH=PATH=$JAVA_HOME/bin:$HOME/MiniZincIDE-2.5.5-bundle-linux-x86_64/bin:$PATH
+ENV CAPO=$HOME/gaps/capo/Java
+ENV CLASSPATH=$CAPO/joana/dist/*:$CAPO/examples/eop2-demo/dist/*:$CAPO/jython-standalone-2.7.2.jar:$CAPO/jscheme-7.2.jar
+
+RUN apt-get update && \
+    apt-get install -y net-tools iproute2 netcat dnsutils curl iputils-ping iptables nmap tcpdump wget
+
+RUN apt-get -y install gcc mono-mcs
+RUN apt-get -y install make
+
+RUN apt-get -y install openjdk-8-jdk-headless
+
+RUN apt-get -y install libzmq3-dev
+RUN apt-get -y install libconfig-dev
+RUN apt-get -y install ant
+RUN apt-get -y install maven
+RUN apt-get -y  install build-essential
+
+RUN apt-get -y install python3
+RUN apt install -y python3-pip
+RUN pip3 install libconf
+
+RUN apt-get -y install tmux
+RUN apt-get -y install libzmq-java
+RUN apt-get -y install openssh-client
+
+RUN apt-get -y install git
+
+######### Create and run as closure
+RUN useradd -u 8877 -s /bin/bash closure
+RUN mkdir -p /home/closure
+RUN chown closure.closure /home/closure
+
+USER closure
+
+RUN mkdir -p $HOME/opencv-4.6.0/build/
+RUN mkdir -p $HOME/gaps
+
+WORKDIR $HOME/gaps
+RUN git clone -b tcp https://github.com/gaps-closure/hal.git
+RUN git clone https://github.com/gaps-closure/CodeGenJava.git
+RUN git clone -b develop https://github.com/gaps-closure/capo.git
+RUN git clone https://github.com/joana-team/joana.git $HOME/gaps/capo/Java/joana
+
+WORKDIR $CAPO/joana
+RUN git submodule init
+RUN git submodule update
+
+RUN mv setup_deps setup_deps.orig && \
+    cp ../setup_deps .
+
+WORKDIR $CAPO
+RUN wget https://repo1.maven.org/maven2/org/python/jython-standalone/2.7.2/jython-standalone-2.7.2.jar
+RUN wget https://sourceforge.net/projects/jscheme/files/jscheme/7.2/jscheme-7.2.jar
+
+WORKDIR $HOME
+RUN wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.5.5/MiniZincIDE-2.5.5-bundle-linux-x86_64.tgz
+RUN tar xzf MiniZincIDE-2.5.5-bundle-linux-x86_64.tgz
+RUN rm -f MiniZincIDE-2.5.5-bundle-linux-x86_64.tgz 
+
+RUN echo "bind X kill-session" > .tmux.conf
+RUN echo "set-option -g status-keys emacs" >> .tmux.conf
+
+WORKDIR $HOME/opencv-4.6.0/build
+RUN wget https://github.com/gaps-closure/capo/releases/download/T0.2/opencv-4.6.0.tgz
+RUN tar xzf opencv-4.6.0.tgz
+RUN rm -f opencv-4.6.0.tgz
+
+WORKDIR $HOME/gaps
+RUN cp capo/Java/examples/eop2-demo/resources/scripts/* .
+RUN cp capo/Java/release/README-src.md README.md
+
+EXPOSE 8080 8081
+```

@@ -4,3 +4,5 @@ jdoc.pdf
 jdoc.html
 result
 result/**
+.project
+.cproject
