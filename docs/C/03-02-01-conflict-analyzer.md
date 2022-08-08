@@ -26,7 +26,45 @@ that wrap the function invocations in the cross-domain cut.
 
 ### Introduction to the Conflict Analyzer
 
-### Usage **XXX Add example**
+### Usage 
+
+The usage of the conflict analyzer is as follows:
+
+```
+usage: Conflict Analyzer [-h] [--temp-dir TEMP_DIR] [--clang-args CLANG_ARGS] [--schema [SCHEMA]] --pdg-lib PDG_LIB [--source-path SOURCE_PATH] [--constraint-files [CONSTRAINT_FILES [CONSTRAINT_FILES ...]]] [--output OUTPUT]
+                         [--artifact ARTIFACT] [--conflicts CONFLICTS] [--output-json] [--log-level {DEBUG,INFO,ERROR}]
+                         sources [sources ...]
+
+positional arguments:
+  sources               .c or .h to run through conflict analyzer
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --temp-dir TEMP_DIR   Temporary directory.
+  --clang-args CLANG_ARGS
+                        Arguments to pass to clang (paths should be absolute)
+  --schema [SCHEMA]     CLE schema
+  --pdg-lib PDG_LIB     Path to pdg lib
+  --source-path SOURCE_PATH
+                        Source path for output topology. Defaults to current directory
+  --constraint-files [CONSTRAINT_FILES [CONSTRAINT_FILES ...]]
+                        Path to constraint files
+  --output OUTPUT       Output path for topology json
+  --artifact ARTIFACT   artifact json path
+  --conflicts CONFLICTS
+                        conflicts json path
+  --output-json         whether to output json
+  --log-level {DEBUG,INFO,ERROR}, -v {DEBUG,INFO,ERROR}
+```
+
+As inputs the conflict analyzer takes in C source and header files and outputs a [topology.json](#xd-assignment) and possibly
+an `artifact.json`. 
+
+The pdglib can be found at `/opt/closure/lib/libpdg.so`. The soure path controls the `source_path` field in the 
+topology. The `output-json` option will output diagnostics and results in a JSON form readable by [CVI](#cvi).
+
+Note: the `--clang-args` is a comma separated list of arguments to pass to clang, and any paths given (e.g., 
+includes) must be absolute. 
 
 ### The CLOSURE `preprocessor` {#preprocessor}
 
