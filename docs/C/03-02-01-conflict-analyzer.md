@@ -1,4 +1,4 @@
-## Phase 2 CLOSURE Conflict Analyzer Based on MiniZinc Constraint Solver **XXX: Review: Rob, PSU** {#conflict-analyzer}  
+## CLOSURE Conflict Analyzer Using MiniZinc Constraint Solver **XXX: Review: Rob, PSU** {#conflict-analyzer}  
 
 The role of the conflict analyzer is to evaluate a user annotated program and decide if the annotated program respects the allowable information flows specified in the annotations. As input, the conflict analyzer requires the user annottated C source code. Based on this, if it is properly annotated and a partition is possible it will provide an assignment for every global variable and function to an enclave (topology.json). If the conflict analyzer detects a conflict, it produces a report guiding users to problematic program points that may need to be refactored or additional annotations applied.
 
