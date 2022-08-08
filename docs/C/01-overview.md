@@ -113,32 +113,8 @@ design are the following:
 - Considers complex application data structures (nested JSON) and generates flat fixed-formats suitable for simple-but-fast hardware guards
 - Increases formatting and marshalling complexity testing flexibility of current GAPS hardware capability
 
-The model-driven approach is part of a larger workflow shown in the figure.
-Rapid capture of message flow data through use of sniffer, wildcard-subscriber,
-or other instrumentation provides listing of message types and field contents
-(types can be inferred and tweaked by developer if need be). A design-tool can
-then be used to annotate the message flows, structures, and cross-domain
-security intent in language-agnostic fashion. Automated generation of CLE
-annotated XDCC in C language is performed. XDCC program isolates per-message
-code paths facilitating annotations and compliant cross-domain partitioning,
-covering a large class of message-based cross-domain applications. We consider
-this technique relevant and transitionable to RHEL AMQ Interconnect for which
-it could enable cross-domain message routing.
+[Model driven](#message-model-analysis) approach described later in this document.
 
-![Concept for Design-Level Workflow of Message-Based Applications](docs/C/images/modelworkflow.png) 
-
-An application of this type was evaluated during the [EoP1](#eop1) exercises.
-CLOSURE enables message-flow partitioning by generating a cross-domain
-communication component (XDCC) from a [message flow
-specification](https://github.com/gaps-closure/build/blob/develop/apps/eop1/case1/design/design_spec.json).
-Using the specification, CLOSURE tools generate a C program that subscribes to those
-messages that will be cross-domain and facilitates their transfer over the
-guard. When a cross-domain message is received on the remote XDCC, the message
-is reconstructed and published to ActiveMQ for consumption by the remote
-enclave components. See [partitioning of message-flow model](#modeldriven) for 
-more details on how the specification is processed. 
-
-![XDCC concept](docs/C/images/xdcc.png) 
 
 ## Document Roadmap
 
