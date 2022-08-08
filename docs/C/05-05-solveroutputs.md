@@ -1,8 +1,17 @@
-## Constraint Solver Outputs **Review: Rajesh**
+## Constraint Solver Outputs {#appendix-solver-outputs}
 
-When the [conflict analyzer](#conflict-analyzer) finds a conflict it will print out a diagnostic.
-Diagnostic generation produces commandline output
-containing node types and grouped by constraints from minizinc
+When the [conflict analyzer](#conflict-analyzer) cannot find an assignment that simultaneously
+satisfies all constraints entailed by the CLE annotations on the program under analysis, it will 
+print out a diagnostic. The diagnostic is based on a minimum unsatisfiable subset
+of constraints determined by the findMUS utility of Minizinc, which groups
+conflicts by constraint (name) with references to the PDG nodes and edges
+involved in the conflict. The diagnostic is further enhanced with source file and 
+line number references for use by the [CVI](#cvi) plugin to provide contextual guidance to
+the developer. 
+
+When the conflict analyzer finds a satisfying assignment it generates a `topology.json` file
+as described in the [cross-domain cut specification](#xd-assignment) section.
+
 
 ```
 <constraint_name>: 
@@ -10,7 +19,7 @@ containing node types and grouped by constraints from minizinc
   (<node_type>) <file>:<function>@<line> # for nodes  
 ``` 
 
-Here's a possible example from example1:
+Here's an example based on example1 with unsatisfiable annotations:
 
 ```
 XDCallAllowed
@@ -58,9 +67,8 @@ XDCallAllowed
     (Inst_Other) /workspaces/build/apps/examples/example1/annotated-working/example1.c@None:84
 ```
 
-
 When `--output-json` mode is activated the
-solver will output a list of conflicts in json form. In this form,
+solver will output a list of conflicts in JSON format. In this format,
 it can be read by [CVI](#cvi).
 
 ```json
@@ -913,7 +921,3 @@ it can be read by [CVI](#cvi).
   }
 ]  
 ```
-
-
-**Include findMUS output file generated**
-**Describe in 1-2 sentences each**
