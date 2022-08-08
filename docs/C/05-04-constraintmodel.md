@@ -1,9 +1,9 @@
 ## Constraint Model in MiniZinc **Review: Rob** 
 
 The following contains type declarations
-for the minizinc model used within the [conflict analyzer](#conflict-analyzer).
+for the MiniZinc model used within the [conflict analyzer](#conflict-analyzer).
 These type declarations, along with a model instance generated in python
-are inputted to minizinc along with the [constraints](#constraints) to either produce
+are inputted to MiniZinc along with the [constraints](#constraints) to either produce
 a satisfiable assignment or some minimally unsatisfiable set of constraints.
 
 ### Type declarations  

@@ -1,9 +1,9 @@
-## Constraint Solver Outputs {#appendix-solver-outputs}
+## Constraint Solver Diagnostic Outputs {#appendix-solver-outputs}
 
 When the [conflict analyzer](#conflict-analyzer) cannot find an assignment that simultaneously
 satisfies all constraints entailed by the CLE annotations on the program under analysis, it will 
 print out a diagnostic. The diagnostic is based on a minimum unsatisfiable subset
-of constraints determined by the findMUS utility of Minizinc, which groups
+of constraints determined by the findMUS utility of MiniZinc, which groups
 conflicts by constraint (name) with references to the PDG nodes and edges
 involved in the conflict. The diagnostic is further enhanced with source file and 
 line number references for use by the [CVI](#cvi) plugin to provide contextual guidance to

@@ -1,6 +1,6 @@
-## Phase 2 CLOSURE conflict analyzer based on minizinc constraint solver **XXX: Review: Rob, PSU** {#conflict-analyzer}  
+## Phase 2 CLOSURE Conflict Analyzer Based on MiniZinc Constraint Solver **XXX: Review: Rob, PSU** {#conflict-analyzer}  
 
-The role of the conflict analyzer is to evaluate a user annotated program and decide if the annotated program respects the allowable information flows specified in the annotations. As input, the conflict analyzer requires the user annottated C source code. Based on this, if it is properly annotated and a partition is possible it will provide an assingment for every global variable and function to an enclave (topology.json). If the conflict analyzer detects a conflict, it produces a report guiding users to problematic program points that may need to be refactored or additional annotations applied.
+The role of the conflict analyzer is to evaluate a user annotated program and decide if the annotated program respects the allowable information flows specified in the annotations. As input, the conflict analyzer requires the user annottated C source code. Based on this, if it is properly annotated and a partition is possible it will provide an assignment for every global variable and function to an enclave (topology.json). If the conflict analyzer detects a conflict, it produces a report guiding users to problematic program points that may need to be refactored or additional annotations applied.
 
 
 The conflict analyzer uses a constraint solver called [MiniZinc @minizinc_handbook ](https://www.minizinc.org/doc-2.5.5/en/index.html)  to perform program analysis and determine a correct-by-construction partition that satifies the constraints
@@ -13,7 +13,7 @@ the minimum unsatisfiable subset (MUS) of constraints if a problem
 instance is unsatisfiable. The output of this tool can be used to
 provide diagnostic feedback to the user to help refactor the program.
 
-In addition to outputing a `topology.json` providing the assingments of global and function variables, the conflict analyzer can also provide a more detailed version of this file `artifact.json`. This file provides the label, level, and enclave assingments to every program element.
+In addition to outputing a `topology.json` providing the assignments of global and function variables, the conflict analyzer can also provide a more detailed version of this file `artifact.json`. This file provides the label, level, and enclave assignments to every program element.
 
 
 Downstream tools in the CLOSURE toolchain will use the output of the solver to
@@ -73,14 +73,13 @@ fine because its very simple substitution
 
 ### `opt` pass for the Program Dependence Graph (PDG)
 
-The Program Dependence Graph (PDG)@program_mandering @kSplit @ptrsplit is an abstraction over a C/C++ program which specifies its control and data dependencies in a graph data structure. The PDG is computed by adding an anlysis pass to clang. The resulting graph is then parsed into a format that minizinc can reason about.
+The Program Dependence Graph (PDG)@program_mandering @kSplit @ptrsplit is an abstraction over a C/C++ program which specifies its control and data dependencies in a graph data structure. The PDG is computed by adding an anlysis pass to clang. The resulting graph is then parsed into a format that MiniZinc can reason about.
 
 
-**XXX:May be worth adding a sample graph image showing visually what the pdg computes and then show the pdg.mzn file showing the input to minizinc.** 
+**XXX:May be worth adding a sample graph image showing visually what the pdg computes and then show the pdg.mzn file showing the input to MiniZinc.** 
 
  
-During the invocation of the conflict analyzer, a subprocess is spawned in python to retrieve this `minizinc` 
-representation of the PDG.
+During the invocation of the conflict analyzer, a subprocess is spawned in python to retrieve this `minizinc` (problem instance in MiniZinc format) representation of the PDG.
 
 
 The relevant PDG node types for conflict analysis are Inst (instructions), VarNode (global, static, or module static
@@ -117,13 +116,13 @@ From these assignments, the `topology.json` and `artifact.json` can be generated
 - cle/enclave instance should be a pure function 
 from collated cle json to an encoded minizinc instance 
 - inputs are put in temp files for reference/debugging
-- minizinc called using Gecode solver, with pdg/cle/enclave instance and constraints
+- MiniZinc called using Gecode solver, with pdg/cle/enclave instance and constraints
 - output parsed and sent back to the console
-- if unsat, then it will run findmus  
+- if unsat, then it will run findMUS  
 
-### diagnostics using findMUS
+### Diagnostics using findMUS
 
 Diagnostic generation produces commandline output
-containing source and dest node and grouped by the constraints violated in minizinc.
+containing source and dest node and grouped by the constraints violated in MiniZinc.
 When given `--output-json` it should also produce a machine readable `conflicts.json` which can be ingested by [CVI](#cvi)
 to show these errors in VSCode.

@@ -1,7 +1,7 @@
 ### Detailed MiniZinc constraint model **XXX: Review: Rob** {#constraints}
 
-The following assumes some familiarity with minizinc syntax. More
-about minizinc, it's usage and syntax can be found [here](https://www.minizinc.org/).
+The following assumes some familiarity with MiniZinc syntax. More
+about MiniZinc, it's usage and syntax can be found [here](https://www.minizinc.org/).
 
 In the model below, the `nodeEnclave` decision variable stores the enclave
 assignment for each node, the `taint` decision variable stores the label
