@@ -147,7 +147,8 @@ Optional fields in function annotations include
 
 
 ### Label Coercion
-**XXX: TODO: discussion**
+Only an annotated function can accept data of one or more label and produce data with other labels as allowed by the annotation constraints on the function's arguments, return, and body. We call this label or taint coercion. See [label coercion](#coercion) for detailed discussion.
+
 
 ### TAGs
 

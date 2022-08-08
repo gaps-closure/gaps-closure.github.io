@@ -150,7 +150,7 @@ constraint :: "XDCDataReturnAllowed"           forall (e in DataDepEdge_Ret)    
 constraint :: "XDCParmAllowed"                 forall (e in Parameter)          (xdedge[e] -> allowOrRedact(cdfForRemoteLevel[esTaint[e], hasLabelLevel[edTaint[e]]]));
 ```
 
-#### Constraints on Taint Coercion Within Each Enclave
+#### Constraints on Taint Coercion Within Each Enclave {#coercion}
 
 While the constraints on the control dependency and data depdendency that
 we discussed governed data sharing at the cross-domain cut, we still need
