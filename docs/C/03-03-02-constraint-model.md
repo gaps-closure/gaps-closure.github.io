@@ -60,6 +60,7 @@ Set up a number of auxiliary decision variables:
  * `esFunCdf[e]`: if the source node of the edge `e` is an annotated function, then this variable stores the CDF with the remotelevel equal to the level of the taint of the destination node; `nullCdf` if a valid CDF does not exist
  * `edFunCdf[e]`: if the destination node of the edge `e` is an annotated function, then this variable stores the CDF with the remotelevel equal to the level of the taint of the source node; `nullCdf` if a valid CDF does not exist
 
+
 ```minizinc
 constraint :: "MyFunctionTaint"                 forall (n in PDGNodeIdx)         (ftaint[n] == (if hasFunction[n]!=0 then taint[hasFunction[n]] else nullCleLabel endif));
 constraint :: "EdgeSourceEnclave"               forall (e in PDGEdgeIdx)         (esEnclave[e]==nodeEnclave[hasSource[e]]);
