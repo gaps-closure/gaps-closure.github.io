@@ -140,40 +140,11 @@ more details on how the specification is processed.
 
 ![XDCC concept](docs/C/images/xdcc.png) 
 
-## Limitations and language coverage {#limitations} 
+## Document Roadmap
 
-CLOSURE toolchain supports most of the c99 standard. Our solution is based on
-LLVM, and in particular, the Program Dependency Graph abstraction @ptrsplit of 
-a the LLVM IR representation of a C program. The [constraint model](#constraints) 
-is straight-forward and can be studied for more details on coverage.
-
-Some C language and pre-processor features not currently supported include: (i)
-module static functions for which the compiler creates synthetic names are not
-handled, (ii) inlined functions, macro generated functions and conditionally
-compiled code that are not visible in the LLVM IR and are not handled, (iii)
-functions to be wrapped in cross-domain RPC must have arguments that are
-primitive types or fixed size arrays of primitive types. 
-
-In our current solution, every global variable and function must be assigned to
-a separate enclave. Any functions called from multiple enclaves must be in an 
-external library (and not subject to program analysis), and currently we do not 
-provide a sandboxing mechanism for external library functions. Our program
-divider has limited awareness of C language syntax. The solution supports at 
-most one enclave at each security level.
-
-Currently the constraint model is a single pass that requires functions to be 
-called cross-domain to be annotated by the developer. It may be desirable to do 
-constraint solving in two passes: the first pass can allow the locus of the cut 
-to be moved for optimization, and the second pass can check that all functions 
-ultimately involved in cross-domain cuts have been inspected and correctly annotated 
-by the developer.
-
-The CLOSURE C toolchain has been exhaustively tested with 2-enclave scenarios, 
-but not with scenarios involving more than 2 enclaves.  The largest program we
-have analyzed is about 25KLoC and it takes several minutes to analyze.
-
-CLOSURE message-flow toolchain currently supports ActiveMQ-based communication, though 
-the approach is general and can be extended to other messaging middleware if needed. 
-
-Subsequent releases may address some of these limitations and add features as discussed 
-in our roadmap for [future work](#future-work).
+In the rest of this document, we first present a quick start guide followed by a detailed usage of 
+the toolchain components. For each compoennt, we describe what is does, provide some insight into
+how it works, discuss inputs and outputs and provide invocation syntax for usage. We conclude with 
+a discussion of limitations of the current toolchain and a roadmap for future work. We provide 
+samples of significant input and output files in the appendices, and provide a list of bibliographic 
+references at the end. 
