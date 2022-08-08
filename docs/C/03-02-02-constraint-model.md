@@ -1,4 +1,4 @@
-### Detailed MiniZinc constraint model **XXX: Review: Rob** {#constraints}
+### Detailed MiniZinc constraint model {#constraints}
 
 The following assumes some familiarity with MiniZinc syntax. More
 about MiniZinc, it's usage and syntax can be found [here](https://www.minizinc.org/).

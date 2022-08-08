@@ -1,4 +1,4 @@
-# CLOSURE Toolchain Overview
+# CLOSURE Toolchain Overview **XXX: Ben run spell check and look for visual formatting issues**
 
 ## What is CLOSURE?
 
