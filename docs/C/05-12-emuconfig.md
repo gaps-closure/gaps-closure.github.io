@@ -1,7 +1,7 @@
 ## EMU configuration **Review: Ben** 
 
-### enclaves.json
-Configuration file that specifies the cross-doamin elments of the scenario nodes and associated topology. Example1 enclaves.json shown below. Key elements include:
+### `enclaves.json`
+`enclaves.json` is a configuration file that specifies the cross-doamin elments of the scenario nodes and associated topology. Example1 enclaves.json shown below. Key elements include:
 
 - qname: scenario name
 - enclave: the enclave, set of nodes running at the same level
@@ -141,8 +141,8 @@ Configuration file that specifies the cross-doamin elments of the scenario nodes
   ]
 }
 ```
-### layout.json
-Controls the artistic layout of the scenario elements (nodes, links, colors). Use [2,3,4]enclave directories for boiler plate layouts depending on the network size required for additional scenarios.
+### `layout.json`
+Controls the graphical layout of the scenario elements (nodes, links, colors). Use \[2,3,4\]enclave directories for boiler plate layouts depending on the network size required for additional scenarios.
 
 ```
 {
@@ -249,16 +249,16 @@ Controls the artistic layout of the scenario elements (nodes, links, colors). Us
 }
 ```
 
-### settings.json
-Controls general settings for the emulator.
+### `settings.json`
+`settings.json` controls general settings for the emulator. Fields of this json file include:
 
 - core_timeout: if CORE does not start in specified number of seconds, emulator will quit. Make sure core-daemon is properly installed
 - instdir: parent directory where emu is installed
 - imgdir: directory where QEMU golden images are stored
 - mgmt_ip: IP of VMs for ssh purposes
 - shadow_directories: comma separated list of directories to be mounted uniquely in CORE BSD containers
-- snapdir: location of VM snapshots relative to ${instdir}/emu
-- imndir: location of scenario CORE .imn files relative to ${instdir}/emu
+- snapdir: location of VM snapshots relative to `${instdir}/emu`
+- imndir: location of scenario CORE .imn files relative to `${instdir}/emu`
 
 ```
 {
