@@ -167,14 +167,14 @@ Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated appl
 
 Given the annotated application and the topology, the Java code generation tool, CodeGenJava, does the following
 
-- creates a directory for each partition and copies the original app code into it; (purple_E/)
-- generates AspectJ definitions for each partition; (purple_E/aspect/VideoRequesterHighClosureAspect.aj)
-- generates cross-domain tags and HAL configurations; (xdcc/xdconf.ini and hal_*.cfg)
-- generates remote procedure call handlers; (green_E/aspect/VideoManagerMainAspect.aj)
-- generates an ant build script for each enclave (purple_E/build-closure.xml) and
+- creates a directory for each partition and copies the original app code into it; (xdcc/purple_E/)
+- generates AspectJ definitions for each partition; (xdcc/purple_E/aspect/VideoRequesterHighClosureAspect.aj)
+- generates cross-domain tags and HAL configurations; (xdcc/xdconf.ini and xdcc/hal_purple_E.cfg)
+- generates remote procedure call handlers; (xdcc/green_E/aspect/VideoManagerMainAspect.aj)
+- generates an ant build script for each enclave (xdcc/purple_E/build-closure.xml) and
 - compiles and aspect weaves the resulting code.
 
-The generated artifacts on the list is straightforward. Examples of the output files are listed inside the parentheses above and can be found in the appendix. We briefly describe below the AspectJ definitions.
+The generated artifacts on the list is straightforward. Examples of the output files are listed inside the parentheses above and can be found in the appendix. We only briefly describe below the AspectJ definitions.
 Aspect-oriented programming (AOP) is a programming paradigm that aims to increase modularity by allowing the separation of cross-cutting concerns. It does so by adding behavior to existing code ("advice") without modifying the code itself, instead separately specifying which code is modified (a "pointcut" specification). For example, log all function calls when the function name begins with 'set‘.
 
 Aspect-oriented programming has the benefits of clean modularization of cross-cutting concerns,
