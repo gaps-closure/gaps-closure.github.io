@@ -1,7 +1,7 @@
 ## HAL Configuration Files **Requires update for Java** {#halconfig}
 
 ### devices.json {#devices-json}
-**devices.json** provides the interfaces for reading/writing to the employed GAPS devices. Note that different devices can be used in the forward and reverse direction between a pair of enclaves. Device settings for BITW(MIND), BKND (ILIP), and Emulator shown.
+**devices.json** provides the interfaces for reading/writing to the employed GAPS devices. Note that different devices can be used in the forward and reverse direction between a pair of enclaves. Device settings for BITW(MIND) on localhost is shown.
 
 ```
 {
@@ -47,7 +47,7 @@
 ```
 
 ### xdconf.ini {#xdconf}
-**xdconf.ini** is automatically genreated during the automagic stages of the project build. The file appears in partitioned/{single, multi}threaded directory. The file includes the [mux, sec, typ](#haltag) mappings for each data type. The data types are oraganized by enclave with from/to enclave clearly specified so the direction is apparent. Appropriate in/out uri interfaces for where the message is read or written  to and from HAL are also specified. xdconf.ini content ultimately populates the map portion of the HAL config file. 
+**xdconf.ini** is automatically genreated by CodeGenJava. The file appears in the top directory of the desitnation directory (dstDir in config.json). The file includes the [mux, sec, typ](#haltag) mappings for each data type. The data types are oraganized by enclave with from/to enclave clearly specified so the direction is apparent. Appropriate in/out uri interfaces for where the message is read or written  to and from HAL are also specified. xdconf.ini content ultimately populates the map portion of the HAL config file. 
 ```
 {
   "enclaves": [
@@ -269,7 +269,7 @@
 ```
 
 ### hal_purple configuration {#hal-purple}
-The [HAL configuration tool](#halconf) combines the xdconf.ini with selected devices (see closure_env.sh). Example orange enclave configuration for example1 shown below.
+The [HAL configuration tool](#halconf) combines the xdconf.ini with selected devices (see closure_env.sh). Example purple enclave configuration for the demo appliaction is shown below.
 
 ```
 maps =

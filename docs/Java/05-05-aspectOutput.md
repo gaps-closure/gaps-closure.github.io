@@ -1,6 +1,19 @@
-## AspectJ Outputs
+## AspectJ Code Generator Outputs
 
-### xdcc/purple_E/aspect/VideoRequesterHighClosureAspect.aj
+### Output Directory Structure
+
+Below is the sample output directory structure created by the Java tool chain for the demo application. The AspectJ definitions and other artifacts, along with the original application, for each enclave is placed in a separate directory. In addition, the HAL configuration files (xdconf.ini and hal_*.cfg) are put at the top level.
+
+![](docs/Java/images/output.png){#codeGenOutput}
+
+Inside each enclave, AspectJ related files are placed under the aspect subdirectory. Below is a sample for the purple enclave.
+
+![](docs/Java/images/purple.png){#purple}
+
+
+### Sample AspectJ for the VideoRequesterHighClosureAspect Class {#video.aspectj}
+The following is the AspectJ definition generated for the VideoRequesterHighClosure class, which is located in the orange enclave and accessed from the purple enclave in the partititoned demo application.
+
 ```java
 package com.peratonlabs.closure.aspectj;
 
@@ -138,13 +151,15 @@ public aspect VideoRequesterHighClosureAspect {
 }
 ```
 
-### xdcc/purple_E/aspect/ipc.txt
+### ZeroMQ URL (ipc.txt) {#zeromq}
+The ipc.txt file is loaded at application startup time to connect to the ZeroMQ for publication and subscriptions. The following is a sample for the purple enclave.
 ```
 ipc:///tmp/tchalsubpurple_e
 ipc:///tmp/tchalpubpurple_e
 ```
 
-### xdcc/purple_E/aspect/tags.txt
+### XDCC Tags (tags.txt){#xdcc-tags}
+The tags.txt file is loaded at application startup time to initialize mux/sec/type of cross-domain calls.
 ```
 com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.start.int.java.lang.String 4 4 1
 com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.start.int.java.lang.String_rsp 6 6 2
@@ -160,7 +175,8 @@ com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.send.java.lang.St
 com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.send.java.lang.String.byte[]_rsp 1 1 12
 ```
 
-### xdcc/purple_E/bnuild-closure.xml
+### Ant Build for AspectJ Weaving{#ant}
+An ant build file, build-closure.xml, is generated to handle the AspectJ weaving task.
 ```xml
 <project name="Build app and aspect lib then weave" default="weave">
   <property file="./build.properties"/>
@@ -216,7 +232,9 @@ com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.send.java.lang.St
 </project>
 ```
 
-### xdcc/green_E/aspect/VideoManagerMainAspect.aj
+### Slave Handler{#slave-handler}
+The slave handler is used to listen for cross domain calls. It replaces the entrypoint of the original app via a AspectJ pointcut.
+
 ```java
 package com.peratonlabs.closure.aspectj;
 
@@ -233,7 +251,8 @@ public aspect VideoManagerMainAspect {
 }
 ```
 
-### config.json
+### Sample Config for CodeGenJava{#config.json}
+Below is a sample configuration file for the CodeGenJava tool.
 ```json
 {
   "dstDir": "/home/closure/xdcc",
