@@ -1,12 +1,40 @@
-## Partitioning of Message-Flow Model{#message-model-analysis}
+## Partitioning of Message-Flow Model {#message-model-analysis}
 
-CLOSURE supports the partitioning of models of message-flow based applications, that is, applications that have already been partitioned into components, but use a messaging service such as ActiveMQ to exchange messages via publish/subscribe blackboard. In this section, we describe an application that was evaluated during the [EoP1](#eop1) exercises. 
+CLOSURE supports the partitioning of models of message-flow based applications, that is, applications that have already been partitioned into components, but use a messaging service such as ActiveMQ to exchange messages via publish/subscribe blackboard. 
 
 The process begins with the developer specifying a topological model of components and messages along with 
 the schema of the messages. The developer also specifies cross-domain concerns using CLE annotations.
 We describe the subsequent steps involved including the model specification and model format details, 
 analysis and partitioning of the annotated model, and auto generation of CLE-annotated C code from 
 the partitioned model. The generated C code is then processed using the CLOSURE toolchain for C as described earlier.
+
+The model-driven approach is part of a larger workflow shown in the figure.
+Rapid capture of message flow data through use of sniffer, wildcard-subscriber,
+or other instrumentation provides listing of message types and field contents
+(types can be inferred and tweaked by developer if need be). A design-tool can
+then be used to annotate the message flows, structures, and cross-domain
+security intent in language-agnostic fashion. Automated generation of CLE
+annotated XDCC in C language is performed. XDCC program isolates per-message
+code paths facilitating annotations and compliant cross-domain partitioning,
+covering a large class of message-based cross-domain applications. We consider
+this technique relevant and transitionable to RHEL AMQ Interconnect for which
+it could enable cross-domain message routing.
+
+![Concept for Design-Level Workflow of Message-Based Applications](docs/C/images/modelworkflow.png) 
+
+An application of this type was evaluated during the [EoP1](#eop1) exercises.
+CLOSURE enables message-flow partitioning by generating a cross-domain
+communication component (XDCC) from a [message flow
+specification](https://github.com/gaps-closure/build/blob/develop/apps/eop1/case1/design/design_spec.json).
+Using the specification, CLOSURE tools generate a C program that subscribes to those
+messages that will be cross-domain and facilitates their transfer over the
+guard. When a cross-domain message is received on the remote XDCC, the message
+is reconstructed and published to ActiveMQ for consumption by the remote
+enclave components. See [partitioning of message-flow model](#modeldriven) for 
+more details on how the specification is processed. 
+
+![XDCC concept](docs/C/images/xdcc.png) 
+
 
 ### Specification Format
 A snippet of [EoP1 Message Specification](https://github.com/gaps-closure/build/blob/develop/apps/eop1/case1/design/design_spec.json) is reproduced below. The structure of the specification is as follows:

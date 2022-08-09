@@ -1,4 +1,4 @@
-## Constraint Model in MiniZinc **Review: Rob** 
+## Additional files for Constraint Model in MiniZinc **XXX: Ben add mzn instances**  
 
 The following contains type declarations
 for the MiniZinc model used within the [conflict analyzer](#conflict-analyzer).

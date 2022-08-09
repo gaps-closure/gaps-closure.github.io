@@ -1,8 +1,6 @@
-## Verifier **XXX: Review: Max, Rob** {#verifier}
+## Verifier {#verifier}
 
-### ECT/ParTV
-
-#### Overview
+### Overview
 
 ECT/ParTV, a translation validation tool for post-partition verification @cprogpartv that certifies a partition is
 behaviorally equivalent to its original program and complies with the annotated fine-grained
@@ -30,7 +28,7 @@ checked as the tool proceeds and written out in
 
 ![ECT/ParTV Workflow](docs/C/images/ect-workflow.png)
 
-#### Invocation
+### Invocation
 
 ECT/ParTV can be invoked as follows:
 
