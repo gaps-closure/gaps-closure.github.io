@@ -3,7 +3,7 @@
 ** Rip out everything below and rewrite for java **
 ** What it does, how it works (including design and diagrams), usage, input/output with pointers to examples described in appendix **
 
-Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated application code, and determined that all remaining conflicts are resolvable by RPC-wrapping to result in a security compliant cross-domain partitioned  code, the conflict analyzer will produce a topology file (JSON) containing the assignment of every  class and global variable to an enclave/level. An abbreviated sample topology JSON is provided below. 
+Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated application code, and determined that all remaining conflicts are resolvable by RPC-wrapping to result in a security compliant cross-domain partitioned  code, the conflict analyzer will produce a topology file (JSON) containing the assignment of every class to an enclave/level. An abbreviated sample topology JSON is provided below. A full length version can be found in the [appendix](#cut.json}
 
 ```json
 {
