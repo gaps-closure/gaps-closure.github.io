@@ -1,7 +1,5 @@
 ## Annotations **XXX: Rob**
 
-**Add field  and method annotation example**
-
 The CLOSURE toolchain relies on source level annotations to specify
 the cross domain constraints. Developers annotate programs using CLOSURE Language Extensions (CLE) 
 to specifycross-domain security constraints. Each CLE annotation definition associates
@@ -10,7 +8,7 @@ of cross-domain data sharing and function invocation constraints.
 
 These source level annotations determine the following:
 
-1. The assignments of functions and global variables to enclaves   
+1. The assignments of classes to enclaves  
 2. The confidentiality of data between enclaves
 3. Which functions can be called cross domain
 4. Guard rules which transform data as it crosses domains   
@@ -170,7 +168,7 @@ The following is an example showing how a method or constructor annotation can b
 ```java
 @OrangePurpleCallable
 void foo() {
-  
+
 }
 ```
 

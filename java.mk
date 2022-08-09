@@ -1,7 +1,8 @@
 PANDOC ?= pandoc
 DOCS != find docs/Java -name '*.md' | sort 
 TITLE = docs/Java/title.txt 
-BIB = docs/Java/bibliography.yaml
+BIB = docs/Java/bibliography.bib
+CSL= docs/Java/bibliography.csl 
 FLAGS = --number-sections \
 		--resource-path docs/Java \
  		--toc --toc-depth=2 \
@@ -9,6 +10,7 @@ FLAGS = --number-sections \
 		--wrap=auto \
 		--citeproc \
 		--bibliography=$(BIB) \
+		--csl=$(CSL) \
 		--pdf-engine=xelatex
 SOURCES = $(TITLE) $(DOCS)
 

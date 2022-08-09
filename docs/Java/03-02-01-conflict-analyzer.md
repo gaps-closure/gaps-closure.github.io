@@ -23,59 +23,48 @@ that wrap the function invocations in the cross-domain cut.
 
 ### Introduction to the Conflict Analyzer
 
+### Usage 
+
+The usage of the conflict analyzer is as follows:
+
+
+```
+java -cp $CLASSPATH org.python.util.jython zincOutput.jy
+ -m './example1/src/example1/Example1.java'
+ -c './example1/dist/TESTPROGRAM.jar'   
+ -e 'com.peratonlabs.closure.testprog.example1.Example1' 
+ -b 'com.peratonlabs.closure.testprog' 
+```
+
+  -m option indicates what java file has the main class to analyze
+
+  -c option indicates the jar file to analyze
+
+  -e option indicates the class with the entry method
+
+  -b option indicates the prefix for the classes that are of interest
+
+
+  Running this command will result in the following artifacts to be generated
+  * Debug Output
+    * dbg_edge.csv
+    * dbg_node.csv
+    * dbg_classinfo.csv
+
+  * Minizinc instance files
+    * enclave_instance.mzn
+    * pdg_instance.mzn
+    * cle_instance.mzn
+  * Partition Result (If satisfiable)
+    * cut.json
+
+
 
 
 ### Modeling data and control flows 
 Java CLOSURE uses an SDG @joana to construct a call graph, control flow graph, and data flow graph so we can accurately track taints throughout an application. Joana is written in java and builds on wala which analyzes an IR form of java bytecode.
 
-We convert the node and edge types from the SDG to the format presented in our C documentation using the following rules:
-```
-nodeConversion = {
-    "NORM" : "Inst_Other",
-    "PRED" : "Inst_Br",
-    "EXPR" : "Inst_Other",
-    "SYNC" : "Inst_Other",
-    "FOLD" : "Inst_Other",
-    "CALL" : "Inst_FunCall",
-    "ENTR" : "FunctionEntry",
-    "EXIT" : "Inst_Ret",
-    "ACTI" : "Param_ActualIn",
-    "ACTO" : "Param_ActualOut",
-    "FRMI" : "Param_FormalIn",
-    "FRMO" : "Param_FormalOut",
-}
-
-edgeConversion = {
-    "CD" : "ControlDep_Other",
-    "CE" : "ControlDep_Other",
-    "UN" : "ControlDep_Other",
-    "CF" : "ControlDep_Other",
-    "NF" : "ControlDep_Other",
-    "RF" : "ControlDep_CallRet",
-    "CC" : "ControlDep_CallInv",
-    "CL" : "ControlDep_CallInv",
-    "SD" : "ControlDep_Other",
-    "JOIN" : "ControlDep_Other",
-    "FORK" : "ControlDep_Other",
-    "DD" : "DataDepEdge_Other",
-    "DH" : "DataDepEdge_Other",
-    "DA" : "DataDepEdge_Alias",
-    "SU" : "DataDepEdge_Other",
-    "SH" : "DataDepEdge_Other",
-    "SF" : "DataDepEdge_Other",
-    "FD" : "DataDepEdge_Other",
-    "FI" : "DataDepEdge_Other",
-    "PI" : "Parameter_In",
-    "PO" : "Parameter_Out",
-    "PS" : "Parameter_Field",
-    "PE" : "DataDepEdge_Alias",
-    "FORK_IN" : "DataDepEdge_Other",
-    "FORK_OUT" : "DataDepEdge_Other",
-    "ID" : "DataDepEdge_Other",
-    "IW" : "DataDepEdge_Other",
-}
-```
-We show in more detail the node and edges of the SDG in the [appendix](#sdg-appendix).
+We convert the node and edge types from the SDG to the format presented in our C documentation @CDoc. The transformation is shown in detail in the [appendix](#sdg-appendix).
 
 
 ### Data required by minizinc
