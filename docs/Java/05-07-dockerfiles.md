@@ -1,4 +1,4 @@
-## Dockerfile **Requires update for Java** {#dockerfile}
+## Dockerfile **ready for review** {#dockerfile}
 
 ### Dockerfile for Source release {#src-docker}
 The following dockerfile is used to build a source release from scratch.

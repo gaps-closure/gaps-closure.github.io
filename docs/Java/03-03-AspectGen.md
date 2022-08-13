@@ -1,7 +1,6 @@
-## Auto Generation of Aspects for Partition Enforcement and Cross Domain Communications **XXX: Ta => Rajesh Review** {#AspectJ} 
+## Auto Generation of Aspects for Partition Enforcement and Cross Domain Communications **XXX: ready for Review** {#AspectJ} 
 
-** Rip out everything below and rewrite for java **
-** What it does, how it works (including design and diagrams), usage, input/output with pointers to examples described in appendix **
+** Move the output to the end of the previous section **
 
 Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated application code, and determined that all remaining conflicts are resolvable by RPC-wrapping to result in a security compliant cross-domain partitioned  code, the conflict analyzer will produce a topology file (JSON) containing the assignment of every class to an enclave/level. An abbreviated sample topology JSON is provided below. A full length version can be found in the [appendix](#cut.json)
 
@@ -181,7 +180,7 @@ Aspect-oriented programming has the benefits of clean modularization of cross-cu
 unmodified annotated source code with aspects being woven in by the compiler when generating the executable.
 The following diagram gives a high level explanation of the concept.
 
-![CLOSURE architecture](docs/Java/images/aopArch.png){#aopArch}
+![Aspect-Oriented Programming Concept](docs/Java/images/aopArch.png){#aopArch}
 
 CLOSURE's approach to AOP is the following.
 A developer annotates Java application code using CLE and perform cross-domain analysis at the Java/Dalvik bytecode level. 
