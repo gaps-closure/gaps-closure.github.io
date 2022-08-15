@@ -340,3 +340,165 @@ Other objectives could be used instead.
 var int: objective = sum(e in ControlDep_CallInv, l in nonNullEnclave where xdedge[e,l])(1);
 solve minimize objective;
 ```
+
+Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated application code, and determined that all remaining conflicts are resolvable by RPC-wrapping to result in a security compliant cross-domain partitioned  code, the conflict analyzer will produce a topology file (JSON) containing the assignment of every class to an enclave/level. An abbreviated sample topology JSON is provided below. A full length version can be found in the [appendix](#cut.json)
+
+```json
+{
+    "enclaves": [
+        {
+            "level": "green", 
+            "assignedClasses": [
+                "com.peratonlabs.closure.eop2.level.normal.VideoEndpointNormal", 
+                "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal", 
+                "com.peratonlabs.closure.eop2.level.normal.VideoServerNormal"
+            ], 
+            "name": "green_E"
+        }, 
+        {
+            "level": "purple", 
+            "assignedClasses": [
+                "com.peratonlabs.closure.eop2.transcoder.Transcoder", 
+                "com.peratonlabs.closure.eop2.video.manager.VideoManager"
+            ], 
+            "name": "purple_E"
+        }, 
+        {
+            "level": "orange", 
+            "assignedClasses": [
+                "com.peratonlabs.closure.eop2.level.high.VideoEndpointHigh", 
+                "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh", 
+                "com.peratonlabs.closure.eop2.level.high.VideoServerHigh"
+            ], 
+            "name": "orange_E"
+        }
+    ], 
+    "entry": {
+        "mainClass": "com.peratonlabs.closure.eop2.video.manager.VideoManager", 
+        "enclave": "purple_E", 
+        "filepath": "./examples/eop2-demo/src/com/peratonlabs/closure/eop2/video/manager/VideoManager.java"
+    }, 
+    "cuts": [
+        {
+            "callee": {
+                "level": "orange", 
+                "type": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh"
+            }, 
+            "allowedCallers": [
+                {
+                    "level": "purple", 
+                    "type": "com.peratonlabs.closure.eop2.video.manager.VideoManager"
+                }
+            ], 
+            "methodSignature": {
+                "parameterTypes": [
+                    "int", 
+                    "java.lang.String"
+                ], 
+                "fqcn": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh", 
+                "name": "start", 
+                "returnType": "void"
+            }
+        }, 
+        {
+            "callee": {
+                "level": "green", 
+                "type": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal"
+            }, 
+            "allowedCallers": [
+                {
+                    "level": "purple", 
+                    "type": "com.peratonlabs.closure.eop2.video.manager.VideoManager"
+                }
+            ], 
+            "methodSignature": {
+                "parameterTypes": [
+                    "int", 
+                    "java.lang.String"
+                ], 
+                "fqcn": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal", 
+                "name": "start", 
+                "returnType": "void"
+            }
+        }, 
+        {
+            "callee": {
+                "level": "orange", 
+                "type": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh"
+            }, 
+            "allowedCallers": [
+                {
+                    "level": "purple", 
+                    "type": "com.peratonlabs.closure.eop2.video.manager.VideoManager"
+                }
+            ], 
+            "methodSignature": {
+                "parameterTypes": [], 
+                "fqcn": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh", 
+                "name": "getRequest", 
+                "returnType": "com.peratonlabs.closure.eop2.video.requester.RequestHigh"
+            }
+        }, 
+        {
+            "callee": {
+                "level": "green", 
+                "type": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal"
+            }, 
+            "allowedCallers": [
+                {
+                    "level": "purple", 
+                    "type": "com.peratonlabs.closure.eop2.video.manager.VideoManager"
+                }
+            ], 
+            "methodSignature": {
+                "parameterTypes": [], 
+                "fqcn": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal", 
+                "name": "getRequest", 
+                "returnType": "com.peratonlabs.closure.eop2.video.requester.Request"
+            }
+        }, 
+        {
+            "callee": {
+                "level": "orange", 
+                "type": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh"
+            }, 
+            "allowedCallers": [
+                {
+                    "level": "purple", 
+                    "type": "com.peratonlabs.closure.eop2.transcoder.Transcoder"
+                }
+            ], 
+            "methodSignature": {
+                "parameterTypes": [
+                    "java.lang.String", 
+                    "byte[]"
+                ], 
+                "fqcn": "com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh", 
+                "name": "send", 
+                "returnType": "void"
+            }
+        }, 
+        {
+            "callee": {
+                "level": "green", 
+                "type": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal"
+            }, 
+            "allowedCallers": [
+                {
+                    "level": "purple", 
+                    "type": "com.peratonlabs.closure.eop2.transcoder.Transcoder"
+                }
+            ], 
+            "methodSignature": {
+                "parameterTypes": [
+                    "java.lang.String", 
+                    "byte[]"
+                ], 
+                "fqcn": "com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal", 
+                "name": "send", 
+                "returnType": "void"
+            }
+        }
+    ]
+}
+```
