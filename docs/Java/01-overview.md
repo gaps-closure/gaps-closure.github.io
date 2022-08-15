@@ -46,12 +46,12 @@ between the program partitions.
 
 ## Architecture **Requires rewrite for java**
 
-
+![CLOSURE architecture](docs/Java/images/arch.png){#fig-arch}
 
 ## Workflow **Requires rewrite for java**
 The CLOSURE workflow for building cross-domain applications shown in [the figure below](#fig-workflow).
 
-![Java Closure Workflow](docs/Java/images/JavaWorkFlow.png){#fig-workflow}
+![Java Closure Workflow](docs/Java/images/workflow.png){#fig-workflow}
 
 In the first stage, the developer either writes a new application or imports
 existing source which must be tooled for cross-domain operation. The developer
