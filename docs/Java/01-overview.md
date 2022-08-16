@@ -1,6 +1,6 @@
-# CLOSURE Toolchain Overview **XXX: Rob rough import then Rajesh Review/Refactor**
+# CLOSURE Toolchain Overview **XXX: Rajesh Review/Refactor**
 
-## What is CLOSURE? **XXX: Can be largely reused**
+## What is CLOSURE? 
 
 DARPA's Guaranteed Architecture for Physical Systems (GAPS) is a research program 
 that addresses software and hardware for compartmentalized applications where
@@ -44,11 +44,11 @@ partition if feasible. CLOSURE automatically generates and inserts serialization
 marshalling, and remote-procedure call code for cross-domain interactions
 between the program partitions.
 
-## Architecture **Requires rewrite for java**
+## Architecture 
 
 
 
-## Workflow **Requires rewrite for java**
+## Workflow 
 The CLOSURE workflow for building cross-domain applications shown in [the figure below](#fig-workflow).
 
 ![Java Closure Workflow](docs/Java/images/JavaWorkFlow.png){#fig-workflow}

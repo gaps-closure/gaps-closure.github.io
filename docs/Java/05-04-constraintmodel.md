@@ -1,4 +1,4 @@
-## Constraint Model in MiniZinc **Update for Java**
+## Constraint Model in MiniZinc **XXX: Ready for Review**
 
 The following contains type declarations
 for the minizinc model used within the [conflict analyzer](#conflict-analyzer).
@@ -240,6 +240,9 @@ array[functionCdf, cleLabel]          of bool:           hasARCtaints;
 bool:                                                    debug;
 debug = true;
 
+
+array[ClassNames,nonNullEnclave]                     of var bool: classEnclave;
+array[ClassNames,Level]                              of var bool: classTaintedAtLevel;
 
 array[PDGNodeIdx,nonNullEnclave]                     of var Enclave:    nodeEnclave;
 array[PDGNodeIdx,nonNullEnclave]                     of var Level:      nodeLevel;

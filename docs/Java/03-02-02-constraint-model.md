@@ -1,4 +1,4 @@
-### Detailed MiniZinc constraint model **XXX: Rob** {#constraints}
+### Detailed MiniZinc constraint model **XXX: Ready for Review** {#constraints}
 
 
 In this section, we present an informal statement of constraints to be enforced by our conflict analyzer. We then present the main constraints coded in minizinc used by our model to achieve these constraints.More
@@ -14,11 +14,6 @@ compilation.
 
 The solver will attempt to assign a node annotation label to all nodes except a user annotated function. Only user annotated functions may have a function annotation. Functions lacking a function annotation cannot be invoked cross-domain and can only have exactly one taint accross all invocations. This ensures that the arguments, return and function body only touch the same taint. 
 
-### Remarks and Limitations
-
-* A limitation of the current model is that it supports at most one enclave per level.
- 
-* Class annotations are currently not used by CLE, but this can change in the future.
 
 ### General Constraints
 
@@ -340,3 +335,14 @@ Other objectives could be used instead.
 var int: objective = sum(e in ControlDep_CallInv, l in nonNullEnclave where xdedge[e,l])(1);
 solve minimize objective;
 ```
+
+
+### Remarks and Limitations
+
+* A limitation of the current model is that it supports at most one enclave per level.
+ 
+* Class annotations are currently not used by CLE, but this can change in the future.
+
+* Class static fields are handled imprecisely
+
+* No mechanism exists to apply user-defined function annotations to a lambda function

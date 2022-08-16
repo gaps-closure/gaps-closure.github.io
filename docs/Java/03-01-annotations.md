@@ -1,10 +1,10 @@
-## Annotations **XXX: Rob**
+## Annotations **XXX: Ready for Review**
 
 The CLOSURE toolchain relies on source level annotations to specify
 the cross domain constraints. Developers annotate programs using CLOSURE Language Extensions (CLE) 
 to specifycross-domain security constraints. Each CLE annotation definition associates
-a _CLE label_ (a symbol) with a _CLE JSON_ which provides detailed specification
-of cross-domain data sharing and function invocation constraints.
+a _CLE label_ (a symbol) with a _CLE JSON_ which provides a detailed specification
+for cross-domain data sharing and function invocation constraints.
 
 These source level annotations determine the following:
 
@@ -13,13 +13,15 @@ These source level annotations determine the following:
 3. Which functions can be called cross domain
 4. Guard rules which transform data as it crosses domains   
 
-Typically, these annotations are only applied to a subset of the program
-and a separate tool called the _conflict analyzer_ is able infer the CLE labels 
-of the rest of the program elements given this subset.
+These annotations are only applied to a subset of the program
+and then passed to a separate tool called the _conflict analyzer_ that is able infer the CLE labels 
+of the rest of the program elements.
 
-### Field Annotations  
+The rest of this section will introduce examples of Java program features with CLE annotations.
 
-First, we defined a custom java annotion shown below called Cledef that that allows us to add a custom CLE json to fields, constructors, and methods.
+
+### Defining CLE Annotations
+First, we define a custom java annotion shown below called _Cledef_. This enables us to add a custom CLE json via Java's annotation feature to fields, constructors, and methods.
 
 ```java
 @Target(ElementType.ANNOTATION_TYPE)
@@ -32,6 +34,8 @@ public @interface Cledef
 
 ```
 
+
+### Field Annotations  
 In the example below, we show how we can apply a CLE annotation to a field in a Java program.
 
 First we define our annotation in a java source file.
@@ -45,9 +49,9 @@ First we define our annotation in a java source file.
 public @interface Green {}
 ```
 
-The above annotation can be applied to any field (static or not) in a class. The retention policy ensures that the annotation is accessible throughout compilation and at runtime. 
+The above annotation can be applied to any field (static or non-static) in a class. The retention policy ensures that the annotation is accessible throughout compilation and at runtime. 
 
-The clejson specifies a `"level"` field set to `"green"`. The level is like 
+The clejson specifies a `"level"` field set to `"green"`. The level is similar to 
 security level, but there is no requirement for an ordering among the levels.
 A single level may correspond to many enclaves, but in most cases they will
 be in a bijection with the enclaves. The level names can be any string.
@@ -90,7 +94,7 @@ In the above example, the `"remotelevel"` field specifies that the
 program element the label is applied to can be shared with an enclave
 so long as its level is `"purple"`. The `"guarddirective": { "operation": "allow"}}`
 defines how data gets transformed as it goes across enclaves. 
-In this case, `{ "operation": "allow" }` simply allows the data to pass uninhibited. 
+In this case, `{ "operation": "allow" }` simply allows the data to pass uninhibited.
 The `"direction"` field is currently not used and is ignored by the CLOSURE toolchain (may be removed in future release).
 
 The `cdf` is an array, and data can be released into more than one enclave. 
@@ -132,7 +136,8 @@ The following shows an example of a constructor annotation.
 public @interface PurpleGreenConstructable {}
 ```
 
-Similarly, the following example shows a method annotation.
+Similarly, the following example shows a method annotation. The only difference between a constructor and method annotation in Java is the Target. 
+
 ```java
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
