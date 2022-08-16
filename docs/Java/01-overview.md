@@ -17,7 +17,7 @@ toolchain, developers will express security intent through annotations applied
 to the program, which drive the program analysis, partitioning, and code
 autogeneration required by a GAPS application.
 
-**Problem:** The machinery required to verifiably and securely establish
+**Problem:** The machinery required to verifiable and securely establish
 communication between cross-domain systems (CDS) without jeopardizing data
 spillage is too complex to implement for many software platforms where such
 communication would otherwise be desired. To regulate data exchanges between

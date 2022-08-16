@@ -1,9 +1,9 @@
-## Phase 2 CLOSURE conflict analyzer based on minizinc constraint solver **XXX: Ready for Review** {#conflict-analyzer}  
+## Phase 2 CLOSURE conflict analyzer based on MiniZinc constraint solver **XXX: Ready for Review** {#conflict-analyzer}  
 
-The role of the conflict analyzer is to evaluate a user annotated program and decide if the annotated program respects the allowable information flows specified in the annotations. As input, the conflict analyzer requires the user annottated Java source code. Based on this, if it is properly annotated and a partition is possible it will produce an assingment for each class to an enclave (cut.json). If the conflict analyzer detects an inconsistency in the given annotations and program, it reports this and the user can run Minzinc on the model to produce diagnostics identifying problematic constraints.
+The role of the conflict analyzer is to evaluate a user annotated program and decide if the annotated program respects the allowable information flows specified in the annotations. As input, the conflict analyzer requires the user annotated Java source code. Based on this, if it is properly annotated and a partition is possible it will produce an assignment for each class to an enclave (cut.json). If the conflict analyzer detects an inconsistency in the given annotations and program, it reports this and the user can run Minzinc on the model to produce diagnostics identifying problematic constraints.
 
 
-The conflict analyzer uses a constraint solver called [MiniZinc @minizinc_handbook ](https://www.minizinc.org/doc-2.5.5/en/index.html)  to perform program analysis and determine a correct-by-construction partition that satifies the constraints
+The conflict analyzer uses a constraint solver called [MiniZinc @minizinc_handbook ](https://www.minizinc.org/doc-2.5.5/en/index.html)  to perform program analysis and determine a correct-by-construction partition that satisfies the constraints
 specified by the developer using CLE annotations. MiniZinc provides a high level
 language abstraction to express constraint solving problems in an intuitive manner.
 MiniZinc compiles a MiniZinc language specification of a problem for 
@@ -67,11 +67,11 @@ Java CLOSURE uses JOANA @joana to construct system dependency graph (SDG) which 
 We convert the node and edge types from the SDG to the format presented in our C documentation @CDoc. The transformation is shown in detail in the [appendix](#sdg-appendix).
 
 
-### Data required by minizinc
+### Data required by MiniZinc
 
 The Java conflict analyzer uses three kinds of information in its model. It uses information about data and control flows from the SDG. It also collects information from the annotations using a jython script that uses java utilities to extract the CLE annotations from a given jar file. Lastly we make use of reflection feature in Java to relate fields and methods to their associated classes as well as track any modifiers that may be present on those fields and methods. 
 
-These three pieces of data along with the [constraints](#constraints) described in the next section are given to minizinc. Minizinc will then either produce at least one enclave assingment per class or report no such assingment exists given the program and user annotations.
+These three pieces of data along with the [constraints](#constraints) described in the next section are given to MiniZinc. MiniZinc will then either produce at least one enclave assingment per class or report no such assingment exists given the program and user annotations.
 
 ### Design Decisions
 The Java conflict analyzer permits unannotated classes to reside on multiple enclaves. This choice was made to make our approach more practical. This design choice allows developers to annotate child classes with different level taints without necessarily requiring the parent class to be annotated. 

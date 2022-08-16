@@ -11,6 +11,6 @@ Also in the research pipeline are:
   
 1. Support for Android applications
 2. Support for large applications
-3. Support for more language features, i.e. annotated lambdad
+3. Support for more language features, i.e. annotated lambda
 4. support for concurrent (multi-threaded) program
    

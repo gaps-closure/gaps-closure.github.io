@@ -12,7 +12,7 @@ edge are in different enclaves. Several other auxiliary decision variables are
 used in the constraint model to express the constraints or for efficient
 compilation. 
 
-The solver will attempt to assign a node annotation label to all nodes except a user annotated function. Only user annotated functions may have a function annotation. Functions lacking a function annotation cannot be invoked cross-domain and can only have exactly one taint accross all invocations. This ensures that the arguments, return and function body only touch the same taint. 
+The solver will attempt to assign a node annotation label to all nodes except a user annotated function. Only user annotated functions may have a function annotation. Functions lacking a function annotation cannot be invoked cross-domain and can only have exactly one taint across all invocations. This ensures that the arguments, return and function body only touch the same taint. 
 
 
 ### General Constraints
@@ -190,7 +190,7 @@ in the caller).
 3) For any parameter passing edge in the cut, the taint of the source
 node must have a CDF that allows the data to be shared with the level of the taint of the destination node. This applies to the input parameters going from caller to callee and output parameters going from callee back to the caller.
 
-Note: For cross domain calls, the callee is assigned to a fixed enclave level. The caller may be unannotated and the label to be considered (e.g. for argument passing checks) would corrsepond to the label applicable at the level of the caller (instance).
+Note: For cross domain calls, the callee is assigned to a fixed enclave level. The caller may be unannotated and the label to be considered (e.g. for argument passing checks) would correspond to the label applicable at the level of the caller (instance).
 
 ```minizinc
 constraint :: "XDCDataReturnAllowed"
