@@ -1,9 +1,9 @@
 ## Conflict Analyzer Using MiniZinc Constraint Solver {#conflict-analyzer}  
 
-The role of the conflict analyzer is to evaluate a user annotated program and decide if the annotated program respects the allowable information flows specified in the annotations. As input, the conflict analyzer requires the user annottated C source code. Based on this, if it is properly annotated and a partition is possible it will provide an assignment for every global variable and function to an enclave (topology.json). If the conflict analyzer detects a conflict, it produces a report guiding users to problematic program points that may need to be refactored or additional annotations applied.
+The role of the conflict analyzer is to evaluate a user annotated program and decide if the annotated program respects the allowable information flows specified in the annotations. As input, the conflict analyzer requires the user annotated C source code. Based on this, if it is properly annotated and a partition is possible it will provide an assignment for every global variable and function to an enclave (topology.json). If the conflict analyzer detects a conflict, it produces a report guiding users to problematic program points that may need to be refactored or additional annotations applied.
 
 
-The conflict analyzer uses a constraint solver called [MiniZinc @minizinc_handbook ](https://www.minizinc.org/doc-2.5.5/en/index.html)  to perform program analysis and determine a correct-by-construction partition that satifies the constraints
+The conflict analyzer uses a constraint solver called [MiniZinc @minizinc_handbook ](https://www.minizinc.org/doc-2.5.5/en/index.html)  to perform program analysis and determine a correct-by-construction partition that satisfies the constraints
 specified by the developer using CLE annotations. MiniZinc provides a high level
 language abstraction to express constraint solving problems in an intuitive manner.
 MiniZinc compiles a MiniZinc language specification of a problem for 
@@ -19,7 +19,7 @@ In addition to outputing a `topology.json` providing the assignments of global a
 Downstream tools in the CLOSURE toolchain will use the output of the solver to
 physically partition the code, and after further analysis (for example, to
 determine whether each parameter is an input, output, or both, and the size of
-the parameter), the downstream tools will autogenerate code for the marshalling and
+the parameter), the downstream tools will autogenerate code for the marshaling and
 serialization of input and output/return data for the cross-domain call, as
 well as code for invocation and handling of cross-domain remote-procedure calls
 that wrap the function invocations in the cross-domain cut. 
@@ -60,7 +60,7 @@ optional arguments:
 As inputs the conflict analyzer takes in C source and header files and outputs a [topology.json](#xd-assignment) and possibly
 an `artifact.json`. 
 
-The pdglib can be found at `/opt/closure/lib/libpdg.so`. The soure path controls the `source_path` field in the 
+The pdglib can be found at `/opt/closure/lib/libpdg.so`. The source path controls the `source_path` field in the 
 topology. The `output-json` option will output diagnostics and results in a JSON form readable by [CVI](#cvi).
 
 Note: the `--clang-args` is a comma separated list of arguments to pass to clang, and any paths given (e.g., 
@@ -102,7 +102,7 @@ int *secretvar = 0;
 
 ### `opt` pass for the Program Dependence Graph (PDG)
 
-The Program Dependence Graph (PDG)@program_mandering @kSplit @ptrsplit is an abstraction over a C/C++ program which specifies its control and data dependencies in a graph data structure. The PDG is computed by adding an anlysis pass to clang. The resulting graph is then parsed into a format that MiniZinc can reason about.
+The Program Dependence Graph (PDG)@program_mandering @kSplit @ptrsplit is an abstraction over a C/C++ program which specifies its control and data dependencies in a graph data structure. The PDG is computed by adding an analysis pass to clang. The resulting graph is then parsed into a format that MiniZinc can reason about.
 
 
 ![Visualization of the PDG for example 1](images/pdg-graph.png)
@@ -140,7 +140,7 @@ From these assignments, the `topology.json` and `artifact.json` can be generated
 
 ### Diagnostics using findMUS
 
-Diagnostic generation produces commandline output
+Diagnostic generation produces command line output
 containing source and dest node and grouped by the constraints violated in MiniZinc.
 When given `--output-json` it should also produce a machine readable `conflicts.json` which can be ingested by [CVI](#cvi)
 to show these errors in VSCode.

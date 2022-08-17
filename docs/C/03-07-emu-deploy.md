@@ -6,14 +6,14 @@ The CLOSURE project provides a general purpose emulation tool for instantiating 
 
 ![EMU GUI View, 4-enclave](docs/C/images/emu.png)
 
-Upon running the emulator, several enclaves (indicateed by color) are instantiated per the configuration file. Within each enclave are two types of nodes: 
+Upon running the emulator, several enclaves (indicated by color) are instantiated per the configuration file. Within each enclave are two types of nodes: 
 
 1. enclave-gateway node (e.g., orange-enclave-gw-P) which is co-located with emulated cross-domain hardware used for cross-domain communication to a peer enclave, and 
 2. a local enclave host (e.g., orange-1) within the enclave but without emulated GAPS hardware. 
 
-Enclave gateways are named using the following convention: ```<local color>-enclave-gw-<first letter of peer enclave in capital letter>```. Between enclave gateways are cross-domain gateway nodes ```<color1>-<color2>-xd-gw```. The cross-domain gateways faciliate bump-in-the-wire guard configuration described in subsequent sections. The Emulator has been tested with up to 4 enclaves. Note the enclave limit is attributed to the processing capcity of the underlying machine running the emulator (there is no fundamental limit to number of nodes and enclaves otherwise). A node can be accessed by double clicking its icon in the GUI to obtain a terminal to the node.
+Enclave gateways are named using the following convention: ```<local color>-enclave-gw-<first letter of peer enclave in capital letter>```. Between enclave gateways are cross-domain gateway nodes ```<color1>-<color2>-xd-gw```. The cross-domain gateways facilitate bump-in-the-wire guard configuration described in subsequent sections. The Emulator has been tested with up to 4 enclaves. Note the enclave limit is attributed to the processing capacity of the underlying machine running the emulator (there is no fundamental limit to number of nodes and enclaves otherwise). A node can be accessed by double clicking its icon in the GUI to obtain a terminal to the node.
 
-Each enclave-gateway node runs an instance of QEMU to model the node. The QEMU is configured using socat and netcat such that there is a device (`/dev/vcom`) with with the node reads/writes to communicate cross domain. Data written to `/dev/vcom` is passed to the corresponding xd-gw node which either passes the data through or applies redaction (see guard discussion below). The data is then available for reading at the remote enclave-gw QEMU instance upon reading from /dev/vcom. This configuration emulates reading/writing to the guard in the real deployment - no IP-based communication is occuring between the applications (even though under the hood the emulator uses IP transport to move the data). From the applications' perspective they are reading/writing directly to the guard device driver. Note that when double-clicking the enclave-gw node, you are immediately within the QEMU @QEMU instance (rather than the CORE @CORE BSD container wrapping it).
+Each enclave-gateway node runs an instance of QEMU to model the node. The QEMU is configured using socat and netcat such that there is a device (`/dev/vcom`) with with the node reads/writes to communicate cross domain. Data written to `/dev/vcom` is passed to the corresponding xd-gw node which either passes the data through or applies redaction (see guard discussion below). The data is then available for reading at the remote enclave-gw QEMU instance upon reading from /dev/vcom. This configuration emulates reading/writing to the guard in the real deployment - no IP-based communication is occurring between the applications (even though under the hood the emulator uses IP transport to move the data). From the applications' perspective they are reading/writing directly to the guard device driver. Note that when double-clicking the enclave-gw node, you are immediately within the QEMU @QEMU instance (rather than the CORE @CORE BSD container wrapping it).
 
 ![EMU Architecture](docs/C/images/emudesign.png)
 
@@ -119,7 +119,7 @@ The above specifies a BITW model. Simply change to the following to use BKND:
 ### Running Scenarios
 Prior to running the emulator, follow the instructions above to generate the QEMU Golden Images.
 
-In general, the Emulator is best run using the EMULATE build target of a project. This automates several steps such as constructing HAL configuration, preparing application tarballs, installing application depencencies etc. See the tasks.json and Makefile.mbig for respective projects. Furthermore the QEMU and CORE dependencies are all preinstalled in the CLOSURE contanier.
+In general, the Emulator is best run using the EMULATE build target of a project. This automates several steps such as constructing HAL configuration, preparing application tarballs, installing application dependencies etc. See the tasks.json and Makefile.mbig for respective projects. Furthermore the QEMU and CORE dependencies are all preinstalled in the CLOSURE container.
 
 ![Running Emulator from CVI](docs/C/images/cviemu.png)
 

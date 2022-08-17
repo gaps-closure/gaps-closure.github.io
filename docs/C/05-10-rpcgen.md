@@ -26,11 +26,11 @@ The RPC generator has modes of operation instantiated using C preprocessor macro
 
 2) **Receive Sockets are one per APP vs. one per function**
     - *One socket per APP* design (legacy) is based on one persistent listener that handled all cross-domain messages. This thread opened a zeromq socket once and reused it for the life of the program. This is efficient but not thread-safe
-    - *One socket per Function design (my_xdc). The socket is opened and closed just in time within the thread in question. This is less efficent, but thread-safe (e.g., for a web application framework that assigned each HTTP request to an arbitrary thread). 
+    - *One socket per Function design (my_xdc). The socket is opened and closed just in time within the thread in question. This is less efficient, but thread-safe (e.g., for a web application framework that assigned each HTTP request to an arbitrary thread). 
 
 3. **Request-Response vs One-way Diode** The requestor can send a call (with parameters) and either: a) wait for a response (with results) or b) continue without waiting for a response. In both cases the responder will run the cross-domain function and will either: a) send the result back to the requestor (Request-Response mode) or will not send any response (One-way Diode).
 
-The following are the [rpc generated](#rpc) functions for `example1`. Reall that in `example1` 
+The following are the [rpc generated](#rpc) functions for `example1`. Recall that in `example1` 
 there is a single function `get_a` with no arguments in level orange that is called from an enclave in 
 level purple. 
 

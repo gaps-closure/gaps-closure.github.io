@@ -2,7 +2,7 @@
  
 ### GEDL {#gedl}
 
-The GEDL is a JSON document specifying all the cross domain calls and their associated data including the arguments and return type. For function arguments, the directional assignment of that argument is indicated: `input` (a source argument, the function is reading in this value), `output` (a destination argument, the function is writing data to this argument), `both` (the argument is used as both an input and output argument in the function). This specification enables the RPC logic to auto-generate the required code to marshall the data accordingly.
+The GEDL is a JSON document specifying all the cross domain calls and their associated data including the arguments and return type. For function arguments, the directional assignment of that argument is indicated: `input` (a source argument, the function is reading in this value), `output` (a destination argument, the function is writing data to this argument), `both` (the argument is used as both an input and output argument in the function). This specification enables the RPC logic to auto-generate the required code to marshal the data accordingly.
 
 This gedl is generated in an llvm `opt` pass which analyzes the divvied code. Whether a parameter is an input or an output is
 determined using heuristics based on function signatures, for example, in `memset` the first argument is an output. If the `opt` pass is unable
@@ -28,7 +28,7 @@ opt -load libgedl.so
 
 ### IDL {#idl}
 
-The IDL is a text file with a set of C style struct data type definitions, used to facilitate subsequent serialization and marshalling of data types.
+The IDL is a text file with a set of C style struct data type definitions, used to facilitate subsequent serialization and marshaling of data types.
 The IDL syntax is based on C; an IDL file contains one or more C struct datatypes. Two structs are
 generated for each TAG request and response pair, with the in arguments in the request and the out arguments in the response.
 
@@ -75,7 +75,7 @@ A sample .idl can be found in the [appendix](#idl-appendix).
 
 ### Codecs {#codecs}
 
-For each struct in the IDL, a codecs is generated to faciliate serialization to the remote enclave. The codecs consist of
+For each struct in the IDL, a codecs is generated to facilitate serialization to the remote enclave. The codecs consist of
 encode, decode, print functions for each of the structs, which handle byte order conversions between host and network byte order. 
 
 The codecs can be generated using `hal_autogen` which is described in the [DFDL section](#dfdl).

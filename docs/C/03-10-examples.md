@@ -1,16 +1,16 @@
 ## Example applications {#examples} 
 
 ### Pedagogical Examples (examples 1-3)
-The [pedagoical examples](https://github.com/gaps-closure/build/blob/develop/apps/examples/) are available for basic understanding of the CLOSURE workflow, annotations, and testing via emulation. Each example uses the same [plain source](https://github.com/gaps-closure/build/blob/develop/apps/examples/example1/plain/example1.c), however, the **partitioning objectives** differ for each:
+The [pedagogical examples](https://github.com/gaps-closure/build/blob/develop/apps/examples/) are available for basic understanding of the CLOSURE workflow, annotations, and testing via emulation. Each example uses the same [plain source](https://github.com/gaps-closure/build/blob/develop/apps/examples/example1/plain/example1.c), however, the **partitioning objectives** differ for each:
 
 - Example1 
     - variable a in get_a() is in ORANGE and can be shared with PURPLE 
     - variable b in get_b() is in PURPLE and cannot be shared
-    - calculated ewma must be availbale on PURPLE side (for printing)
+    - calculated ewma must be available on PURPLE side (for printing)
 - Example2
     - variable a in get_a() is in ORANGE and can be shared with PURPLE
     - Variable b in get_b() is in PURPLE and cannot be shared
-    - calculated ewma must be available on nORANGE side (for printing)
+    - calculated ewma must be available on ORANGE side (for printing)
 - Example3 
     - variable a in get_a() is in ORANGE and cannot be shared
     - variable b in get_b() is in ORANGE and cannot be shared

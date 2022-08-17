@@ -11,7 +11,7 @@ edge are in different enclaves. Several other auxiliary decision variables are
 used in the constraint model to express the constraints or for efficient
 compilation. They are described later in the model.
 
-The solver will attempt to assign a node annotation label to all nodes except a user annotated function. Only user annotated functions may have a function annotation. Functions lacking a function annotation cannot be invoked cross-domain and can only have exactly one taint accross all invocations. This ensures that the arguments, return and function body only touch the same taint. 
+The solver will attempt to assign a node annotation label to all nodes except a user annotated function. Only user annotated functions may have a function annotation. Functions lacking a function annotation cannot be invoked cross-domain and can only have exactly one taint across all invocations. This ensures that the arguments, return and function body only touch the same taint. 
 
 #### General Constraints on Output and Setup of Auxiliary Decision Variables
 
@@ -152,11 +152,11 @@ constraint :: "XDCParmAllowed"                 forall (e in Parameter)          
 
 #### Constraints on Taint Coercion Within Each Enclave {#coercion}
 
-While the constraints on the control dependency and data depdendency that
+While the constraints on the control dependency and data dependency that
 we discussed governed data sharing at the cross-domain cut, we still need
 to perform taint checking to ensure that data annotated with different 
 labels inside each enclave are managed correctly and only when the
-mixing of the taints is explcitly allowed by the user.
+mixing of the taints is explicitly allowed by the user.
 
 Labels can be cooerced (i.e., nodes of a given PDG edge can be permitted to
 have different label assigments) inside an enclave only through user annotated
@@ -176,7 +176,7 @@ constraint :: "TaintsSafeOrCoerced"            forall (e in DataEdgeParam)      
 
 ```
 
-If the edge is a paremeter in or parameter out edege, then it can be coerced if
+If the edge is a parameter in or parameter out edge, then it can be coerced if
 and only if the associated function annotation has the taint of the other node
 in the argument taints for the corresponding parameter index. In other words,
 what is passed in through this parameter has a taint allowed by the function
@@ -209,7 +209,7 @@ Note that this constraint might appear seem redundant given the
 `AnnotatedFunContentCoercible` constraint discussed earlier. On closer
 inspection we can see that the following constraint also includes edges 
 between nodes in the function and global/static variables; the earlier 
-constraint dows not. There is overlap between the constraints, so some
+constraint does not. There is overlap between the constraints, so some
 refinement is possible, which may make the model a little harder to understand.
 
 ```minizinc

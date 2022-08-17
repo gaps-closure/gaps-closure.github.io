@@ -2,7 +2,7 @@
 
 ### HAL Data-Plane Client API (send/recv API)
 
-The HAL Data-Plane API abstracts the different hardware APIs used by CDGs, providing a single high-level interace to support all cross-domain communication (xdc) between security enclaves. The client API is available as a library that cross-domain applications can link to. 
+The HAL Data-Plane API abstracts the different hardware APIs used by CDGs, providing a single high-level interface to support all cross-domain communication (xdc) between security enclaves. The client API is available as a library that cross-domain applications can link to. 
 
 The application needs to perform some initialization steps before it can send and receive data.
 
@@ -63,7 +63,7 @@ extern int  xdc_recv(void *socket, void *adu, gaps_tag *tag);
 
 In additon to the selection of socket (e.g., returned by the xdc_pub_socket() call), the user specifies buffers for the Application Data Unit (adu) and tag. The tag data type (e.g., position or distance) specifies the adu structure (and which registered encode/decode function to use).
 
-In future versions of this API, we plan to support additional send and receive communication patterns including asynchronous receive calls using one-shot or repeated callbacks that can be registered by the application, sending a tagged request and receiving a reply matching the tag, suport for a stream of sequenced messages with in-order delivery, etc.
+In future versions of this API, we plan to support additional send and receive communication patterns including asynchronous receive calls using one-shot or repeated callbacks that can be registered by the application, sending a tagged request and receiving a reply matching the tag, support for a stream of sequenced messages with in-order delivery, etc.
 
 #### Other API Calls
 
@@ -79,7 +79,7 @@ The log level can be set from level 0 (trace) to level 5 (fatal). The default is
 
 #### Data API Summary
 
-In summary, the application initializes the URIs for the 0MQ endpoints, registers codecs for the application datatypes, and initializes the send and recv sockets. The applicaiton can then sends and receives data using pointers to in-memory data structures and associated tags. An example python test program that makes uses of this client API can be found in [hal/test/halperf.py](https://github.com/gaps-closure/hal/tree/develop/test/halperf.py), which links to the HAL data-plane client API dynamic library (`libxdcomms.sa`). A C test program that makes use of the recv timeouts can be found in [hal/test/app_req_rep.c](https://github.com/gaps-closure/hal/tree/develop/test/app_req_rep.c), which links to HAL data-plane client API static library (`libxdcomms.a`).
+In summary, the application initializes the URIs for the 0MQ endpoints, registers codecs for the application datatypes, and initializes the send and recv sockets. The application can then sends and receives data using pointers to in-memory data structures and associated tags. An example python test program that makes uses of this client API can be found in [hal/test/halperf.py](https://github.com/gaps-closure/hal/tree/develop/test/halperf.py), which links to the HAL data-plane client API dynamic library (`libxdcomms.sa`). A C test program that makes use of the recv timeouts can be found in [hal/test/app_req_rep.c](https://github.com/gaps-closure/hal/tree/develop/test/app_req_rep.c), which links to HAL data-plane client API static library (`libxdcomms.a`).
 
 ### HAL Control-Plane API (Future)
 
