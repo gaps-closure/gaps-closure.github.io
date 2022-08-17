@@ -119,7 +119,7 @@ design are the following:
 ## Document Roadmap
 
 In the rest of this document, we first present a quick start guide followed by a detailed usage of 
-the toolchain components. For each component, we describe what is does, provide some insight into
+the toolchain components. For each component, we describe what it does, provide some insight into
 how it works, discuss inputs and outputs and provide invocation syntax for usage. We conclude with 
 a discussion of limitations of the current toolchain and a roadmap for future work. We provide 
 samples of significant input and output files in the appendices, and provide a list of bibliographic 
