@@ -1,6 +1,6 @@
-## Additional files for Constraint Model in MiniZinc **XXX: Ben add mzn instances**  
+## Additional files for Constraint Model in MiniZinc {#constraint-appendix}
 
-The following contains type declarations
+The following contains type declarations 
 for the MiniZinc model used within the [conflict analyzer](#conflict-analyzer).
 These type declarations, along with a model instance generated in python
 are inputted to MiniZinc along with the [constraints](#constraints) to either produce
@@ -248,4 +248,191 @@ array[PDGEdgeIdx]                     of var bool:       coerced;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ```
 
+### PDG instance
 
+The following is the MiniZinc representation of the PDG for example 1.
+
+```minizinc
+Inst_FunCall_start = 1;
+Inst_FunCall_end = 14;
+Inst_Ret_start = 15;
+Inst_Ret_end = 19;
+Inst_Br_start = 20;
+Inst_Br_end = 23;
+Inst_Other_start = 24;
+Inst_Other_end = 71;
+Inst_start = 1;
+Inst_end = 71;
+VarNode_StaticGlobal_start = 0;
+VarNode_StaticGlobal_end = -1;
+VarNode_StaticModule_start = 0;
+VarNode_StaticModule_end = -1;
+VarNode_StaticFunction_start = 72;
+VarNode_StaticFunction_end = 74;
+VarNode_StaticOther_start = 0;
+VarNode_StaticOther_end = -1;
+VarNode_start = 72;
+VarNode_end = 74;
+FunctionEntry_start = 75;
+FunctionEntry_end = 79;
+Param_FormalIn_start = 80;
+Param_FormalIn_end = 84;
+Param_FormalOut_start = 85;
+Param_FormalOut_end = 89;
+Param_ActualIn_start = 90;
+Param_ActualIn_end = 91;
+Param_ActualOut_start = 92;
+Param_ActualOut_end = 93;
+Param_start = 80;
+Param_end = 93;
+Annotation_Var_start = 94;
+Annotation_Var_end = 95;
+Annotation_Global_start = 96;
+Annotation_Global_end = 96;
+Annotation_Other_start = 0;
+Annotation_Other_end = -1;
+Annotation_start = 94;
+Annotation_end = 96;
+PDGNode_start = 1;
+PDGNode_end = 96;
+ControlDep_CallInv_start = 1;
+ControlDep_CallInv_end = 4;
+ControlDep_CallRet_start = 5;
+ControlDep_CallRet_end = 8;
+ControlDep_Entry_start = 9;
+ControlDep_Entry_end = 70;
+ControlDep_Br_start = 71;
+ControlDep_Br_end = 85;
+ControlDep_Other_start = 0;
+ControlDep_Other_end = -1;
+ControlDep_start = 1;
+ControlDep_end = 85;
+DataDepEdge_DefUse_start = 86;
+DataDepEdge_DefUse_end = 141;
+DataDepEdge_RAW_start = 142;
+DataDepEdge_RAW_end = 148;
+DataDepEdge_Ret_start = 149;
+DataDepEdge_Ret_end = 152;
+DataDepEdge_Alias_start = 153;
+DataDepEdge_Alias_end = 154;
+DataDepEdge_start = 86;
+DataDepEdge_end = 154;
+Parameter_In_start = 155;
+Parameter_In_end = 166;
+Parameter_Out_start = 167;
+Parameter_Out_end = 174;
+Parameter_Field_start = 175;
+Parameter_Field_end = 176;
+Parameter_start = 155;
+Parameter_end = 176;
+Anno_Global_start = 177;
+Anno_Global_end = 180;
+Anno_Var_start = 181;
+Anno_Var_end = 184;
+Anno_Other_start = 0;
+Anno_Other_end = -1;
+Anno_start = 177;
+Anno_end = 184;
+PDGEdge_start = 1;
+PDGEdge_end = 184;
+hasFunction = [
+76,76,76,76,79,76,76,76,76,78,78,78,79,79,75,76,77,78,79,76,
+76,76,76,75,75,75,75,76,76,76,76,76,76,76,76,76,76,76,76,76,
+76,76,76,76,76,77,77,77,77,77,78,78,78,78,78,78,78,78,78,78,
+78,78,78,78,78,79,79,79,79,79,79,0,0,0,75,76,77,78,79,78,
+78,79,79,79,78,78,79,79,79,78,78,78,78,76,76,0
+];
+hasSource = [
+1,2,3,5,15,16,17,18,75,75,75,75,75,76,76,76,76,76,76,76,
+76,76,76,76,76,76,76,76,76,76,76,76,76,76,76,76,76,76,76,76,
+77,77,77,77,77,77,78,78,78,78,78,78,78,78,78,78,78,78,78,78,
+78,78,79,79,79,79,79,79,79,79,21,21,21,21,21,21,21,21,21,21,
+21,21,21,21,21,72,72,72,73,73,73,73,74,74,74,24,25,27,28,28,
+28,29,29,30,30,30,31,31,31,31,32,36,37,1,2,40,3,42,43,44,
+46,47,48,50,51,51,52,52,53,57,58,59,60,61,62,63,65,66,67,68,
+5,26,39,41,49,54,55,64,15,16,17,18,33,34,32,40,3,3,78,78,
+80,81,79,79,90,91,3,3,78,78,79,79,92,93,83,88,72,73,75,76,
+76,76,33,34
+];
+hasDest = [
+75,77,78,76,1,5,2,3,25,26,27,15,24,28,29,30,31,33,34,35,
+20,36,37,21,1,38,2,39,32,40,3,41,42,4,22,43,44,45,23,16,
+47,48,49,50,17,46,51,52,53,54,55,56,57,58,59,60,61,62,63,64,
+65,18,67,68,69,70,71,5,19,66,1,38,2,39,32,40,3,41,42,4,
+22,43,44,45,23,27,26,24,50,49,47,46,65,64,61,25,26,15,32,38,
+33,40,39,42,41,34,45,43,36,35,3,37,21,38,39,3,41,4,44,45,
+48,48,49,17,57,54,58,55,56,59,59,60,63,62,63,64,18,69,70,71,
+19,27,40,42,50,57,58,65,1,5,2,3,28,30,90,91,90,91,80,81,
+57,58,82,83,80,81,92,93,85,86,87,88,32,40,84,89,96,96,96,96,
+94,95,94,95
+];
+hasParamIdx = array1d(Param, [
+1,2,1,2,-1,1,2,1,2,-1,1,2,1,2
+]);
+userAnnotatedFunction = array1d(FunctionEntry, [
+ true,true,false,false,false
+]);
+MaxFuncParms = 3;
+constraint ::  "TaintOnNodeIdx33" taint[33]=ORANGE;
+constraint ::  "TaintOnNodeIdx34" taint[34]=PURPLE;
+constraint ::  "TaintOnNodeIdx72" taint[72]=ORANGE;
+constraint ::  "TaintOnNodeIdx73" taint[73]=PURPLE;
+constraint ::  "TaintOnNodeIdx75" taint[75]=XDLINKAGE_GET_A;
+constraint ::  "TaintOnNodeIdx76" taint[76]=EWMA_MAIN;
+```
+
+### cle instance
+
+The following is a representation of the annotations in example 1 in MiniZinc:
+
+```minizinc
+cleLabel = {nullCleLabel, XDLINKAGE_GET_A , TAG_RESPONSE_GET_A , EWMA_MAIN , PURPLE , ORANGE , orangeDFLT , purpleDFLT }; 
+hasLabelLevel = [nullLevel, orange , nullLevel , purple , purple , orange , orange , purple ]; 
+isFunctionAnnotation = [false, true , false , true , false , false , false , false ]; 
+cdf = {nullCdf, XDLINKAGE_GET_A_cdf_0 , XDLINKAGE_GET_A_cdf_1 , EWMA_MAIN_cdf_0 , ORANGE_cdf_0 }; 
+fromCleLabel = [nullCleLabel, XDLINKAGE_GET_A , XDLINKAGE_GET_A , EWMA_MAIN , ORANGE ]; 
+hasRemotelevel = [nullLevel, purple , orange , purple , purple ]; 
+hasDirection = [nullDirection, bidirectional , bidirectional , bidirectional , egress ]; 
+hasGuardOperation = [nullGuardOperation, allow , allow , allow , allow ]; 
+isOneway = [false, false , false , false , false ]; 
+cdfForRemoteLevel = [|
+ nullCdf, nullCdf , nullCdf 
+|nullCdf, XDLINKAGE_GET_A_cdf_1 , XDLINKAGE_GET_A_cdf_0 
+|nullCdf, nullCdf , nullCdf 
+|nullCdf, nullCdf , EWMA_MAIN_cdf_0 
+|nullCdf, nullCdf , nullCdf 
+|nullCdf, nullCdf , ORANGE_cdf_0 
+|nullCdf, nullCdf , nullCdf 
+|nullCdf, nullCdf , nullCdf 
+|]; 
+hasRettaints = array2d(functionCdf, cleLabel, [
+  false , false , true  , false , false , false , false , false 
+, false , false , true  , false , false , false , false , false 
+, false , false , false , false , true  , false , false , false 
+ ]); 
+hasCodtaints = array2d(functionCdf, cleLabel, [
+  false , false , false , false , false , true  , false , false 
+, false , false , false , false , false , true  , false , false 
+, false , false , true  , false , true  , false , false , false 
+ ]); 
+hasArgtaints = array3d(functionCdf, parmIdx, cleLabel, [
+  false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		
+, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		
+, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		, false , false , false 		
+ ]); 
+hasARCtaints = array2d(functionCdf, cleLabel, [
+  false , true  , true  , false , false , true  , false , false 
+, false , true  , true  , false , false , true  , false , false 
+, false , false , true  , true  , true  , false , false , false 
+ ]); 
+```
+
+### enclave instance
+
+The following is the MiniZinc representation of the mapping between enclaves and levels:  
+
+```minizinc
+Level = {nullLevel,orange,purple};
+Enclave = {nullEnclave, orange_E,purple_E};
+hasEnclaveLevel = [nullLevel,orange,purple];
+```

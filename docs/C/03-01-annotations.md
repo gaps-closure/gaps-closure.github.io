@@ -1,4 +1,4 @@
-## Annotations **XXX: Needs more discussion about label coercion**
+## Annotations 
 
 The CLOSURE toolchain relies on source level annotations to specify
 the cross domain constraints. Developers annotate programs using CLOSURE Language Extensions (CLE) 
@@ -147,7 +147,9 @@ Optional fields in function annotations include
 
 
 ### Label Coercion
-Only an annotated function can accept data of one or more label and produce data with other labels as allowed by the annotation constraints on the function's arguments, return, and body. We call this label or taint coercion. See [label coercion](#coercion) for detailed discussion.
+
+Only an annotated function can accept data of one or more label and produce data with other labels as allowed by the annotation constraints on the function's arguments, return, and body. We call this label or taint coercion. See [label coercion](#coercion) for detailed discussion. Label coercion can happen within a single level when a function annotation is given
+a cdf with a remotelevel the same as its level.
 
 
 ### TAGs
