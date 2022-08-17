@@ -16,13 +16,13 @@ The fastest way to get started with the CLOSURE toolchain
 is to pull the published docker image from dockerhub:
 
 ```bash
-docker pull gapsclosure/closuredev:latest
+docker pull gapsclosure/closuredev:master
 ```
 
 Then, to get a shell with closure installed, enter the following:
 
 ```bash
-docker run -it gapsclosure/closuredev:latest 
+docker run -it gapsclosure/closuredev:master 
 ```
 
 ## Running example applications
@@ -72,7 +72,7 @@ If within the build directory, all that needs to be done to build
 CLOSURE dockerfile is:
 
 ```
-docker build -f Dockerfile.dev -t gapsclosure/closuredev:latest .
+docker build -f Dockerfile.dev -t gapsclosure/closuredev:master .
 ```
 
 ### Switching out environment variables in projects
