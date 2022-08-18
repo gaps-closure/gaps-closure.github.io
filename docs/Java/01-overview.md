@@ -81,15 +81,19 @@ rather than the use of a separate XDCOMMS API library.
 The CLOSURE workflow for building cross-domain applications in Java is shown in
 [the figure below](#fig-workflow).
 
-![Java Closure Workflow](docs/Java/images/workflow.png){#fig-workflow}
+![CLOSURE Workflow for Java](docs/Java/images/workflow.png){#fig-workflow}
 
 In the first stage, the developer either writes a new application or imports
 existing source which must be tooled for cross-domain operation. The developer
 must have knowledge of the intended cross-domain policy. While CLOSURE provides
 means to express this policy in code, the requirements analyst/developer 
 determines the actual cross-domain data sharing policy. The developer then 
-uses CLE to annotate the program as such. From there, we use the Java compiler 
-to generated a jar file that we can feed to a tool called JOANA, which builds a 
+uses CLE to annotate the program as such. The developer can use the CLOSURE
+Visual Interface (CVI) based on Visual Studio Code @VSCode. Additional plugins
+to provide syntax hints (similar to the C toolchain @CDoc) are planned in future work.
+
+From there, we use the Java compiler 
+to generated a jar file that we can feed to a tool called JOANA @joana, which builds a 
 system dependency graph (SDG) model of the annotated program. Using the model 
 produced from the SDG, our conflict analysis based on the CLOSURE constraint 
 model for Java (implemented using MiniZinc) determines if the partitioning of 
@@ -98,7 +102,7 @@ for refactoring needed to get a compliant program. Once the program
 is deemed compliant (via the conflict analyzer), CLOSURE proceeds with automated 
 tooling in which CAPO and associated tools divide the code, generate code for 
 cross-domain remote procedure calls (RPCs), describe the formats of the cross-domain 
-data types via DFDL and codec/serialization code, and generate all required 
+data types via DFDL @DFDL and codec/serialization code, and generate all required 
 configurations for interfacing to the GAPS hardware via the Hardware Abstraction 
 Layer (HAL). 
 

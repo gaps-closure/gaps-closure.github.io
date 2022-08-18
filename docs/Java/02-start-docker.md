@@ -1,7 +1,7 @@
 # Installation and Quick Start For Java Closure **XXX: Ready for review **
 
 ## Prerequisite
-The Closure Java is released as a docker container based on Ubuntu 20.04. See [Docker Installation]
+The Closure Java is released as a Docker @Docker container based on Ubuntu 20.04. See [Docker Installation]
 (https://docs.docker.com/engine/install/ubuntu/) for instructions on installing docker on Ubuntu.
 
 ## Pre-built Releases

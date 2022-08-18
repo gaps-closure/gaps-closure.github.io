@@ -9,17 +9,18 @@ Given the annotated application and the topology, the Java code generation tool,
 - generates an ant build script for each enclave [build.xml](#ant) and
 - compiles and aspect weaves the resulting code.
 
-Aspect-oriented programming (AOP) is a programming paradigm that aims to
+Aspect-oriented programming (AOP) @aop-inproceedings is a programming paradigm that aims to
 increase modularity by allowing the separation of cross-cutting concerns. It
 does so by adding behavior to existing code ("advice") without modifying the
 code itself, instead separately specifying which code is modified (a "pointcut"
 specification). For example, an aspect can add behavior to log all function 
 calls when the function name begins with `set`.
 
-Aspect-oriented programming, illustrated in the [diagram](#aopArch) below, has
-the benefits of clean modularization of cross-cutting concerns. The annotated
-source code need not be modified, as the aspects are woven in by the compiler
-when generating the executable. 
+Aspect-oriented programming, illustrated in the [diagram](#aopArch) below from Cerny's 
+dissertation @cernythesis, has the benefits of clean modularization of cross-cutting 
+concerns. For CLOSURE, this also means that the annotated source code need not be 
+physically divided or modified, as the aspects are woven in by the aspect compiler @apectj-env
+and weaver when generating the partitioned executable. 
 
 ![Aspect-Oriented Programming Concept](docs/Java/images/aopArch.png){#aopArch}
 
@@ -65,7 +66,9 @@ $ ant
 If successful, this will create a directory named code-gen containing a jar
 file, `code-gen.jar`, and a subdirectory named `resources`. For
 convenience in deployment, a zip file, `code-gen.zip`, which contains the 
-same contents as the `code-gen` directory is also generated. 
+same contents as the `code-gen` directory is also generated. See the AspectJ 
+programming guide @aspectj-prog for more details on aspect syntax used by
+the generated code.
 
 The usage of the program CodeGenJava is straightforward:
 
