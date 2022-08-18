@@ -6,7 +6,18 @@ Ubuntu 20.04. See [Docker Installation](https://docs.docker.com/engine/install/u
 for instructions on installing Docker on a Ubuntu Linux system.
 
 ## Pre-built Releases
-A pre-built source release is available at [source release](https://github.com/gaps-closure/capo/releases/download/T0.2/source-release) and a binary release at [binary release](https://github.com/gaps-closure/capo/releases/download/T0.2/binary-release). Using the source release docker, one can skip the next step (Build the Source Container) and proceeds to the rest, which builds a docker image equivalent to the binary release when completes successfully.
+
+A pre-built source release and binary release are available from our [repository](https://github.com/gaps-closure).
+Alternatively, for convenience, one can pull the corresponding docker releases:
+
+```bash
+docker pull gapsclosure/closure-java-src:latest  
+docker pull gapsclosure/closure-java-bin:latest    
+```
+
+Using the source release docker, one can skip the next step (Build the Source
+Container) and proceed to the rest, which builds a docker image equivalent to
+the binary release when completes successfully.
 
 ## Build the Source Container
 Save the dockerfile in the appendix to a file, e.g. the default Dockerfile, and build the container as follows.
