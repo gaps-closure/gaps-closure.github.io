@@ -122,8 +122,6 @@ Generate SDG and Dot files for test program as follows:
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
 export CLASSPATH="joana/dist/*:testprog/dist/*:jython-standalone-2.7.2.jar:jscheme-7.2.jar:"
-
-# Generate the SDG
 java -cp $CLASSPATH org.python.util.jython JoanaUsageExample.jy \
   -c './testprog/dist/TESTPROGRAM.jar' \
   -e 'com.peratonlabs.closure.testprog.example1.Example1' \
@@ -186,9 +184,7 @@ source and destination nodes. Similarly, `getclassName.py` takes a class ID and
 produces the correspoinding class name for the ID. Note that these scripts
 assume the `dbg_*.csv` files are in the same directory as the scripts.
 
-### Build Application to Be Partitioned
-
-Set classpath and java location.
+Set classpath and java location and build the application to be partitioned.  
 These commands assume you are in the `capo/Java` directory. 
 
 ```
@@ -207,9 +203,7 @@ cd ../..
 `capo/Java/examples/eop2-demo/src/com/peratonlabs/closure/eop2/video/manager/config.java`
 ensure that webroot is initalized to `capo/Java/examples/eop2-demo/resources`
 
-### Run Conflict Analyzer 
-
-**IMPORTANT** This should be done from `capo/Java`
+Run the conflict analyzer  from `capo/Java`:
 
 ```bash
 java -cp $CLASSPATH org.python.util.jython zincOutput.jy -m './examples/eop2-demo/src/com/peratonlabs/closure/eop2/video/manager/VideoManager.java'   -c './examples/eop2-demo/dist/TESTPROGRAM.jar' -e 'com.peratonlabs.closure.eop2.video.manager.VideoManager' -b 'com.peratonlabs.closure.eop2.'
