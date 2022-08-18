@@ -111,7 +111,7 @@ firefox http://172.17.0.2:8080/
 
 Click on the Play button. The camera image should appear in the browser at this point.
 
-## Additional Notes for CLOSURE Developers
+## Additional Notes for CLOSURE Developers {#addl-notes}
 
 Developers who wish to extend the CLOSURE Java partitioner or visualize the
 generated system dependency graph (SDG) will find the following steps useful.
