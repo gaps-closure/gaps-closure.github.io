@@ -44,12 +44,18 @@ between the program partitions.
 
 ## Obtaining CLOSURE software and documentation
 
-### C
+### CLOSURE for C Language
 
-CLOSURE Toolchain User Manual for C Language, Peraton Labs, Release version 2.0, August 23, 2022 [PDF](./cdoc.pdf) [HTML](./cdoc.html)
+CLOSURE Toolchain User Manual for C Language, Peraton Labs, Release version 2.0, August 23, 2022 \[[PDF](./cdoc.pdf) [HTML](./cdoc.html)\]
 
-Software Release, Peraton Labs, Release version 2.0, August 23, 2022: [Release](https://github.com/gaps-closure/build/releases/tag/v1.2) **XXX: Change to 2.0 as soon as its released**
+Docker container with CLOSURE toolchain installed:
 
-### Java
+```
+docker pull gapsclosure/closuredev:master
+```
+
+Source Code Release, Peraton Labs, Release version 2.0, August 23, 2022: \[[Release](https://github.com/gaps-closure/build/releases/tag/v2.0)\] 
+
+### CLOSURE for Java 
 
 **XXX: Java coming soon!**
