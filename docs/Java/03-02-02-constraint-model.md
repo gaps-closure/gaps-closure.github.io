@@ -1,8 +1,9 @@
-### Detailed MiniZinc constraint model **XXX: Ready for Review** {#constraints}
+### Detailed MiniZinc constraint model {#constraints}
 
-
-In this section, we present an informal statement of constraints to be enforced by our conflict analyzer. We then present the main constraints coded in minizinc used by our model to achieve these constraints.More
-about minizinc, it's usage and syntax can be found [here](https://www.minizinc.org/). 
+In this section, we present an informal statement of constraints to be enforced
+by our conflict analyzer. We then present the main constraints coded in
+MiniZinc used by our model to achieve these constraints. More information
+about MiniZinc including its usage and syntax can be found [here](https://www.minizinc.org/). 
 
 In the model below, the `nodeEnclave` decision variable stores the enclave
 assignment for each node, the `taint` decision variable stores the label
@@ -12,8 +13,11 @@ edge are in different enclaves. Several other auxiliary decision variables are
 used in the constraint model to express the constraints or for efficient
 compilation. 
 
-The solver will attempt to assign a node annotation label to all nodes except a user annotated function. Only user annotated functions may have a function annotation. Functions lacking a function annotation cannot be invoked cross-domain and can only have exactly one taint across all invocations. This ensures that the arguments, return and function body only touch the same taint. 
-
+The solver will attempt to assign a node annotation label to all nodes except a
+user annotated function. Only user annotated functions may have a function
+annotation. Functions lacking a function annotation cannot be invoked
+cross-domain and can only have exactly one taint across all invocations. This
+ensures that the arguments, return and function body only touch the same taint. 
 
 ### General Constraints
 
@@ -28,10 +32,7 @@ The solver will attempt to assign a node annotation label to all nodes except a 
 * All elements (constructor, method, or field) of a class instance must be assigned the same enclave as the instance itself. This entails separate constraints for constructors, instance methods, instance fields, static methods and static fields.
 * Contained nodes and parameters are assigned the same enclave(s) as their containing methods.  
 * Annotations can not be assigned to a valid enclave and they must be assigned to `nullEnclave`.
-
-
 * Each (node,level) pair is assigned at most one valid label with that level.
-
 * Only method entry nodes can be assigned a method annotation label.
 * Only constructor entry nodes can be assigned a constructor annotation label.
 
@@ -62,26 +63,24 @@ forall (n in FunctionEntry)
 (isFunctionAnnotation[taint[n,l]] == userAnnotatedFunction[n]));
 
 constraint :: "NodesHaveClassEnclave"
- forall (n in PDGNodeIdx) 
- (forall (e in nonNullEnclave) 
- ((classEnclave[hasClass[n],e]) == true -> nodeEnclave[n,e] == e));
+forall (n in PDGNodeIdx) 
+(forall (e in nonNullEnclave) 
+((classEnclave[hasClass[n],e]) == true -> nodeEnclave[n,e] == e));
 
 constraint :: "UnannotatedFunContentTaintMatch"
- forall (n in PDGNodeIdx) 
- (forall (l in nonNullEnclave) 
- (userAnnotatedFunction[hasFunction[n]]==false -> taint[n,l]==ftaint[n,l]));
-
+forall (n in PDGNodeIdx) 
+(forall (l in nonNullEnclave) 
+(userAnnotatedFunction[hasFunction[n]]==false -> taint[n,l]==ftaint[n,l]));
 
 constraint :: "ForceAnnotFuncToAnnoLvl"
 forall (n in FunctionEntry) 
 (forall (l in nonNullEnclave) 
 (userAnnotatedFunction[hasFunction[n]] -> hasLabelLevel[taint[n,l]]==hasLabelLevel[ftaint[n,l]]));
 
-
 constraint :: "AnnotatedFunContentCoercible"
- forall (n in PDGNodeIdx where  isFunctionEntry(n)==false)  
- (forall (l in nonNullEnclave)
-  (userAnnotatedFunction[hasFunction[n]] -> isInArctaint(ftaint[n,l], taint[n,l], hasLabelLevel[taint[n,l]])));
+forall (n in PDGNodeIdx where  isFunctionEntry(n)==false)  
+(forall (l in nonNullEnclave)
+(userAnnotatedFunction[hasFunction[n]] -> isInArctaint(ftaint[n,l], taint[n,l], hasLabelLevel[taint[n,l]])));
 ```
 
 ### 2.2 Constraints on the Cross-Domain Control Flow
@@ -105,7 +104,6 @@ forall (e in PDGEdgeIdx)
 (forall (l in nonNullEnclave) 
 (edEnclave[e,l]==nodeEnclave[hasDest[e],l]));
 
-
 constraint :: "EdgeInEnclaveCut"              
 forall (e in ControlDep_CallInv)         
 (
@@ -123,56 +121,49 @@ forall (e in ControlDep_CallInv)
   endif
 );
 
-
 constraint :: "OnlyCallsParamsAndRetsInCut"              
 forall (e in ControlDep_NonCall)         
 (forall (l in nonNullEnclave) 
 (xdedge[e,l]==false));
 
 constraint :: "SourceFunctionAnnotation"
- forall (e in ControlDep_CallInv union ControlDep_CallRet) 
- (forall (l in nonNullEnclave) 
- (esFunTaint[e,l] == 
- (if sourceAnnotFun(e) 
- then taint[hasFunction[hasSource[e]],l] 
- else nullCleLabel endif)));
+forall (e in ControlDep_CallInv union ControlDep_CallRet) 
+(forall (l in nonNullEnclave) 
+(esFunTaint[e,l] == 
+(if sourceAnnotFun(e) 
+then taint[hasFunction[hasSource[e]],l] 
+else nullCleLabel endif)));
 
 constraint :: "DestFunctionAnnotation"
- forall (e in ControlDep_CallInv union ControlDep_CallRet) 
- (forall (l in nonNullEnclave)(edFunTaint[e,l] == 
- (if destAnnotFun(e) 
- then taint[hasFunction[hasDest[e]],l] 
- else nullCleLabel endif)));
+forall (e in ControlDep_CallInv union ControlDep_CallRet) 
+(forall (l in nonNullEnclave)(edFunTaint[e,l] == 
+(if destAnnotFun(e) 
+then taint[hasFunction[hasDest[e]],l] 
+else nullCleLabel endif)));
 
 constraint :: "SourceCdfForDestLevel"
- forall (e in ControlDep_CallInv union ControlDep_CallRet) 
- (forall (l in nonNullEnclave)(esFunCdf[e,l] == 
- (if sourceAnnotFun(e) 
- then cdfForRemoteLevel[esFunTaint[e,l], hasLabelLevel[taint[hasDest[e],l]]] 
- else nullCdf endif)));
+forall (e in ControlDep_CallInv union ControlDep_CallRet) 
+(forall (l in nonNullEnclave)(esFunCdf[e,l] == 
+(if sourceAnnotFun(e) 
+then cdfForRemoteLevel[esFunTaint[e,l], hasLabelLevel[taint[hasDest[e],l]]] 
+else nullCdf endif)));
 
 constraint :: "DestCdfForSourceLevel"
- forall (e in ControlDep_CallInv union ControlDep_CallRet) 
- (forall (l in nonNullEnclave) (edFunCdf[e,l] == 
- (if destAnnotFun(e) then 
- cdfForRemoteLevel[edFunTaint[e,l], hasLabelLevel[taint[hasSource[e],l]]] 
- else nullCdf endif)));
-
+forall (e in ControlDep_CallInv union ControlDep_CallRet) 
+(forall (l in nonNullEnclave) (edFunCdf[e,l] == 
+(if destAnnotFun(e) then 
+cdfForRemoteLevel[edFunTaint[e,l], hasLabelLevel[taint[hasSource[e],l]]] 
+else nullCdf endif)));
 
 constraint :: "XDCallBlest"                   
 forall (e in ControlDep_CallInv) 
 (forall (l in nonNullEnclave) ( ( xdedge[e,l]) -> userAnnotatedFunction[hasDest[e]]));
 
-
-
 constraint :: "XDCallAllowed"
- forall (e in ControlDep_CallInv) 
- (forall (l in nonNullEnclave) (
- xdedge[e,l] -> allowOrRedact(cdfForRemoteLevel[edTaint[e,l], hasLabelLevel[esTaint[e,l]]])));
-
-
+forall (e in ControlDep_CallInv) 
+(forall (l in nonNullEnclave) (
+xdedge[e,l] -> allowOrRedact(cdfForRemoteLevel[edTaint[e,l], hasLabelLevel[esTaint[e,l]]])));
 ```
-
 
 ### 2.3 Constraints on the Cross-Domain Data Flow
 
@@ -187,23 +178,27 @@ node (the returned value in the callee) must have a CDF that allows the data to
 be shared with the level of the taint of the destination node (the return site 
 in the caller). 
 
-3) For any parameter passing edge in the cut, the taint of the source
-node must have a CDF that allows the data to be shared with the level of the taint of the destination node. This applies to the input parameters going from caller to callee and output parameters going from callee back to the caller.
+3) For any parameter passing edge in the cut, the taint of the source node must
+have a CDF that allows the data to be shared with the level of the taint of the
+destination node. This applies to the input parameters going from caller to
+callee and output parameters going from callee back to the caller.
 
-Note: For cross domain calls, the callee is assigned to a fixed enclave level. The caller may be unannotated and the label to be considered (e.g. for argument passing checks) would correspond to the label applicable at the level of the caller (instance).
+Note: For cross domain calls, the callee is assigned to a fixed enclave level.
+The caller may be unannotated and the label to be considered (e.g. for argument
+passing checks) would correspond to the label applicable at the level of the
+caller (instance).
 
 ```minizinc
 constraint :: "XDCDataReturnAllowed"
- forall (e in DataDepEdge_Ret) 
- (forall (l in nonNullEnclave)  (
-  xdedge[e,l] -> allowOrRedact(cdfForRemoteLevel[esFunTaint[e,l], hasLabelLevel[edTaint[e,l]]])));
+forall (e in DataDepEdge_Ret) 
+(forall (l in nonNullEnclave)  (
+xdedge[e,l] -> allowOrRedact(cdfForRemoteLevel[esFunTaint[e,l], hasLabelLevel[edTaint[e,l]]])));
 
 constraint :: "XDCParmAllowed"
- forall (e in Parameter)     
- (forall (l in nonNullEnclave)  
- (xdedge[e,l] -> allowOrRedact(cdfForRemoteLevel[esFunTaint[e,l], hasLabelLevel[edTaint[e,l]]])));
+forall (e in Parameter)     
+(forall (l in nonNullEnclave)  
+(xdedge[e,l] -> allowOrRedact(cdfForRemoteLevel[esFunTaint[e,l], hasLabelLevel[edTaint[e,l]]])));
 ```
-
 
 ### 2.4 Constraints on Taint Coercion Within Each Enclave
 
@@ -231,7 +226,6 @@ constraint :: "ArgumentTaintCoerced"
    else true 
    endif));
 
-
 constraint :: "ReturnTaintCoerced"
  forall (e in DataDepEdge_Ret) 
  (forall (l in nonNullEnclave) 
@@ -252,7 +246,6 @@ constraint :: "DataTaintCoercedData"
 
 ### 2.5 Class Constraints
 
-
 * For each level, all elements of a class that contains no annotated elements must have the same taint.
 
 * All taints on a static field must be at the same level. Unfortunately this means that a class with a static field can only be assigned to a single enclave. This can be relaxed for final static variables because they will not change.
@@ -269,7 +262,6 @@ forall (cl in ClassNames)
     (true == classEnclave[cl,e])
   );
 
-
 constraint :: "BindClassLevelToEnclave" 
 forall (cl in ClassNames)
   (forall (e in nonNullEnclave)
@@ -283,7 +275,6 @@ forall (n in PDGNodeIdx)
     (classTaintedAtLevel[hasClass[n], hasLabelLevel[taint[n,e]]] == true)
   )
 );
-
 
 constraint :: "BindAnnoClassToEnclaveLevel"
 forall (cl in ClassNames)
@@ -320,9 +311,6 @@ forall (method in FunctionEntry)
     )
   )
 );
-
-
-
 ```
 
 #### Solution Objective
@@ -498,13 +486,18 @@ Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated appl
 }
 ```
 
-
 ### Remarks and Limitations
 
-* A limitation of the current model is that it supports at most one enclave per level.
+* A limitation of the current model is that it supports at most one enclave per level
  
-* Class annotations are currently not used by CLE, but this can change in the future.
+* Class annotations are currently not used by CLE, but this can change in the future
 
 * Class static fields are handled imprecisely
 
 * No mechanism exists to apply user-defined function annotations to a lambda function
+
+* The size of programs that can be analyzed are limited by the capabilities of JOANA (and in turn IBM WALA)
+
+* Children of classes with annotated elements cannot be annotated for placement in an enclave with a different 
+level, so it is best to keep annotations close to the leaf of the inheritance hierarchy
+
