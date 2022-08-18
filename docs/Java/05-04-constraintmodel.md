@@ -1,7 +1,7 @@
-## Constraint Model in MiniZinc **XXX: Ready for Review**
+## Constraint Model in MiniZinc 
 
 The following contains type declarations
-for the minizinc model used within the [conflict analyzer](#conflict-analyzer).
+for the MiniZinc model used within the [conflict analyzer](#conflict-analyzer).
 These type declarations, along with a model instance generated in python
 are inputted to minizinc with the [constraints](#constraints) to either produce
 a satisfiable assignment or some minimally unsatisfiable set of constraints.
@@ -24,20 +24,8 @@ int: Inst_Other_end;
 int: Inst_start;
 int: Inst_end;
 
-% int: VarNode_StaticGlobal_start;
-% int: VarNode_StaticGlobal_end;
-% int: VarNode_StaticModule_start;
-% int: VarNode_StaticModule_end;
-% int: VarNode_StaticFunction_start;
-% int: VarNode_StaticFunction_end;
-% int: VarNode_StaticOther_start;
-% int: VarNode_StaticOther_end;
-% int: VarNode_start;
-% int: VarNode_end;
-
 int: FunctionEntry_start;
 int: FunctionEntry_end;
-
 
 % Need to check that there isn't an issue with non-contiguious arg indicies
 int: Param_FormalIn_start;
@@ -51,13 +39,11 @@ int: Param_ActualOut_end;
 int: Param_start;
 int: Param_end;
 
-
 int: PDGNode_start;
 int: PDGNode_end;
 
 set of int: Inst = Inst_start .. Inst_end;
 set of int: FunCall = Inst_FunCall_start .. Inst_FunCall_end;
-
 
 set of int: FunctionEntry = FunctionEntry_start .. FunctionEntry_end;
 
@@ -119,19 +105,15 @@ set of int: Parameter_Out = Parameter_Out_start .. Parameter_Out_end;
 set of int: Parameter_Field = Parameter_Field_start .. Parameter_Field_end;
 set of int: Parameter = Parameter_start .. Parameter_end;
 
-
-
 set of int: PDGEdgeIdx = PDGEdge_start .. PDGEdge_end;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Java OO Features
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 int: ClassNames_start;
 int: ClassNames_end;
 int: ExternalClass;
-
 
 int: ClassFields_Instance_start;
 int: ClassFields_Instance_end;
@@ -155,19 +137,12 @@ set of int: ClassMethods = ClassMethods_Instance_start .. ClassMethods_Static_en
 
 set of int: ClassElements = ClassFields_Instance_start .. ClassMethods_Static_end;
 
-
-array[ClassFields]     of ClassNames:  fieldOfClass;
-
-
-array[ClassMethods]     of ClassNames:  methodOfClass;
-
-
+array[ClassFields]    of ClassNames:  fieldOfClass;
+array[ClassMethods]   of ClassNames:  methodOfClass;
 array[ClassNames]     of AllClassNames:  immediateParent;
 array[ClassNames]     of set of AllClassNames:  allParents;
 array[ClassNames]     of set of AllClassNames:  implementsInterface;
-
-
-array[FunctionEntry]     of set of ClassFields:  methodsFieldAccess;
+array[FunctionEntry]  of set of ClassFields:  methodsFieldAccess;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Containing Class for PDG Nodes, Containing Function for PDG Nodes, Endpoints for PDG Edges, Indices of Fucntion Formal Parameters
@@ -194,7 +169,6 @@ set of int: DataEdgeParam       = DataDepEdge union Parameter;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Security Levels and Enclaves
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 enum Level;
 set of Level: nonNullLevel = { x | x in Level where x!=nullLevel };
@@ -240,7 +214,6 @@ array[functionCdf, cleLabel]          of bool:           hasARCtaints;
 bool:                                                    debug;
 debug = true;
 
-
 array[ClassNames,nonNullEnclave]                     of var bool: classEnclave;
 array[ClassNames,Level]                              of var bool: classTaintedAtLevel;
 
@@ -252,7 +225,6 @@ array[ClassNames,nonNullEnclave]                     of var cleLabel:   ctaint;
 
 array[ClassFields,nonNullEnclave]                    of var cleLabel:   fieldTaint;
 
-
 array[PDGEdgeIdx,nonNullEnclave]                     of var Enclave:    esEnclave;
 array[PDGEdgeIdx,nonNullEnclave]                     of var Enclave:    edEnclave;
 
@@ -261,7 +233,6 @@ array[PDGEdgeIdx,nonNullEnclave]                     of var cleLabel:   edTaint;
 
 array[PDGEdgeIdx,nonNullEnclave]                     of var cleLabel:   esFunTaint;
 array[PDGEdgeIdx,nonNullEnclave]                     of var cleLabel:   edFunTaint;
-
 
 array[PDGEdgeIdx,nonNullEnclave]                     of var cdf:        esFunCdf;
 array[PDGEdgeIdx,nonNullEnclave]                     of var cdf:        edFunCdf;
@@ -272,5 +243,4 @@ array[PDGEdgeIdx,nonNullEnclave]                     of var bool:       tcedge;
 array[PDGEdgeIdx,nonNullEnclave]                     of var bool:       coerced;
 
 ```
-
 

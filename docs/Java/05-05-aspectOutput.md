@@ -1,18 +1,24 @@
-## AspectJ Code Generator Outputs **ready for review**
+## AspectJ Code Generator Outputs
 
 ### Output Directory Structure
 
-Below is the sample output directory structure created by the Java tool chain for the demo application. The AspectJ definitions and other artifacts, along with the original application, for each enclave is placed in a separate directory. In addition, the HAL configuration files (xdconf.ini and hal_*.cfg) are put at the top level.
+Below is the sample output directory structure created by the Java tool chain
+for the demo application. The AspectJ definitions and other artifacts, along
+with the original application, for each enclave is placed in a separate
+directory. In addition, the HAL configuration files (`xdconf.ini` and `hal_*.cfg`)
+are put at the top level.
 
 ![](docs/Java/images/output.png){#codeGenOutput}
 
-Inside each enclave, AspectJ related files are placed under the aspect subdirectory. Below is a sample for the purple enclave.
+Inside each enclave, AspectJ related files are placed under the aspect
+subdirectory. Below is a sample for the purple enclave.
 
 ![](docs/Java/images/purple.png){#purple}
 
-
-### Sample AspectJ for the VideoRequesterHighClosureAspect Class {#video.aspectj}
-The following is the AspectJ definition generated for the VideoRequesterHighClosure class, which is located in the orange enclave and accessed from the purple enclave in the partititoned demo application.
+### Sample AspectJ Class {#video.aspectj}
+The following is the AspectJ definition generated for the
+VideoRequesterHighClosure class, which is located in the orange enclave and
+accessed from the purple enclave in the partititoned demo application.
 
 ```java
 package com.peratonlabs.closure.aspectj;
