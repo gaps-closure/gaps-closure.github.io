@@ -1,4 +1,4 @@
-## Annotations **XXX: Ready for Review**
+## Annotations **XXX: Ready for Review** {#annot-java}
 
 The CLOSURE toolchain relies on source level annotations to specify
 the cross domain constraints. Developers annotate programs using CLOSURE Language Extensions (CLE) 

@@ -19,7 +19,7 @@ calls when the function name begins with `set`.
 Aspect-oriented programming, illustrated in the [diagram](#aopArch) below from Cerny's 
 dissertation @cernythesis, has the benefits of clean modularization of cross-cutting 
 concerns. For CLOSURE, this also means that the annotated source code need not be 
-physically divided or modified, as the aspects are woven in by the aspect compiler @apectj-env
+physically divided or modified, as the aspects are woven in by the aspect compiler @aspectj-env
 and weaver when generating the partitioned executable. 
 
 ![Aspect-Oriented Programming Concept](docs/Java/images/aopArch.png){#aopArch}

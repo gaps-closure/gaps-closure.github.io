@@ -1,6 +1,7 @@
-## CLE JSON example and schema **Should be similar for Java** {#cle-extra}
+## CLE JSON example and schema {#cle-extra}
 
-** Could point to C for CLE JSON Schema **
+With [CLE annotations for Java](#annot-java), we use the same CLE-JSON schema as with the C toolchain @CDoc.
+We describe an example CLE-JSON used with an annotation and the CLE-JSON schema below.
 
 ### Example 
 
