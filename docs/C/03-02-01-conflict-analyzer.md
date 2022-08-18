@@ -30,8 +30,8 @@ that wrap the function invocations in the cross-domain cut.
 
 The usage of the conflict analyzer is as follows:
 
-```
-usage: Conflict Analyzer [-h] [--temp-dir TEMP_DIR] [--clang-args CLANG_ARGS] [--schema [SCHEMA]] --pdg-lib PDG_LIB [--source-path SOURCE_PATH] [--constraint-files [CONSTRAINT_FILES [CONSTRAINT_FILES ...]]] [--output OUTPUT]
+```usage
+usage: conflict_analyzer [-h] [--temp-dir TEMP_DIR] [--clang-args CLANG_ARGS] [--schema [SCHEMA]] --pdg-lib PDG_LIB [--source-path SOURCE_PATH] [--constraint-files [CONSTRAINT_FILES [CONSTRAINT_FILES ...]]] [--output OUTPUT]
                          [--artifact ARTIFACT] [--conflicts CONFLICTS] [--output-json] [--log-level {DEBUG,INFO,ERROR}]
                          sources [sources ...]
 

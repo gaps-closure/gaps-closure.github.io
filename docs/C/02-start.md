@@ -1,4 +1,4 @@
-# Installation and Quick Start **XXX: Done, to be reviewed during testing**
+# Installation and Quick Start
 
 ## Prerequisites
 
