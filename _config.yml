@@ -1,3 +1,4 @@
 theme: jekyll-theme-minimal
 title: GAPS-CLOSURE
 description: Cross-domain Language-extensions for SecUre Refactoring and Execution
+show_downloads: true
