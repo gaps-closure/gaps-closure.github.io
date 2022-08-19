@@ -58,4 +58,13 @@ Source Code Release, Peraton Labs, Release version 2.0, August 23, 2022: \[[Rele
 
 ### CLOSURE for Java 
 
-**XXX: Java coming soon!**
+CLOSURE Toolchain User Manual for Java Language, Peraton Labs, Release version 2.0, August 23, 2022 \[[PDF](./jdoc.pdf) [HTML](./jdoc.html)\]
+
+Docker container with CLOSURE toolchain installed:
+
+```
+docker pull gapsclosure/closure-java-src:latest
+docker pull gapsclosure/closure-java-bin:latest
+```
+
+Source Code Release, Peraton Labs, Release version 2.0, August 23, 2022: \[[Release](https://github.com/gaps-closure/build/releases/download/v2.0/gaps-java-eop2-src.tgz)\] 
