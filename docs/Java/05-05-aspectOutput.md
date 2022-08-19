@@ -166,7 +166,8 @@ ipc:///tmp/tchalpubpurple_e
 
 ### XDCC Tags (tags.txt){#xdcc-tags}
 The tags.txt file is loaded at application startup time to initialize mux/sec/type of cross-domain calls.
-```
+
+```g
 com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.start.int.java.lang.String 4 4 1
 com.peratonlabs.closure.eop2.level.high.VideoRequesterHigh.start.int.java.lang.String_rsp 6 6 2
 com.peratonlabs.closure.eop2.level.normal.VideoRequesterNormal.start.int.java.lang.String 3 3 3

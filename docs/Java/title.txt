@@ -13,5 +13,7 @@ numbersections: true
 colorlinks: true
 header-includes:
  - \usepackage{fvextra}
- - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+ - \usepackage[htt]{hyphenat}
+ - \let\NormalTok\texttt
+ - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines, breakanywhere, breaksymbol=, breakanywheresymbolpre=, commandchars=\\\{\}, fontsize=\small}
 ---

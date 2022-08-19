@@ -359,7 +359,8 @@ Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated appl
     "entry": {
         "mainClass": "com.peratonlabs.closure.eop2.video.manager.VideoManager", 
         "enclave": "purple_E", 
-        "filepath": "./examples/eop2-demo/src/com/peratonlabs/closure/eop2/video/manager/VideoManager.java"
+        "filepath": 
+"./examples/eop2-demo/src/com/peratonlabs/closure/eop2/video/manager/VideoManager.java"
     }, 
     "cuts": [
         {

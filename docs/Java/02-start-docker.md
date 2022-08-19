@@ -198,7 +198,7 @@ assume the `dbg_*.csv` files are in the same directory as the scripts.
 Set classpath and java location and build the application to be partitioned.  
 These commands assume you are in the `capo/Java` directory. 
 
-```
+```bash
 export CLASSPATH="joana/dist/*:examples/eop2-demo//dist/*:jython-standalone-2.7.2.jar:jscheme-7.2.jar:"
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 ```
@@ -211,7 +211,9 @@ cd ../..
 ```
 
 **IMPORTANT** In file 
-`capo/Java/examples/eop2-demo/src/com/peratonlabs/closure/eop2/video/manager/config.java`
+```g
+capo/Java/examples/eop2-demo/src/com/peratonlabs/closure/eop2/video/manager/config.java
+```
 ensure that webroot is initialized to `capo/Java/examples/eop2-demo/resources`
 
 Run the conflict analyzer  from `capo/Java`:
