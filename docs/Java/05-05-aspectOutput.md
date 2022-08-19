@@ -2,15 +2,15 @@
 
 ### Output Directory Structure
 
-Below is the sample output directory structure created by the Java tool chain
+Below is the sample output directory structure created by the Java toolchain
 for the demo application. The AspectJ definitions and other artifacts, along
-with the original application, for each enclave is placed in a separate
+with the original application, for each enclave are placed in a separate
 directory. In addition, the HAL configuration files (`xdconf.ini` and `hal_*.cfg`)
 are put at the top level.
 
 ![](docs/Java/images/output.png){#codeGenOutput}
 
-Inside each enclave, AspectJ related files are placed under the aspect
+Inside each enclave, AspectJ-related files are placed under the aspect
 subdirectory. Below is a sample for the purple enclave.
 
 ![](docs/Java/images/purple.png){#purple}
@@ -18,7 +18,7 @@ subdirectory. Below is a sample for the purple enclave.
 ### Sample AspectJ Class {#video.aspectj}
 The following is the AspectJ definition generated for the
 VideoRequesterHighClosure class, which is located in the orange enclave and
-accessed from the purple enclave in the partititoned demo application.
+accessed from the purple enclave in the partitioned demo application.
 
 ```java
 package com.peratonlabs.closure.aspectj;
@@ -239,7 +239,7 @@ An ant build file, build-closure.xml, is generated to handle the AspectJ weaving
 ```
 
 ### Slave Handler{#slave-handler}
-The slave handler is used to listen for cross domain calls. It replaces the entrypoint of the original app via a AspectJ pointcut.
+The slave handler is used to listen for cross-domain calls. It replaces the entry point of the original app via an AspectJ pointcut.
 
 ```java
 package com.peratonlabs.closure.aspectj;

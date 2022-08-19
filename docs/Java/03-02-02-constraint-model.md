@@ -17,7 +17,7 @@ The solver will attempt to assign a node annotation label to all nodes except a
 user annotated function. Only user annotated functions may have a function
 annotation. Functions lacking a function annotation cannot be invoked
 cross-domain and can only have exactly one taint across all invocations. This
-ensures that the arguments, return and function body only touch the same taint. 
+ensures that the arguments, return and function body only touches the same taint. 
 
 ### General Constraints
 
@@ -85,13 +85,13 @@ forall (n in PDGNodeIdx where  isFunctionEntry(n)==false)
 
 ### 2.2 Constraints on the Cross-Domain Control Flow
 
-The control flow can never leave an enclave, unless it is done through an
+The control flow can never leave an enclave unless it is done through an
 approved cross-domain call, as expressed in the following constraints.
 
 1) The only control edges allowed in the cross-domain cut are either call
 invocations or returns. 
 
-2) For any call invocation edge in the cut, the method annotation of the method entry being called must have a CDF that allows (with or without redaction) the level of the label assigned to the callsite (caller).  
+2) For any call invocation edge in the cut, the method annotation of the method entry being called must have a CDF that allows (with or without redaction) the level of the label assigned to the call site (caller).  
 
 ```minizinc
 constraint :: "EdgeSourceEnclave"             
@@ -183,7 +183,7 @@ have a CDF that allows the data to be shared with the level of the taint of the
 destination node. This applies to the input parameters going from caller to
 callee and output parameters going from callee back to the caller.
 
-Note: For cross domain calls, the callee is assigned to a fixed enclave level.
+Note: For cross-domain calls, the callee is assigned to a fixed enclave level.
 The caller may be unannotated and the label to be considered (e.g. for argument
 passing checks) would correspond to the label applicable at the level of the
 caller (instance).
@@ -204,7 +204,7 @@ forall (e in Parameter)
 
 For each level, each node in an unannotated method or constructor must have the same taint as the containing unannotated method or constructor itself.
 
-For each level, for each parameter or data dependency (including returns) edges with at least one end point in an unannotated method or constructor, both end points must have the same taint.
+For each level, for each parameter or data dependency (including returns) edges with at least one endpoint in an unannotated method or constructor, both endpoints must have the same taint.
 
 Unannotated methods can be assigned to multiple enclaves as long as they touch only one taint within that enclave. Annotated methods, on the other hand, can only be assigned to a single enclave/level.
 
@@ -212,7 +212,7 @@ Each node in an annotated method or constructor must have a taint that is allowe
 
 For each parameter-in or parameter-out edge connected to an argument of an annotated method or constructor, the taint of the remote (caller side) endpoint must be allowed by the argument taints (argtaints) for that argument in the annotation applied to the method or constructor.
 
-For each data return edge of an annotated method or constructor, the taint of remote (caller side) endpoint must be allowed by the return taints (rettaints) of the annotation applied to the method or constructor.
+For each data return edge of an annotated method or constructor, the taint of the remote (caller side) endpoint must be allowed by the return taints (rettaints) of the annotation applied to the method or constructor.
 
 For each data dependency edge (that is not a return or parameter edge) of an annotated method or constructor, the taint of both endpoints must be allowed by at least one of the following: argument taints (argtaints), code taints (codtaints), or return taints (rettaints) of the annotation applied to the method or constructor.
 
@@ -248,7 +248,7 @@ constraint :: "DataTaintCoercedData"
 
 * For each level, all elements of a class that contains no annotated elements must have the same taint.
 
-* All taints on a static field must be at the same level. Unfortunately this means that a class with a static field can only be assigned to a single enclave. This can be relaxed for final static variables because they will not change.
+* All taints on a static field must be at the same level. Unfortunately, this means that a class with a static field can only be assigned to a single enclave. This can be relaxed for final static variables because they will not change.
 
 * The taint(s) of the object reference (this) must be allowed by the code taints (codtaints) of annotated methods. (If the object reference can take multiple labels, then unannotated methods are not possible within that class.)
 
@@ -316,7 +316,7 @@ forall (method in FunctionEntry)
 #### Solution Objective
 
 In this model, we require the solver to provide a satisfying assignment that
-minimizes the total number of call invocation that are in the cross-domain cut.
+minimizes the total number of call invocations that are in the cross-domain cut.
 Other objectives could be used instead.
 
 ```minizinc
@@ -324,7 +324,7 @@ var int: objective = sum(e in ControlDep_CallInv, l in nonNullEnclave where xded
 solve minimize objective;
 ```
 
-Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated application code, and determined that all remaining conflicts are resolvable by RPC-wrapping to result in a security compliant cross-domain partitioned  code, the conflict analyzer will produce a topology file (JSON) containing the assignment of every class to an enclave/level. An abbreviated sample topology JSON is provided below. A full length version can be found in the [appendix](#cut.json)
+Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated application code and determined that all remaining conflicts are resolvable by RPC-wrapping to result in a security-compliant cross-domain partitioned code, the conflict analyzer will produce a topology file (JSON) containing the assignment of every class to an enclave/level. An abbreviated sample topology JSON is provided below. A full-length version can be found in the [appendix](#cut.json)
 
 ```json
 {
@@ -496,7 +496,7 @@ Once the CAPO partitioning conflict analyzer has analyzed the CLE-annotated appl
 
 * No mechanism exists to apply user-defined function annotations to a lambda function
 
-* The size of programs that can be analyzed are limited by the capabilities of JOANA (and in turn IBM WALA)
+* The size of programs that can be analyzed is limited by the capabilities of JOANA (and in turn IBM WALA)
 
 * Children of classes with annotated elements cannot be annotated for placement in an enclave with a different 
 level, so it is best to keep annotations close to the leaf of the inheritance hierarchy

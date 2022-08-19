@@ -92,7 +92,7 @@ ant
 
 ### Partition the Demo Application
 
-Generate aspects and weave into demo application to generate partitioned executable for each enclave.
+Generate aspects and weave them into the demo application to generate a partitioned executable for each enclave.
 
 ```
 cd $HOME/gaps/CodeGenJava
@@ -127,7 +127,7 @@ Click on the Play button. The camera image should appear in the browser at this 
 Developers who wish to extend the CLOSURE Java partitioner or visualize the
 generated system dependency graph (SDG) will find the following steps useful.
 
-Generate SDG and Dot files for test program as follows:
+Generate SDG and Dot files for the test program as follows:
 
 ```bash
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
@@ -167,7 +167,7 @@ The command line parameters are as follows:
   -b option indicates the prefix for the classes that are of interest
 ```
 
-Running this command will result in the following artifacts to be generated
+Running this command will result in generating the following artifacts
   
   * `enclave_instance.mzn`
   * `pdg_instance.mzn`
@@ -185,14 +185,14 @@ The `dbg_classinfo.csv` file contains the class name, field, and method name to 
 
 The three `.mzn` files are what get fed to MiniZinc along with the fixed `.mzn` files in the `constraints/`
 directory to run the constraint solver.  If the program is properly annotated,
-a `cut.json` file is produced showing the class assingments to each enclave and
+a `cut.json` file is produced showing the class assignments to each enclave and
 the methods in the cut.
 
 Since the output of the constraint solver reports edge IDs, useful scripts
 are available in the `capo/Java/scripts` directory. The `edgeDbg.py` script takes
 an edge ID as input and produces the debug information for the associated
 source and destination nodes. Similarly, `getclassName.py` takes a class ID and
-produces the correspoinding class name for the ID. Note that these scripts
+produces the corresponding class name for the ID. Note that these scripts
 assume the `dbg_*.csv` files are in the same directory as the scripts.
 
 Set classpath and java location and build the application to be partitioned.  
@@ -212,7 +212,7 @@ cd ../..
 
 **IMPORTANT** In file 
 `capo/Java/examples/eop2-demo/src/com/peratonlabs/closure/eop2/video/manager/config.java`
-ensure that webroot is initalized to `capo/Java/examples/eop2-demo/resources`
+ensure that webroot is initialized to `capo/Java/examples/eop2-demo/resources`
 
 Run the conflict analyzer  from `capo/Java`:
 
