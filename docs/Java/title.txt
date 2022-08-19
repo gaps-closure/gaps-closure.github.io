@@ -1,7 +1,7 @@
 ---
 title: CLOSURE Toolchain User Manual for Java Language
 author: Peraton Labs 
-subtitle: Release version 1.0
+subtitle: Release version 2.0
 date: August 23, 2022 
 keywords: [books,programming,GAPS,CLOSURE,CLE,partitioning,aspect-oriented-programming,cross-domain,multi-level-security]
 language: en-US
