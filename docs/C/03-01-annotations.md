@@ -159,8 +159,8 @@ name which does not require a user-provided definition. The definitions for thes
 
 ### Example cross domain function
 
-Consider `double foo(double x, double y);` which resides in level `purple`
-and `void bar()` which resides in level `orange`, and the intent is that `bar` will call `foo`
+Consider `double bar(double x, double y);` which resides in level `purple`
+and `void foo()` which resides in level `orange`, and the intent is that `foo` will call `bar`
 cross domain. A full specification of this interaction using CLE annotations is presented as follows:
 
 ```c
@@ -186,7 +186,7 @@ cross domain. A full specification of this interaction using CLE annotations is 
 
 #pragma cle def BAR {"level":"purple",\
   "cdf": [\
-    {"remotelevel":"orange", \
+    {"remotelevel":"purple", \
      "direction": "bidirectional", \
      "guarddirective": { "operation": "allow"}, \
      "argtaints": [["TAG_REQUEST_BAR"], ["TAG_REQUEST_BAR"]], \
