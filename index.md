@@ -69,12 +69,7 @@ docker pull gapsclosure/closure-java-bin:latest
 
 Source Code Release, Peraton Labs, Release version 2.0, August 23, 2022: \[[Release](https://github.com/gaps-closure/build/releases/download/v2.0/gaps-java-eop2-src.tgz)\] 
 
-## CLOSURE publications 
+## CLOSURE Presentations and Publications 
 
-### DARPA V-SPELLS Kickoff 
-
-Michael Kaplan, and Rajesh Krishnan, "Program Insights from CLOSURE / DARPA GAPS, " Presentation at the DARPA V-SPELLS Kick-Off, July 28, 2021 \[[PDF](./vspells.pdf)\]
-
-### C Program Partitioning Paper  
-
-Maxwell Levatich and Robert Brotzman and Benjamin Flin and Ta Chen and Rajesh Krishnan and Michael Kaplan and Stephen A. Edwards. C Program Partitioning with Fine-Grained Security Constraints and Post-Partition Verification. In Proceedings of the IEEE Military Communications Conference (MILCOM), pages 285-291, Rockville, Maryland, USA, November 2022. \[[PDF](./levatich2022c.pdf)\]
+1. Michael Kaplan and Rajesh Krishnan, "Program Insights from CLOSURE / DARPA GAPS," Presentation at the DARPA V-SPELLS Kick-Off Meeting, July 28, 2021 \[[PDF](./vspells.pdf)\]
+2. Maxwell Levatich, Robert Brotzman, Benjamin Flin, Ta Chen, Rajesh Krishnan, Michael Kaplan, and Stephen A. Edwards, "C Program Partitioning with Fine-Grained Security Constraints and Post-Partition Verification," In Proceedings of the IEEE Military Communications Conference (MILCOM), pages 285-291, Rockville, Maryland, USA, November 2022. \[[PDF](./levatich2022c.pdf)\]
