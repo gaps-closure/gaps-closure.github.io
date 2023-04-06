@@ -71,7 +71,7 @@ Source Code Release, Peraton Labs, Release version 2.0, August 23, 2022: \[[Rele
 
 ## CLOSURE publications 
 
-### DARPA VSPELLS Kickoff 
+### DARPA V-SPELLS Kickoff 
 
 Michael Kaplan, and Rajesh Krishnan, "Program Insights from CLOSURE / DARPA GAPS, " Presentation at the DARPA V-SPELLS Kick-Off, July 28, 2021 \[[PDF](./vspells.pdf)\]
 
