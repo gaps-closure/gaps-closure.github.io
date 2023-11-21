@@ -74,8 +74,9 @@ The key sub-modules of the toolchain include:
 - **CAPO**: Conflict Analyzer Partition Optimizer. CAPO includes the constraint-based conflict analysis tools to determine if a partitioning is feasible. Additional tools in CAPO auto-generate the additional logic needed to make a program cross-domain enabled (i.e., data type marshalling/serialization, RPCs for cross-domain data exchange, interfacing to the device drivers of cross-domain guards, DFDL @DFDL and rule generation, among others). CAPO also includes a post-partitioning verifier which checks that the partitioned program 
 including auto-generated code is functionally equivalent to complies with developer security annotations.
 - **MBIG**: Multi-Target Binary Generation. Supports compilation to x86 and ARM targets as well as packaging of applications.
-- **HAL**: Hardware-Abstraction-layer. Abstracts hardware APIs of different cross-domain hardware devices. Our flagship approach presents as a 0MQ-based middleware to the applications, but future implementations may
-include other embedded APIs.
+- **HAL**: Hardware-Abstraction-layer. Abstracts hardware APIs of different cross-domain hardware devices giving appliacations a single cross-domain communication (XDCOMMS) API. CLOSURE has two HAL implementations:
+    - *HAL-Daemon*: Runs HAL as a separate daemon that communicates with applications using 0MQ-based middleware.
+    - *HAL-Library*: Linked to applications as a library using the raw XDCOMMS send, receive and control API calls.
 - **EMU**: Emulator. Enables test and evaluation of cross-domain applications utilizing QEMU.
 
 ## Workflow 
