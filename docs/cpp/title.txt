@@ -1,0 +1,19 @@
+---
+title: CLOSURE Toolchain User Manual for C++ Language
+author: Peraton Labs 
+subtitle: Release version (Preview v0.1)
+date: January 31, 2024 
+keywords: [books,programming,GAPS,CLOSURE,CLE,partitioning,aspect-oriented-programming,cross-domain,multi-level-security]
+language: en-US
+titlepage: true
+documentclass: scrartcl
+toc: true
+toc-own-page: true
+numbersections: true
+colorlinks: true
+header-includes:
+ - \usepackage{fvextra}
+ - \usepackage[htt]{hyphenat}
+ - \let\NormalTok\texttt
+ - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines, breakanywhere, breaksymbol=, breakanywheresymbolpre=, commandchars=\\\{\}, fontsize=\small}
+---
