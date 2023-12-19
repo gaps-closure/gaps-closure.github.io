@@ -1,4 +1,4 @@
-## Dockerfile [TODO: XXX] {#dockerfile}
+## Dockerfile [TODO: MIKE] {#dockerfile}
 
 ### Dockerfile for Source release {#src-docker}
 The following dockerfile is used to build a source release from scratch.

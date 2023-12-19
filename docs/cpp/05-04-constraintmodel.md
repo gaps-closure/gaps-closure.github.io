@@ -1,4 +1,4 @@
-## [TODO: DANNIE] Constraint Model in MiniZinc 
+## Constraint Model in MiniZinc [TODO: DANNIE]
 
 XXX: Review/update
 
