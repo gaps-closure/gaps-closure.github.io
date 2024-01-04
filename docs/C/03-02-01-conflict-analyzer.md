@@ -122,6 +122,12 @@ edge types are further divided into subtypes.
 
 More documentation about the specific nodes and edges in the PDG can be found [here](#pdg-appendix). 
 
+
+### SVF and pointer analysis
+
+SVF provides a suite of tools for pointer and data dependency analysis on LLVM. SVF is used in CLOSURE to provide pointer analysis using Andersen's algorithm. The pointer analysis results
+are given in points-to relations between instructions in the LLVM. The conflict analyzer then maps each of these points-to relations to the PDG as additional edges between existing nodes.
+
 ### input generation and constraint solving using Minizinc
 
 From the cle json outputted by the preprocessor, the conflict analyzer generates

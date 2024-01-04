@@ -5,13 +5,12 @@ about MiniZinc, it's usage and syntax can be found [here](https://www.minizinc.o
 
 In the model below, the `nodeEnclave` decision variable stores the enclave
 assignment for each node, the `taint` decision variable stores the label
-assignment for each node, and the `xdedge` decision variable stores whether a
-given edge is in the enclave cut (i.e., the source and destination nodes of the
-edge are in different enclaves. Several other auxiliary decision variables are
-used in the constraint model to express the constraints or for efficient
-compilation. They are described later in the model.
+assignment for each node.
 
-The solver will attempt to assign a node annotation label to all nodes except a user annotated function. Only user annotated functions may have a function annotation. Functions lacking a function annotation cannot be invoked cross-domain and can only have exactly one taint across all invocations. This ensures that the arguments, return and function body only touch the same taint. 
+There are also many auxiliary predicates and functions which are generally used as shorthands
+for longer expressions. These are described at the end of this section.
+
+The solver will attempt to assign a node annotation label to all nodes except a user annotated functions. Only user annotated functions may have a function annotation. Functions lacking a function annotation cannot be invoked cross-domain and can only have exactly one taint across all invocations. This ensures that the arguments, return and function body only touch the same taint. 
 
 #### General Constraints on Output and Setup of Auxiliary Decision Variables
 
@@ -29,13 +28,10 @@ constraint :: "AnnotationHasNoEnclave"          forall (n in Annotation)        
 ```
 
 The level of every node that is not an annotation stored in the `nodeLevel`
-decision variable must match:
- * the level of the label (taint) assigned to the node
- * the level of the enclave the node is assigned to 
+decision variable must match the level of the enclave the node is assigned to 
 
 ```minizinc
-constraint :: "NodeLevelAtTaintLevel"           forall (n in NonAnnotation)      (nodeLevel[n]==hasLabelLevel[taint[n]]);
-constraint :: "NodeLevelAtEnclaveLevel"         forall (n in NonAnnotation)      (nodeLevel[n]==hasEnclaveLevel[nodeEnclave[n]]);
+constraint :: "NodeLevelAtEnclaveLevel"       forall (n in NonAnnotation)      (hasLabelLevel[taint[n]] == hasEnclaveLevel[nodeEnclave[n]]);
 ```
 
 Only function entry nodes can be assigned a function annotation label.
@@ -43,36 +39,8 @@ Furthermore, only the user can bless a function with a function annotation
 (that gets be passed to the solver through the input).  
 
 ```minizinc
-constraint :: "FnAnnotationForFnOnly"           forall (n in NonAnnotation)      (isFunctionAnnotation[taint[n]] -> isFunctionEntry(n));
-constraint :: "FnAnnotationByUserOnly"          forall (n in FunctionEntry)      (isFunctionAnnotation[taint[n]] -> userAnnotatedFunction[n]);
-```
-
-Set up a number of auxiliary decision variables:
- * `ftaint[n]`: CLE label taint of the function containing node `n`
- * `esEnclave[e]`: enclave assigned to the source node of edge `e`
- * `edEnclave[e]`: enclave assigned to the destination node of edge `e`
- * `xdedge[e]`: source and destination nodes of `e` are in different enclaves
- * `esTaint[e]`: CLE label taint of the source node of edge `e`
- * `edTaint[e]`: CLE label taint of the destination node of edge `e`
- * `tcedge[e]`: source and destination nodes of `e` have different CLE label taints
- * `esFunTaint[e]`: CLE label taint of the function containing source node of edge `e`, `nullCleLabel` if not applicable
- * `edFunTaint[e]`: CLE label taint of the function containing destination node of edge `e`, `nullCleLabel` if not applicable
- * `esFunCdf[e]`: if the source node of the edge `e` is an annotated function, then this variable stores the CDF with the remotelevel equal to the level of the taint of the destination node; `nullCdf` if a valid CDF does not exist
- * `edFunCdf[e]`: if the destination node of the edge `e` is an annotated function, then this variable stores the CDF with the remotelevel equal to the level of the taint of the source node; `nullCdf` if a valid CDF does not exist
-
-
-```minizinc
-constraint :: "MyFunctionTaint"                 forall (n in PDGNodeIdx)         (ftaint[n] == (if hasFunction[n]!=0 then taint[hasFunction[n]] else nullCleLabel endif));
-constraint :: "EdgeSourceEnclave"               forall (e in PDGEdgeIdx)         (esEnclave[e]==nodeEnclave[hasSource[e]]);
-constraint :: "EdgeDestEnclave"                 forall (e in PDGEdgeIdx)         (edEnclave[e]==nodeEnclave[hasDest[e]]);
-constraint :: "EdgeInEnclaveCut"                forall (e in PDGEdgeIdx)         (xdedge[e]==(esEnclave[e]!=edEnclave[e]));
-constraint :: "EdgeSourceTaint"                 forall (e in PDGEdgeIdx)         (esTaint[e]==taint[hasSource[e]]);
-constraint :: "EdgeDestTaint"                   forall (e in PDGEdgeIdx)         (edTaint[e]==taint[hasDest[e]]);
-constraint :: "EdgeTaintMismatch"               forall (e in PDGEdgeIdx)         (tcedge[e]==(esTaint[e]!=edTaint[e]));
-constraint :: "SourceFunctionAnnotation"        forall (e in PDGEdgeIdx)         (esFunTaint[e] == (if sourceAnnotFun(e) then taint[hasFunction[hasSource[e]]] else nullCleLabel endif));
-constraint :: "DestFunctionAnnotation"          forall (e in PDGEdgeIdx)         (edFunTaint[e] == (if destAnnotFun(e) then taint[hasFunction[hasDest[e]]] else nullCleLabel endif));
-constraint :: "SourceCdfForDestLevel"           forall (e in PDGEdgeIdx)         (esFunCdf[e] == (if sourceAnnotFun(e) then cdfForRemoteLevel[esFunTaint[e], hasLabelLevel[edTaint[e]]] else nullCdf endif));
-constraint :: "DestCdfForSourceLevel"           forall (e in PDGEdgeIdx)         (edFunCdf[e] == (if destAnnotFun(e) then cdfForRemoteLevel[edFunTaint[e], hasLabelLevel[esTaint[e]]] else nullCdf endif));
+constraint :: "FnAnnotationForFnOnly"         forall (n in NonAnnotation)      (isFunctionAnnotation[taint[n]] -> isFunctionEntry(n));
+constraint :: "FnAnnotationByUserOnly"        forall (n in FunctionEntry)      (isFunctionAnnotation[taint[n]] -> userAnnotatedFunction[n]);
 ```
 
 If a node `n` is contained in an unannotated function then the CLE label taint
@@ -81,7 +49,8 @@ words, since unannotated functions must be singly tainted, all noded contained
 within the function must have the same taint as the function.
 
 ```minizinc
-constraint :: "UnannotatedFunContentTaintMatch" forall (n in NonAnnotation where hasFunction[n]!=0) (userAnnotatedFunction[hasFunction[n]]==false -> taint[n]==ftaint[n]);
+constraint :: "UnannotatedFunContentTaintMatch"
+ forall (n in NonAnnotation where hasFunction[n]!=0) (userAnnotatedFunction[hasFunction[n]] == false -> taint[n] == ftaint(n));
 ```
 
 If the node `n` is contained in an user annotated function, then the CLE label
@@ -92,7 +61,9 @@ by the user can only contain nodes with taints that are explicitly permitted
 (to be coerced) by the function annotation.
 
 ```minizinc
-constraint :: "AnnotatedFunContentCoercible"    forall (n in NonAnnotation where hasFunction[n]!=0 /\ isFunctionEntry(n)==false) (userAnnotatedFunction[hasFunction[n]] -> isInArctaint(ftaint[n], taint[n], hasLabelLevel[taint[n]]));
+constraint :: "AnnotatedFunContentCoercible"
+ forall (n in NonAnnotation where hasFunction[n]!=0 /\ isFunctionEntry(n)==false) 
+  (userAnnotatedFunction[hasFunction[n]] -> isInArctaint(ftaint(n), taint[n], hasLabelLevel[taint[n]]));
 ```
 
 #### Constraints on the Cross-Domain Control Flow
@@ -108,9 +79,10 @@ allows the data to be shared with the level of the (taint of the) function
 entry being called.
 
 ```minizinc
-constraint :: "NonCallControlEnclaveSafe"      forall (e in ControlDep_NonCall where isAnnotation(hasDest[e])==false) (xdedge[e]==false);
-constraint :: "XDCallBlest"                    forall (e in ControlDep_CallInv) (xdedge[e] -> userAnnotatedFunction[hasDest[e]]);
-constraint :: "XDCallAllowed"                  forall (e in ControlDep_CallInv) (xdedge[e] -> allowOrRedact(cdfForRemoteLevel[edTaint[e], hasLabelLevel[esTaint[e]]]));
+constraint :: "NonCallControlEnclaveSafe"     forall (e in ControlDep_NonCall where isAnnotation(hasDest[e])==false) (xdedge(e)==false);
+constraint :: "XDCallBlest"                   forall (e in ControlDep_CallInv) (xdedge(e) -> userAnnotatedFunction[hasDest[e]]);
+constraint :: "XDCallAllowed"
+ forall (e in ControlDep_CallInv) (xdedge(e) -> allowOrRedact(cdfForRemoteLevel[edTaint(e), hasLabelLevel[esTaint(e)]]));
 ```
 
 Notes: 
@@ -123,7 +95,7 @@ Notes:
    code. The actual cut in the partitioned code with autogenerated code to
    handle cross-domain communications will be between the cross-domain send 
    and receive functions that are several steps removed from the cut in the
-   `xdedge` variable at this stage of analysis. The autogenerated code will 
+   `xdedge` function at this stage of analysis. The autogenerated code will 
    apply annotations to cross-domain data annotations that contain GAPS tags,
    and they will have a different label. So we cannot check whether the label 
    of the arguments passed from the caller matches the argument taints allowed by
@@ -145,9 +117,13 @@ shared with the level of the taint of the destination node (the corresponding
 actual parameter node of the callee function).
 
 ```minizinc
-constraint :: "NonRetNonParmDataEnclaveSafe"   forall (e in DataEdgeNoRet)      (xdedge[e]==false);
-constraint :: "XDCDataReturnAllowed"           forall (e in DataDepEdge_Ret)    (xdedge[e] -> allowOrRedact(cdfForRemoteLevel[esTaint[e], hasLabelLevel[edTaint[e]]]));
-constraint :: "XDCParmAllowed"                 forall (e in Parameter)          (xdedge[e] -> allowOrRedact(cdfForRemoteLevel[esTaint[e], hasLabelLevel[edTaint[e]]]));
+constraint :: "NonRetNonParmDataEnclaveSafe"
+ forall (e in DataEdgeEnclaveSafe) (xdedge(e) == false);
+constraint :: "XDCDataReturnAllowed"
+ forall (e in DataDepEdge_Ret) (xdedge(e) -> allowOrRedact(cdfForRemoteLevel[esTaint(e), hasLabelLevel[edTaint(e)]]));
+constraint :: "XDCParmAllowed"
+ forall (e in DataDepEdge_ArgPass_In union DataDepEdge_ArgPass_Out)
+   (xdedge(e) -> allowOrRedact(cdfForRemoteLevel[esTaint(e), hasLabelLevel[edTaint(e)]]));
 ```
 
 #### Constraints on Taint Coercion Within Each Enclave {#coercion}
@@ -158,74 +134,115 @@ to perform taint checking to ensure that data annotated with different
 labels inside each enclave are managed correctly and only when the
 mixing of the taints is explicitly allowed by the user.
 
-Labels can be cooerced (i.e., nodes of a given PDG edge can be permitted to
+Labels can be coerced (i.e., nodes of a given PDG edge can be permitted to
 have different label assigments) inside an enclave only through user annotated
-functions.  To track valid label coercion across a PDG edge `e`, the model uses
-an additional auxiliary decision variable called `coerced[e]`.
+functions.  
 
-Any data dependency or parameter edge that is intra-enclave (not in the
-cross-domain cut) and with different CLE label taints assigned to the source
-and destination nodes must be coerced (through an annotated function).
+All data dependencies where one node is contained in an unannotated function and the other is in the function must have the same taint.
 
-Note: one may wonder whether a similar constraint must be added for control 
-dependency edges at the entry block for completeness. Such a constraint is 
-not necessary given our inclusion of the `UnannotatedFunContentTaintMatch` and
-`AnnotatedFunContentCoercible` constraints discussed earlier. 
 ```minizinc
-constraint :: "TaintsSafeOrCoerced"            forall (e in DataEdgeParam)      ((tcedge[e] /\ (xdedge[e]==false)) -> coerced[e]);
-
+constraint :: "UnannotatedExternDataEdgeTaintsMatch"
+  forall (e in DataDepEdge)
+    (externUnannotated(e) -> esTaint(e) == edTaint(e));
 ```
 
-If the edge is a parameter in or parameter out edge, then it can be coerced if
-and only if the associated function annotation has the taint of the other node
-in the argument taints for the corresponding parameter index. In other words,
-what is passed in through this parameter has a taint allowed by the function
-annotation.
+In all data dependency edges into an annotated function where one node lies outside the function
+and the other inside the function, the node outside the function must have a taint which is listed in the function's argument, body or return taints.
 
 ```minizinc
-constraint :: "ArgumentTaintCoerced"
- forall (e in Parameter_In union Parameter_Out)
-  (if     destAnnotFun(e)   /\ isParam_ActualIn(hasDest[e])    /\ (hasParamIdx[hasDest[e]]>0)
-   then coerced[e] == hasArgtaints[edFunCdf[e], hasParamIdx[hasDest[e]], esTaint[e]]
-   elseif sourceAnnotFun(e) /\ isParam_ActualOut(hasSource[e]) /\ (hasParamIdx[hasSource[e]]>0)
-   then coerced[e] == hasArgtaints[esFunCdf[e], hasParamIdx[hasSource[e]], edTaint[e]]
-   else true 
-   endif);
+constraint :: "AnnotatedExternDataEdgeInArctaints"
+  forall (e in DataDepEdge)
+    ((srcFunExternAnnotated(e) ->
+       isInArctaint(esFunTaint(e), edTaint(e), hasLabelLevel[edTaint(e)])) /\
+     (destFunExternAnnotated(e) ->
+       isInArctaint(edFunTaint(e), esTaint(e), hasLabelLevel[esTaint(e)])));
 ```
 
-If the edge is a data return edge, then it can be coerced if and only if the
-associated function annotation has the taint of the other node in the return
-taints.
+If a return edge comes from an unnannotated function, then the sources and 
+destinations of the edge must have the same taint.
 
 ```minizinc
-constraint :: "ReturnTaintCoerced"            forall (e in DataDepEdge_Ret)     (coerced[e] == (if sourceAnnotFun(e) then hasRettaints[esFunCdf[e], edTaint[e]] else false endif));
+constraint :: "retEdgeFromUnannotatedTaintsMatch"
+  forall (e in DataDepEdge_Ret union DataDepEdge_Indirect_Ret)
+    (not sourceAnnotFun(e)
+      -> esTaint(e) == edTaint(e));
 ```
 
-If the edge is a data dependency edge (and not a return or parameter edge),
-then it can be coerced if and only if the associated function annotation allows
-the taint of the other node in the argument taints of any parameter, 
-
-Note that this constraint might appear seem redundant given the
-`AnnotatedFunContentCoercible` constraint discussed earlier. On closer
-inspection we can see that the following constraint also includes edges 
-between nodes in the function and global/static variables; the earlier 
-constraint does not. There is overlap between the constraints, so some
-refinement is possible, which may make the model a little harder to understand.
+If a return edge comes from an annotated function, then the source must
+be in the rettaints for that function, or that edge must be cross-domain.
 
 ```minizinc
-constraint :: "DataTaintCoerced"
- forall (e in DataEdgeNoRetParam)
-  (if (hasFunction[hasSource[e]]!=0 /\ hasFunction[hasDest[e]]!=0 /\ hasFunction[hasSource[e]]==hasFunction[hasDest[e]])
-   then coerced[e] == (isInArctaint(esFunTaint[e], edTaint[e], hasLabelLevel[edTaint[e]]) /\
-                       isInArctaint(esFunTaint[e], esTaint[e], hasLabelLevel[esTaint[e]]))     % source and dest taints okay
-   elseif (isVarNode(hasDest[e]) /\ hasFunction[hasSource[e]]!=0)
-   then coerced[e] == (isInArctaint(esFunTaint[e], edTaint[e], hasLabelLevel[edTaint[e]]) /\
-                       isInArctaint(esFunTaint[e], esTaint[e], hasLabelLevel[esTaint[e]]))
-   elseif (isVarNode(hasSource[e]) /\ hasFunction[hasDest[e]]!=0)
-   then coerced[e] == (isInArctaint(edFunTaint[e], esTaint[e], hasLabelLevel[esTaint[e]]) /\
-                       isInArctaint(edFunTaint[e], edTaint[e], hasLabelLevel[edTaint[e]]))
-   else coerced[e] == false
-   endif);
+constraint :: "returnNodeInRettaints"
+  forall (e in DataDepEdge_Ret union DataDepEdge_Indirect_Ret)
+    (sourceAnnotFun(e)
+      -> (hasRettaints[esFunCdf(e), edTaint(e)] \/ xdedge(e)));
+```
+
+For parameter passing edges into unannotated functions, the source and destination 
+nodes must have the same taint.
+
+For parameter passing edges into annotated functions, the source must be in the corresponding argtaint for that argument's position, or it must be a cross-domain edge.
+
+```minizinc
+constraint :: "argPassInEdgeToUnannotatedTaintsMatch"
+  forall (e in DataDepEdge_ArgPass_In union DataDepEdge_ArgPass_Indirect_In)
+    (not destAnnotFun(e)
+      -> esTaint(e) == edTaint(e));
+constraint :: "argPassInSourceInArgtaints"
+  forall (e in DataDepEdge_ArgPass_In union DataDepEdge_ArgPass_Indirect_In)
+    (destAnnotFun(e)
+      -> hasArgtaints[edFunCdf(e), hasParamIdx[hasDest[e]], esTaint(e)] \/ xdedge(e));
+```
+
+All indirect calls (calls through a function pointer) must not be cross-domain.
+Note: ArgPass and Ret edges of indirect calls must satisfy the same constraints as their direct call counter-parts. They are included in the unions above for inter-function edges.
+
+```minizinc 
+constraint :: "IndirectCallSameEnclave"
+  forall (e in ControlDep_Indirect_CallInv)
+    (xdedge(e) == false);
+```
+
+If two global variables are connected by a def-use edge, they must have the same taint.
+
+```minizinc 
+constraint :: "GlobalDefUseTaintsMatch"
+  forall (e in DataDepEdge_GlobalDefUse)
+    (esTaint(e) == edTaint(e));
+```
+
+Any function whose address is taken in the program cannot have a function annotation. Indirect callees, as a consequence, cannot have a function annotation, but we include the constraint separately for completeness.
+
+```minizinc 
+constraint :: "FunctionPtrSinglyTainted"
+  forall (e in DataDepEdge_PointsTo)
+    (isFunctionEntry(hasDest[e]) -> not userAnnotatedFunction[hasDest[e]]);
+constraint :: "IndirectCalleeSinglyTainted"
+  forall (e in ControlDep_Indirect_CallInv)
+    (not userAnnotatedFunction[hasDest[e]]);
+```
+
+Note: For every indirect call edge, we should have a corresponding points to edge for the function pointer at the call site.   
+
+#### points-to edge constraints
+
+Cross-domain points to edges must have compatible taints, meaning the destination taint
+must be allowed to be shared to the remote.
+
+```minizinc
+constraint :: "PointsToXD"
+  forall (e in DataDepEdge_PointsTo)
+    (xdedge(e) -> (allowOrRedact(cdfForRemoteLevel[edTaint(e), hasLabelLevel[esTaint(e)]]) /\ not isFunctionEntry(hasDest[e]))); 
+```
+
+Note: the reason that points-to edges cannot be wholesale eliminated from the cut is because CLOSURE allows arrays of primitives to be passed cross-domain. The extra `not isFunctionEntry(hasDest[e])` is not strictly needed, but included so that function pointers passed cross domain are caught by the solver and not at a downstream step. 
+
+Points-to edges must match in taint. Note that this is true despite whether that edge's source and destination is contained within an annotated function. Sometimes pointer dependencies are captured by a chain of points-to edges which may be intra-function edges. Therefore we restrict intra-function points-to edges to have the same taint, even in annotated functions. This puts a limit on what can be coerced within an annotated function to only include initialized non-pointer data. If pointers must be coerced, then the data at those pointers needs to be copied. 
+
+```minizinc 
+constraint :: "PointsToTaintsMatch"
+  forall (e in DataDepEdge_PointsTo)
+    ((not xdedge(e)) -> esTaint(e) == edTaint(e));
 ```
 
 #### Solution Objective
