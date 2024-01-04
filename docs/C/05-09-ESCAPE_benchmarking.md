@@ -14,10 +14,10 @@ If a process A on host0 and a process B on host1 memory-maps the shared FPGA mem
 
 ![ESCAPE host virtual memory](docs/C/images/ESCAPE_host_virtual_memory.png)
 
-To allow experimentation without the ESCAPE board, we also 
-benchmarked performance using shared memory between two processes on the same host. If a process A on host0 and a process B also on host0 memory-maps part of host0's physical memory, then, as shown below, the virtual address space of each process will again include a portion of shared FPGA memory. 
+To measure raw shared memory performance without the ESCAPE board, we also 
+benchmarked shared memory performance between two processes on the same host. If a process A on host0 and a process B also on host0 memory-maps part of host0's physical memory, then, as shown below, the virtual address space of each process will again include a portion of shared FPGA memory. 
 
-![Inter process virtual memory](docs/C/images/inter-process_virtual_memory.png)
+![Inter-process Virtual Memory](docs/C/images/inter-process_virtual_memory.png)
 
 
 
