@@ -18,7 +18,7 @@ To provide GAPS security between enclaves, the FPGA uses an address-filtering me
 For the benchmarking the 16GB FPGA memory was also split into 14 GB of shared memory and 1 GB of private memory for each host. 
 
 
-If a process A on ESCAPE host0 and a process B on ESCAPE host1 memory-maps the shared FPGA memory (e.g., using the mmap() call in a C program) then, as shown below, the virtual address space of each process will include the same shared FPGA memory. The process A on host0 and the process B on host1 can thus both access the same FPGA memory using memory copy instructions allowing inter-Host communicagtion. 
+If a process A on ESCAPE host0 and a process B on ESCAPE host1 memory-maps the shared FPGA memory (e.g., using the mmap() call in a C program) then, as shown below, the virtual address space of each process will include the same shared FPGA memory. The process A on host0 and the process B on host1 can thus both access the same FPGA memory using memory copy instructions allowing inter-Host communication. 
 
 ![ESCAPE host virtual memory](docs/C/images/ESCAPE_host_virtual_memory.png)
 
@@ -30,91 +30,16 @@ To measure raw shared memory performance without the ESCAPE board, we also bench
 
 ### Benchmarking Program
 
-The [Benchmarking program](https://github.com/gaps-closure/hal/tree/multi-threaded/escape/perftests)
-runs a series of throughput performance measurements for combinations of four variables:
-memory type, payload length, copy function, and number of worker threads.
+#### Benchmarking Program Parameters
 
-#### Variable 1) Memory Types
+The benchmarking program is a C program consisting of two main parts:  
 
-The Benchmarking program copies data between its local heap memory created using malloc() and one of three types of memory:
+- The main program that runs through all the [testing parameter combinations](@benchmarking-program-variables): 
+[memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c).
+- The worker thread pool that creates and manages all the worker threads:
+[thread_pool.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/thread_pool.c).
 
-- **Host heap**: Allocates memory from the host using malloc(). This memory only allows a single process to write then read the memory, but measures raw memory bandwidth. 
-- **Host mmap**: Allocates memory by opening /dev/mem followed by an mmap() of host memory. The resultant mapped memory can be used to communicate data between two processes on the same host.
-- **ESCAPE mmap**: Allocates memory by opening /dev/mem followed by an mmap() of FPGA memory. For the ESCAPE system this starts at address 130 GB = 0x2080000000 (as described above), though this address can be changed by modifying the MMAP_ADDR_ESCAPE definition in [memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c).
-
-In one run of the benchmark program, it reads and writes to each of the three types of memory, creating a total of 2 x 3 = 6 different experiments. Each experiment has an ID from 0 to 5, allowing the user to specify a from- to to-list of experiment types to run [see parameter description](#benchmarking-program-parameters)
-
-#### Variable 2) Payload Lengths
-
-For each of the six memory write/read types in a run, the benchmark program tests thoughput with a series of increasing payload lengths (number of bytes of data that are written or read). 
-It's defulat is to test with 10 different payload lengths from 16 bytes up to 16 MB 
-(except for *host mmap* memory, which linux limits up to 512K).
-However, the number of lengths test can be reduced using the '-n' option when calling the program 
-(e.g., '-n 3' will run just the first 3 payload lengths). 
-The payload values themselves can be modified by changing the definitions of the 
-global array *copy_size_list* in [memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c). 
-
-#### Variable 3) Copy Functions
-
-For each payload length in a run, the benchmarking program tests with three different copy functions,
-which read or write data between the program and the memory:
-
-- **glibc memory copy**: memcpy().
-- **naive memory copy**: using incrementing unsigned long C pointers that point to the destinatiion and source (*d++ = *s++).
-- **Apex memory copy**: A fast memory copy fuunction whose [source code is available](https://www.codeproject.com/Articles/1110153/Apex-memmove-the-fastest-memcpy-memmove-on-x-x-EVE)
-
-The banchmark script runs the test multiple times for each copy function tested. 
-The default number of tests is 5, but the value can be changed by specifying the
-'-r' [parameter option](#benchmarking-program-parameters) when calling the benchmmark program.
-
-#### Variable 4) Number of Worker Threads
-
-The each run the user can specify the number of parallel worker threads that copy the data
-using the '-t' option when calling the program.
-For example, '-t 16' will run just with 16 paralel worker threads  
-
-
-### ESCAPE Testbed Setup 
-
-(escape-green and escape-orange)
-
-
-
-
-xxxxx
-
-
-[HAL daemon listening 0MQ sockets](#hal-interfaces)
-
-
-
-amcauley@jaga:~/gaps/build/hal/escape/perftests$ make
-make clean
-
-apex_
-gcc -c -o thread_pool.o thread_pool.c -g -Iinclude -O3 -Wall -Werror -std=gnu99
-gcc -o memcpy_test memcpy_test.c apex_memmove.o thread_pool.o -g -Iinclude -O3 -Wall -Werror -std=gnu99 -lpthread
-
-
-
-## RUN TEST PROGRAM
-The ESCAPE test program is in a singlefile: [memcpy_test.c](memcpy_test.c)
-It links with the apex memory copy files: [apex_memmove.c](apex_memmove.c) [apex_memmove.h](apex_memmove.h)
-It outputs results into a single file: by default *results.csv*
-To run the test program:
-```
-make && sudo ./memcpy_test  
-
-# Run test with greater sampling
-make && sudo ./memcpy_test -r 1000
-
-# Run quick tests on just Escape Memory (write and read) with lower sampling
-make && sudo ./memcpy_test -r 2 4 5
-```
-
-### Benchmarking Program Parameters
-
-The options available to the benchmarking program can be discovered using the
+The parameter options available to the benchmarking program can be discovered using the
 help option as shown below:
 
 ```
@@ -124,7 +49,7 @@ Usage: ./escape_test [OPTIONS]... [Experiment ID List]
 OPTIONS: are one of the following:
  -h : print this message
  -i : which source data is initialized
-   0 = all sources (default) - both applicaiton or shared memory as source of data
+   0 = all sources (default) - both application or shared memory as source of data
    1 = only if source is application - use current shared memory content as source (so can read on different node/process than writer)
  -n : number of length tests (default=9, maximum = 10)
  -o : source data initialization offset value (before writing)
@@ -140,4 +65,134 @@ memory pair type IDs (default = all) for application (using host heap) to:
  -z : read/write with given number of second sleep between each (default z=0)
 ```
 
-Set nice level...
+
+#### Benchmarking Program Variables
+
+The [Benchmarking program](https://github.com/gaps-closure/hal/tree/multi-threaded/escape/perftests)
+runs a series of throughput performance measurements for combinations of four variables:
+memory type, payload length, copy function, and number of worker threads.
+
+##### **Variable 1)** Memory Types
+
+The Benchmarking program copies data between its local heap memory created using malloc() and one of three types of memory:
+
+- **Host heap**: Allocates memory from the host using malloc(). This memory only allows a single process to write then read the memory, but measures raw memory bandwidth. 
+- **Host mmap**: Allocates memory by opening /dev/mem followed by an mmap() of host memory. The resultant mapped memory can be used to communicate data between two processes on the same host.
+- **ESCAPE mmap**: Allocates memory by opening /dev/mem followed by an mmap() of FPGA memory. For the ESCAPE system this starts at address 130 GB = 0x2080000000 (as described above), though this address can be changed by modifying the MMAP_ADDR_ESCAPE definition in [memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c).
+
+In one run of the benchmark program, it reads and writes to each of the three types of memory, creating a total of 2 x 3 = 6 different experiments. Each experiment has an ID from 0 to 5, allowing the user to specify a list of experiment types to run as program [parameters](#benchmarking-program-parameters)
+
+##### **Variable 2)** Payload Lengths
+
+For each of the six memory write/read types in a run, the benchmark program tests throughput with a series of increasing payload lengths (number of bytes of data that are written or read). 
+It's default is to test with 10 different payload lengths from 16 bytes up to 16 MB 
+(except for *host mmap* memory, which linux limits up to 512K).
+However, the number of lengths test can be reduced using the '-n' [parameter option](#benchmarking-program-parameters) when calling the program 
+(e.g., '-n 3' will run just the first 3 payload lengths). 
+The payload values themselves can be modified by changing the definitions of the 
+global array *copy_size_list* in [memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c). 
+
+##### **Variable 3)** Copy Functions
+
+For each payload length in a run, the benchmarking program tests with three different copy functions,
+which read or write data between the program and the memory:
+
+- **glibc memory copy**: memcpy().
+- **naive memory copy**: using incrementing unsigned long C pointers that point to the destination and source (*d++ = *s++).
+- **Apex memory copy**: A fast memory copy function whose [source code is available](https://www.codeproject.com/Articles/1110153/Apex-memmove-the-fastest-memcpy-memmove-on-x-x-EVE)
+
+The benchmark script runs the test multiple times for each copy function tested. 
+The default number of tests is 5, but the value can be changed by specifying the
+'-r' [parameter option](#benchmarking-program-parameters) when calling the benchmark program.
+
+##### **Variable 4)** Number of Worker Threads
+
+The each run the user can specify the number of parallel worker threads that copy the data
+using the '-t' [parameter option](#benchmarking-program-parameters) when calling the program.
+For example, '-t 16' will run just with 16 parallel worker threads.  
+
+
+#### Clone, Compile and Run Benchmarking Program
+
+The benchmarking program is part of the HAL branch, with the latest version
+(including the multi-threaded option) found in the multi-threaded branch:
+
+```
+git clone git@github.com:gaps-closure/hal.git
+cd hal/escape/perftests
+git checkout multi-threaded
+git branch --set-upstream-to=origin/multi-threaded
+```
+
+To compile the benchmarking program we run make:
+
+```
+make
+  gcc -c -o apex_memmove.o apex_memmove.c -g -Iinclude -O3 -Wall -Werror -std=gnu99
+  gcc -c -o thread_pool.o thread_pool.c -g -Iinclude -O3 -Wall -Werror -std=gnu99
+  gcc -o memcpy_test memcpy_test.c apex_memmove.o thread_pool.o -g -Iinclude -O3 -Wall -Werror -std=gnu99 -lpthread
+```
+
+A few examples of running with  run the benchmarking program:
+
+```
+To run with default parameters:
+  sudo ./memcpy_test  
+
+To run at a higher priority:
+  sudo nice -n -15 ./memcpy_test  
+
+To run only the first two memory types (write and read to heap memory)
+  sudo ./memcpy_test 0 1
+
+To run test with greater sampling (average over 1000 runs instead of 5)
+  sudo ./memcpy_test -r 1000
+
+To run just for smaller lengths
+  sudo ./memcpy_test -n 3
+```
+
+The results for each input variable are printed on the terminal. For example:
+
+```
+sudo ./memcpy_test 0 1 -r 1000 -n 2
+
+$ sudo ./memcpy_test 0 1 -r 1000 -n 2
+PAGE_MASK=0x00000fff data_off=0 source_init=0 payload_len_num=2 runs=1000 thread count=0 sleep=0 num_mem_pairs=2 [ 0 1 ]
+App Memory uses host Heap [len=0x10000000 Bytes] at virtual address 0x7fb55c46c010
+--------------------------------------------------------------------------------------
+    sour data [len=0x10000000 bytes]: 0x fffefdfcfbfaf9f8 f7f6f5f4f3f2f1f0 ... 1716151413121110 f0e0d0c0b0a0908 706050403020100
+0) App writes to host-heap (fd=-1, vir-addr=0x7fb54c46b010, phy-addr=0x0, len=268.435456 MB)
+      16 bytes using glibc_memcpy =   5.785 GB/s (1000 runs: ave delta = 0.000000003 secs)
+      16 bytes using naive_memcpy =   9.473 GB/s (1000 runs: ave delta = 0.000000002 secs)
+      16 bytes using  apex_memcpy =   5.382 GB/s (1000 runs: ave delta = 0.000000003 secs)
+     256 bytes using glibc_memcpy =  49.089 GB/s (1000 runs: ave delta = 0.000000005 secs)
+     256 bytes using naive_memcpy =  23.610 GB/s (1000 runs: ave delta = 0.000000011 secs)
+     256 bytes using  apex_memcpy =  29.190 GB/s (1000 runs: ave delta = 0.000000009 secs)
+    dest data [len=0x100 bytes]: 0x fffefdfcfbfaf9f8 f7f6f5f4f3f2f1f0 ... 1716151413121110 f0e0d0c0b0a0908 706050403020100
+Deallocating memory: fd=-1 pa_virt_addr=0x7fb54c46b010 pa_map_len=0x10000000 mem_typ_pair_indexM=0
+run_per_mem_type_pair Done
+--------------------------------------------------------------------------------------
+    sour data [len=0x10000000 bytes]: 0x fffefdfcfbfaf9f8 f7f6f5f4f3f2f1f0 ... 1716151413121110 f0e0d0c0b0a0908 706050403020100
+1) App reads from host-heap (fd=-1, vir-addr=0x7fb54c46b010, phy-addr=0x0, len=268.435456 MB)
+      16 bytes using glibc_memcpy =   5.440 GB/s (1000 runs: ave delta = 0.000000003 secs)
+      16 bytes using naive_memcpy =   8.879 GB/s (1000 runs: ave delta = 0.000000002 secs)
+      16 bytes using  apex_memcpy =   6.159 GB/s (1000 runs: ave delta = 0.000000003 secs)
+     256 bytes using glibc_memcpy =  48.688 GB/s (1000 runs: ave delta = 0.000000005 secs)
+     256 bytes using naive_memcpy =  23.878 GB/s (1000 runs: ave delta = 0.000000011 secs)
+     256 bytes using  apex_memcpy =  29.314 GB/s (1000 runs: ave delta = 0.000000009 secs)
+    dest data [len=0x100 bytes]: 0x fffefdfcfbfaf9f8 f7f6f5f4f3f2f1f0 ... 1716151413121110 f0e0d0c0b0a0908 706050403020100
+Deallocating memory: fd=-1 pa_virt_addr=0x7fb54c46b010 pa_map_len=0x10000000 mem_typ_pair_indexM=1
+```
+
+The tabulated results (ued by the plotting program) are put into a single file: by default *results.csv*
+
+
+### RUN PLOTTING PROGRAM
+
+
+
+### RESULTS
+
+
+
