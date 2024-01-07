@@ -114,8 +114,8 @@ For example, '-t 16' will run just with 16 parallel worker threads.
 
 #### Clone, Compile and Run Benchmarking Program
 
-The benchmarking program is part of the HAL branch, with the latest version
-(including the multi-threaded option) found in the multi-threaded branch:
+The benchmarking program is part of the HAL branch (as is the plotting script), 
+with the latest version (including the multi-threaded option) found in the git multi-threaded branch:
 
 ```
 git clone git@github.com:gaps-closure/hal.git
@@ -140,7 +140,7 @@ To run with default parameters:
   sudo ./memcpy_test  
 
 To run at a higher priority:
-  sudo nice -n -15 ./memcpy_test  
+  sudo nice --20 ./memcpy_test  
 
 To run only the first two memory types (write and read to heap memory)
   sudo ./memcpy_test 0 1
@@ -185,12 +185,51 @@ run_per_mem_type_pair Done
 Deallocating memory: fd=-1 pa_virt_addr=0x7fb54c46b010 pa_map_len=0x10000000 mem_typ_pair_indexM=1
 ```
 
-The tabulated results (ued by the plotting program) are put into a single file: by default *results.csv*
+The tabulated results (used by the plotting program) are put into a single file: by default *results.csv*
+The first line describes the content of each of the six columns 
+and the remaining lines gives the variable values and performance for each run.
+Below shows an example of initial lines of a run:
 
+```
+$ head -5 results.csv 
+  Experiment Description, Copy length (Bytes), Copy Type, Throughput (GBps), Number of Runs, Number of Threads
+  App writes to host-heap,16,glibc_memcpy,5.785,1000,0
+  App writes to host-heap,16,naive_memcpy,9.473,1000,0
+  App writes to host-heap,16, apex_memcpy,5.382,1000,0
+  App writes to host-heap,256,glibc_memcpy,49.089,1000,0
+```
 
 ### RUN PLOTTING PROGRAM
 
+The benchmarking plotting script, 
+[plot_xy.py](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/plot_xy.py)
+, uses the csv file output of the benchmarking program (see above),
 
+The plotting script is located in the same directory as the benchmarking program:
+[see above](#clone,-compile-and-run-benchmarking-program]
+
+
+The script plots 3-dimensional plots with different x, y and z variables. 
+It defaults to plotting:
+- x-axis: Number worker threads.
+- y-axis: Throughput.
+- z-axis: Data copy length.
+
+However, the script can aldo plot other combinations of variables, including:
+- x-axis: Number worker threads.
+- y-axis: Throughput.
+- z-axis: Type of memory copy function.
+
+and
+- x-axis: Data copy length.
+- y-axis: Throughput.
+- z-axis: Type of memory copy Function.
+
+To add these two alternative plots, the final three lines in 
+[plot_xy.py](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/plot_xy.py)
+can be uncommented.
+Alternative plots with different x, y and z variables can also be added by adding other lines 
+at the end of the script. 
 
 ### RESULTS
 
