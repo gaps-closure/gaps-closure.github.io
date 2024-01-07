@@ -233,5 +233,12 @@ at the end of the script.
 
 ### RESULTS
 
+The first plot shows that writing to host-heap can achieve the server memory B/W limit 
+even without threads, but ESCAPE is two order of magnitude slower even with 64 threads
 
+![ESCAPE Throughput versus Threads for Different Data Lengths](docs/C/images/ESCAPE_BW_v_threads_and_copy_leng.png)
 
+The second plot shows that adding worker threads significantly helps mmapped copy performance,
+but does not help significantly above 8 threads.
+
+![ESCAPE Throughput versus Threads for Different Copy Functions](docs/C/images/ESCAPE_BW_v_threads_and_copy_func.png)
