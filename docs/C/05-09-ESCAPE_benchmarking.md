@@ -65,7 +65,7 @@ which read or write data between the program and the memory:
 
 The banchmark script runs the test multiple times for each copy function tested. 
 The default number of tests is 5, but the value can be changed by specifying the
-'-r' [parameter option](#test-program-parameters) when calling the benchmmark program.
+'-r' [parameter option](#benchmarking-program-parameters) when calling the benchmmark program.
 
 #### Variable 4) Number of Worker Threads
 
