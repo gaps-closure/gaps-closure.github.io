@@ -34,14 +34,15 @@ To measure raw shared memory performance without the ESCAPE board, we also bench
 
 The benchmarking program is a C program consisting of two main parts:  
 
-- The main program that runs through all the [testing parameter combinations](@benchmarking-program-variables): 
+- The top-level program 
 [memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c).
-- The worker thread pool that creates and manages all the worker threads:
+that runs through the [testing parameter combinations](#benchmarking-program-variables).
+- The worker thread pool 
 [thread_pool.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/thread_pool.c).
+that creates and manages all the worker threads.
 
 The parameter options available to the benchmarking program can be discovered using the
 help option as shown below:
-
 ```
 amcauley@jaga:~/gaps/build/hal/escape/perftests$ ./memcpy_test -h
 Shared Memory speed/function test for GAPS CLOSURE project
@@ -133,30 +134,28 @@ make
   gcc -o memcpy_test memcpy_test.c apex_memmove.o thread_pool.o -g -Iinclude -O3 -Wall -Werror -std=gnu99 -lpthread
 ```
 
-A few examples of running with  run the benchmarking program:
+Below are a few examples of running with the benchmarking program:
 
 ```
-To run with default parameters:
+Run with default parameters:
   sudo ./memcpy_test  
 
-To run at a higher priority:
+Run at a high priority:
   sudo nice --20 ./memcpy_test  
 
-To run only the first two memory types (write and read to heap memory)
+Run only the first two memory types (write and read to heap memory)
   sudo ./memcpy_test 0 1
 
-To run test with greater sampling (average over 1000 runs instead of 5)
+Run test with greater sampling (average over 1000 runs instead of 5)
   sudo ./memcpy_test -r 1000
 
-To run just for smaller lengths
+Run just for few smaller lengths
   sudo ./memcpy_test -n 3
 ```
 
 The results for each input variable are printed on the terminal. For example:
 
 ```
-sudo ./memcpy_test 0 1 -r 1000 -n 2
-
 $ sudo ./memcpy_test 0 1 -r 1000 -n 2
 PAGE_MASK=0x00000fff data_off=0 source_init=0 payload_len_num=2 runs=1000 thread count=0 sleep=0 num_mem_pairs=2 [ 0 1 ]
 App Memory uses host Heap [len=0x10000000 Bytes] at virtual address 0x7fb55c46c010
@@ -271,7 +270,7 @@ However, this wisdom has recently been challenged:
   - Transparent paging means OS can flush page to secondary storage at any time -causing blocking
   - Propose Fastpath to ameliorate problems with Linux’s mmap() 
   - [PAP20] A. Papagiannis, G. Xanthakis, G. Saloustros, M. Marazakis, A. Bilas, “Optimizing Memory-mapped I/O for Fast Storage Devices,” Proceedings of the USENIX Annual Technical Conference, July 2020.
-- Argues even with additional complexity mmap() will not scale:
+- Even with additional complexity mmap() will not scale:
 
   - Slow and unpredictable page fault eviction, TLB shoot-downs and other hidden issues
   - Experiments shows that adding more threads ineffective beyond about 8 threads, which our results confirmed.
