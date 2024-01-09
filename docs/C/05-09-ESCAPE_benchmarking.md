@@ -16,11 +16,9 @@ For the benchmarking, the 16GB FPGA memory was also split into 14 GB of shared m
 
 ![ESCAPE host physical memory](docs/C/images/ESCAPE_host_physical_memory.png)
 
-<img src="docs/C/images/ESCAPE_host_physical_memory.png" width="200">
+If process A on ESCAPE host0 and process B on ESCAPE host1 memory-maps the shared FPGA memory (e.g., using the mmap() call in a C program) then, as shown below, the virtual address space of each process will include the same shared FPGA memory. The process A on host0 and the process B on host1 can thus both access the same FPGA memory using memory copy instructions allowing inter-Host communication. 
 
-If a process A on ESCAPE host0 and a process B on ESCAPE host1 memory-maps the shared FPGA memory (e.g., using the mmap() call in a C program) then, as shown below, the virtual address space of each process will include the same shared FPGA memory. The process A on host0 and the process B on host1 can thus both access the same FPGA memory using memory copy instructions allowing inter-Host communication. 
-
-![ESCAPE host virtual memory](docs/C/images/ESCAPE_host_virtual_memory.png)
+![ESCAPE host virtual memory of two local processes](docs/C/images/ESCAPE_host_virtual_memory.png)
 
 ### Inter-Process Communication using Shared Memory 
 
@@ -30,40 +28,43 @@ To measure raw shared memory performance without the ESCAPE board, we also bench
 
 ### Benchmarking Tool
 
-#### Benchmarking Tool Parameters
-
 The benchmarking tool is a C program with two main files:  
 
 - The top-level program 
-[memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c).
+[memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c)
 that runs through the [testing parameter combinations](#benchmarking-tool-variables).
 - The worker thread pool 
-[thread_pool.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/thread_pool.c).
+[thread_pool.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/thread_pool.c)
 that creates and manages all the worker threads.
+
+#### Benchmarking Tool Parameters
 
 The parameter options available to the benchmarking tool can be discovered using the
 help option as shown below:
 ```
 amcauley@jaga:~/gaps/build/hal/escape/perftests$ ./memcpy_test -h
-Shared Memory speed/function test for GAPS CLOSURE project
-Usage: ./escape_test [OPTIONS]... [Experiment ID List]
-OPTIONS: are one of the following:
- -h : print this message
- -i : which source data is initialized
-   0 = all sources (default) - both application or shared memory as source of data
+Shared Memory performance test tool for GAPS CLOSURE project
+Usage: [sudo] ./memcpy_test [OPTIONS]... [Experiment ID List]
+'sudo' required if using shared memory: /dev/mem (Experiment ID 2, 3, 4, 5)
+OPTIONS:
+   -i : which source data is initialized
+   0 = all sources (default) - both applicaiton or shared memory as source of data
    1 = only if source is application - use current shared memory content as source (so can read on different node/process than writer)
- -n : number of length tests (default=9, maximum = 10)
- -o : source data initialization offset value (before writing)
- -r : number of test runs per a) memory pair type, b) payload length and c) copy function (default=5)
-memory pair type IDs (default = all) for application (using host heap) to:
-   0 = write to host heap
-   1 = read from host heap
-   2 = write to host mmap
-   3 = read from host mmap
-   4 = write to shared escape mmap
-   5 = read from shared escape mmap
- -t : number of worker threads in thread pool (default=0)
- -z : read/write with given number of second sleep between each (default z=0)
+   -n : number of length tests (default=9, maximum = 10)
+   -o : source data initialization offset value (before writing)
+   -r : number of test runs per a) memory pair type, b) payload length and c) copy function (default=5)
+   -t : number of worker threads in thread pool (default=0)
+   -z : read/write with given number of second sleep between each (default z=0)
+Experiment ID List (default = all):
+   0 = tool writes to host heap
+   1 = tool reads from host heap
+   2 = tool writed to host mmap
+   3 = tool readd from host mmap
+   4 = tool writed to shared escape mmap
+   5 = tool reads from shared escape mmap
+EXAMPLES:
+   sudo ./memcpy_test
+   ./memcpy_test 0 1 -r 1000 -n 2
 ```
 
 #### Benchmarking Tool Variables
