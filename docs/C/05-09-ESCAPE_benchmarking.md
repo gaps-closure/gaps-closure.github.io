@@ -48,7 +48,7 @@ Usage: [sudo] ./memcpy_test [OPTIONS]... [Experiment ID List]
 'sudo' required if using shared memory: /dev/mem (Experiment ID 2, 3, 4, 5)
 OPTIONS:
    -i : which source data is initialized
-   0 = all sources (default) - both applicaiton or shared memory as source of data
+   0 = all sources (default) - both when application or shared memory is the source of data
    1 = only if source is application - use current shared memory content as source (so can read on different node/process than writer)
    -n : number of length tests (default=9, maximum = 10)
    -o : source data initialization offset value (before writing)
@@ -58,9 +58,9 @@ OPTIONS:
 Experiment ID List (default = all):
    0 = tool writes to host heap
    1 = tool reads from host heap
-   2 = tool writed to host mmap
-   3 = tool readd from host mmap
-   4 = tool writed to shared escape mmap
+   2 = tool writes to host mmap
+   3 = tool reads from host mmap
+   4 = tool writes to shared escape mmap
    5 = tool reads from shared escape mmap
 EXAMPLES:
    sudo ./memcpy_test
@@ -71,68 +71,67 @@ EXAMPLES:
 
 The [Benchmarking tool](https://github.com/gaps-closure/hal/tree/multi-threaded/escape/perftests)
 runs a series of throughput performance measurements for combinations of four variables:
-memory type, payload length, copy function, and number of worker threads.
+1) memory type, 2) payload length, 3) copy function, and 4) number of worker threads.
 
 ##### **Variable 1)** Memory Types
 
 The Benchmarking tool copies data between its local heap memory created using malloc() and one of three types of memory:
 
-- **Host heap**: Allocates memory from the host using malloc(). This memory only allows a single process to write then read the memory, but measures raw memory bandwidth. 
-- **Host mmap**: Allocates memory by opening /dev/mem followed by an mmap() of host memory. The resultant mapped memory can be used to communicate data between two processes on the same host.
+- **Host heap**: Allocates memory from the host using malloc(). This test allows measuring raw memory bandwidth, but  only allows a single process to write or read the memory. 
+- **Host mmap**: Allocates memory by opening /dev/mem followed by an mmap() of host memory. The resultant mapped memory can be used to communicate data between two independent processes on the same host.
 - **ESCAPE mmap**: Allocates memory by opening /dev/mem followed by an mmap() of FPGA memory. For the ESCAPE system this starts at address 130 GB = 0x2080000000 (as described above), though this address can be changed by modifying the MMAP_ADDR_ESCAPE definition in [memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c).
 
-In one run of the benchmark tool, it reads and writes to each of the three types of memory, creating a total of 2 x 3 = 6 different experiments. Each experiment has an ID from 0 to 5, allowing the user to specify a [list of experiment types](#benchmarking-tool-parameters) to run.
+By default, in one run, the benchmark tool reads and writes to each of the three types of memory, creating a total of 2 x 3 = 6 different experiments. Each experiment has an ID from 0 to 5, allowing the user to specify a [list of experiment types](#benchmarking-tool-parameters) to run.
 
 ##### **Variable 2)** Payload Lengths
 
-For each of the six memory write/read types in a run, the benchmark tool tests throughput with a series of increasing payload lengths (number of bytes of data that are written or read). 
+For each of the six memory write/read types in a run, the benchmark tool measures the throughput with a series of increasing payload lengths (number of bytes of data that are written or read). 
 It's default is to test with 10 different payload lengths from 16 bytes up to 16 MB 
-(except for *host mmap* memory, which linux limits up to 512K).
+(except for *host mmap* memory, which linux limits to 512 KB).
 However, the number of lengths test can be reduced using the '-n' [parameter option](#benchmarking-tool-parameters) when calling the tool. 
-(e.g., '-n 3' will run just the first 3 payload lengths). 
-The payload values themselves can be modified by changing the definitions of the 
+(e.g., *./memcpy_test -n 3* will run just the first 3 payload lengths). 
+The payload length values themselves can be modified by changing the definitions of the 
 global array *copy_size_list* in [memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c). 
 
 ##### **Variable 3)** Copy Functions
 
-For each payload length in a run, the benchmarking tool tests with three different copy functions,
-which read or write data between the tool and the memory:
+For each payload length in a run, the benchmarking tool tests with three different copy functions.
+The tool uses the copy function to read or write data between the tool and memory:
 
 - **glibc memory copy**: memcpy().
 - **naive memory copy**: using incrementing unsigned long C pointers that point to the destination and source (*d++ = *s++).
-- **Apex memory copy**: A fast memory copy function whose [source code is available](https://www.codeproject.com/Articles/1110153/Apex-memmove-the-fastest-memcpy-memmove-on-x-x-EVE)
+- **Apex memory copy**: A [fast memory copy](https://www.codeproject.com/Articles/1110153/Apex-memmove-the-fastest-memcpy-memmove-on-x-x-EVE)
+, with available source code.
 
-The benchmark script runs the test multiple times for each copy function tested. 
+The benchmark tool runs the test multiple times for each copy function tested. 
 The default number of tests is 5, but the value can be changed by specifying the
-'-r' [parameter option](#benchmarking-tool-parameters) when calling the benchmark tool.
+'-r' [parameter option](#benchmarking-tool-parameters) when calling the benchmark tool
+(larger values provide more reliable throughput measurements, but small values can run much
+faster for initial testing.
 
 ##### **Variable 4)** Number of Worker Threads
 
 The each run the user can specify the number of parallel worker threads that copy the data
 using the '-t' [parameter option](#benchmarking-tool-parameters) when calling the tool.
-For example, '-t 16' will run just with 16 parallel worker threads.  
+For example, *./memcpy_test -t 16* will run just with 16 parallel worker threads.  
 
 
 #### Clone, Compile and Run Benchmarking Tool
 
 The benchmarking tool is part of the [HAL branch](https://github.com/gaps-closure/hal/tree/multi-threaded)
-along with the [benchmark plotting script](#benchmark-plottiing-script), 
+along with the [benchmark plotting script](#benchmark-plotting-script), 
 with the latest version (including the multi-threaded option) found in the git multi-threaded branch:
 
 ```
 git clone git@github.com:gaps-closure/hal.git
 cd hal/escape/perftests
 git checkout multi-threaded
-git branch --set-upstream-to=origin/multi-threaded
 ```
 
 To compile the benchmarking tool we run make:
 
 ```
 make
-  gcc -c -o apex_memmove.o apex_memmove.c -g -Iinclude -O3 -Wall -Werror -std=gnu99
-  gcc -c -o thread_pool.o thread_pool.c -g -Iinclude -O3 -Wall -Werror -std=gnu99
-  gcc -o memcpy_test memcpy_test.c apex_memmove.o thread_pool.o -g -Iinclude -O3 -Wall -Werror -std=gnu99 -lpthread
 ```
 
 Below are a few examples of running with the benchmarking tool:
@@ -185,7 +184,7 @@ run_per_mem_type_pair Done
 Deallocating memory: fd=-1 pa_virt_addr=0x7fb54c46b010 pa_map_len=0x10000000 mem_typ_pair_indexM=1
 ```
 
-The tabulated results (used by the plotting script) are put into a single file: by default *results.csv*
+The tabulated results (used by the plotting script) are put into a single csv file: by default *results.csv*
 The first line describes the content of each of the six columns 
 and the remaining lines gives the variable values and performance for each run.
 Below shows an example of initial lines of a run:
@@ -199,7 +198,7 @@ $ head -5 results.csv
   App writes to host-heap,256,glibc_memcpy,49.089,1000,0
 ```
 
-### Benchmark Plottiing Script
+### Benchmark Plotting Script
 
 The benchmark plotting script is located in the same directory as the benchmarking tool:
 [see above](#clone,-compile-and-run-benchmarking-tool]
@@ -258,6 +257,8 @@ The winner between glibc and naïve/apex memcpy varies significantly based on th
 
 ### CONCLUSION
 
+We are able to achieve 150 MB/s to communicate 64 KB frames between two hosts using the ESCAPE shared memory.
+Although fast, this was less than initially expected based on simply using memory copies.
 Conventional wisdom holds mmap() should outperform traditional file I/O:
 
 - Access pages via pointers using fast load/store (rather than read/write) as if file resided entirely in memory. 
@@ -265,14 +266,15 @@ Conventional wisdom holds mmap() should outperform traditional file I/O:
 - mmap() removes the system call per I/O and pointers void extra copy between kernel and user space a buffer.
 - Removes need to serialize/deserialize data using the same in-memory and persistent formats.
 
-However, this wisdom has recently been challenged:
+We were able to achieve the memory bandwidth limit only when not memory mapping the files (see graphs above).
+The reason for the difference is explained by recent papers looking at memory-mapped I/O:
 
 - Default memory-mapped I/O path does not scale well with the number of cores:
   - Transparent paging means OS can flush page to secondary storage at any time -causing blocking
   - Propose Fastpath to ameliorate problems with Linux’s mmap() 
   - [PAP20] A. Papagiannis, G. Xanthakis, G. Saloustros, M. Marazakis, A. Bilas, “Optimizing Memory-mapped I/O for Fast Storage Devices,” Proceedings of the USENIX Annual Technical Conference, July 2020.
+  
 - Even with additional complexity mmap() will not scale:
-
   - Slow and unpredictable page fault eviction, TLB shoot-downs and other hidden issues
   - Experiments shows that adding more threads ineffective beyond about 8 threads, which our results confirmed.
   - [CRO22] A. Crotty, V. Leis, A. Pavlo, “Are You Sure You Want to Use MMAP in Your Database Management System?” 12th Annual Conference on Innovative Data Systems Research (CIDR ’22) , Chaminade, USA, Jan 2022.
