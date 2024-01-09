@@ -1,6 +1,6 @@
-## ESCAPE BENCHMARKING
+## ESCAPE Benchmarking
 
-This section describes performance benchmarking of the Intel ESCAPE GAPS Security Engine. It also investigates the fundamental throughput capability of Shared Memory to communicate among applications partitioned into separate security enclaves by the CLOSURE tool. A benchmarking tool collects the memory bandwidth for different: a) types of memory, b) copy sizes, c) copy functions, and d) number of parallel threads. These results are then collated by a plotting script to generate performance plots.
+This section describes performance benchmarking of the Intel ESCAPE GAPS Security Engine partitioned into separate security enclaves by the CLOSURE tool. It also investigates the fundamental throughput capability of Shared Memory to communicate among applications. It uses a benchmarking tool to collect throughput for different: a) types of memory, b) copy sizes, c) copy functions, and d) number of parallel threads. These results are then collated by a plotting script to generate performance plots.
 
 ### ESCAPE GAPS Security Engine 
 
@@ -10,12 +10,13 @@ The two ESCAPE hosts run Ubuntu 20.04.1 OS with 130 GB of local DDR4 memory, con
 [1] Intel, "Extended Secure Capabilities Architecture Platform and Evaluation (ESCAPE) System Bring Up Document," February 17, 2022.
 
 By editing the GRUB boot loader, each Xeon host maps the 16 GB of FPGA physical memory so it appears after its own local physical memory. 
-Thus, each host has 130 + 16 = 146 GB of physical memory map, whose physical addresses are as shown in the figure below:
+Thus, each host has 130 + 16 = 146 GB of physical memory, whose physical addresses are as shown in the figure below.
+To provide GAPS security between enclaves, the FPGA uses an address-filtering mechanism similar to a virtual memory page table. The filtering rules allow or disallow reads and writes from either host to a mediated DDR3 memory pool of 16 GB.  
+For the benchmarking, the 16GB FPGA memory was also split into 14 GB of shared memory and 1 GB of private memory for each host. 
 
 ![ESCAPE host physical memory](docs/C/images/ESCAPE_host_physical_memory.png)
 
-To provide GAPS security between enclaves, the FPGA uses an address-filtering mechanism, similar to virtual memory page tables. The filtering rules allow or disallow reads and writes from either host to a mediated DDR3 memory pool of 16 GB.  
-For the benchmarking, the 16GB FPGA memory was also split into 14 GB of shared memory and 1 GB of private memory for each host. 
+<img src="docs/C/images/ESCAPE_host_physical_memory.png" width="200">
 
 If a process A on ESCAPE host0 and a process B on ESCAPE host1 memory-maps the shared FPGA memory (e.g., using the mmap() call in a C program) then, as shown below, the virtual address space of each process will include the same shared FPGA memory. The process A on host0 and the process B on host1 can thus both access the same FPGA memory using memory copy instructions allowing inter-Host communication. 
 
