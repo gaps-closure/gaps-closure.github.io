@@ -8,6 +8,8 @@ Example 2 is a simple example designed to gain insights and facilitate early dev
 In the imaginary security policy, the value of `a2LUE` is to be guarded, which means the `getValue()` method 
 needs to be guarded. Two enclaves, Orange and Purple, are assumed in this policy. One initial constraints in the CLOSURE C++ toolchain is that a class is always assigned to an enclave in its entirety, not partially. Therefore, the `Extra` class and all its members will be assigned to the Purple enclave. The `Example` class is then assigned to the Orange enclave. This arrangement then fulfills the requirements of cross domain constructor and methods calls.
 
+The following is a snippet of Example2.
+
 ```cpp
 template <typename T, int label>
 using annotate = T;
