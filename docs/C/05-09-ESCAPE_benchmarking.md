@@ -28,8 +28,9 @@ To measure raw shared memory performance without the ESCAPE board, we also bench
 
 ### Benchmarking Tool
 
-The [Benchmarking tool](https://github.com/gaps-closure/hal/tree/multi-threaded/escape/perftests)
-is a C program with two main files:  
+The Benchmarking tool is a C program in the 
+[CLOSURE github repository ](https://github.com/gaps-closure/hal/tree/multi-threaded/escape/perftests) 
+with two main files:  
 
 - The main program
 [memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c)
