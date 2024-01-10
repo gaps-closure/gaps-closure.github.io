@@ -1,6 +1,6 @@
 ## ESCAPE Benchmarking
 
-This section describes performance benchmarking of the Intel ESCAPE GAPS Security Engine partitioned into separate security enclaves by the CLOSURE tool. It also investigates the fundamental throughput capability of Shared Memory to communicate among applications. It uses a benchmarking tool to collect throughput for different: a) types of memory, b) copy sizes, c) copy functions, and d) number of parallel threads. These results are then collated by a plotting script to generate performance plots.
+This section describes performance benchmarking of the Intel ESCAPE GAPS Security Engine and investigates the fundamental throughput capability of Shared Memory to communicate among applications. It uses a benchmarking tool to collect throughput for different: a) types of memory, b) copy sizes, c) copy functions, and d) number of parallel threads. These results are then collated by a plotting script to generate performance plots.
 
 ### ESCAPE GAPS Security Engine 
 
@@ -11,12 +11,12 @@ The two ESCAPE hosts run Ubuntu 20.04.1 OS with 130 GB of local DDR4 memory, con
 
 By editing the GRUB boot loader, each Xeon host maps the 16 GB of FPGA physical memory so it appears after its own local physical memory. 
 Thus, each host has 130 + 16 = 146 GB of physical memory, whose physical addresses are as shown in the figure below.
-To provide GAPS security between enclaves, the FPGA uses an address-filtering mechanism similar to a virtual memory page table. The filtering rules allow or disallow reads and writes from either host to a mediated DDR3 memory pool of 16 GB.  
+To provide GAPS security between enclaves, the FPGA uses an address-filtering mechanism similar to a virtual memory page table. The filtering rules allow or disallow reads and writes from either host to the mediated DDR3 memory pool of 16 GB.  
 For the benchmarking, the 16GB FPGA memory was also split into 14 GB of shared memory and 1 GB of private memory for each host. 
 
 ![ESCAPE host physical memory](docs/C/images/ESCAPE_host_physical_memory.png)
 
-If process A on ESCAPE host0 and process B on ESCAPE host1 memory-maps the shared FPGA memory (e.g., using the mmap() call in a C program) then, as shown below, the virtual address space of each process will include the same shared FPGA memory. The process A on host0 and the process B on host1 can thus both access the same FPGA memory using memory copy instructions allowing inter-Host communication. 
+If process A on ESCAPE host0 and process B on ESCAPE host1 memory-maps the shared FPGA memory (e.g., using the mmap() call in a C program) then, as shown below, the virtual address space of each process will include the same shared FPGA memory. The process A on host0 and the process B on host1 can thus both access the same FPGA memory using memory copy instructions allowing inter-host communication. 
 
 ![ESCAPE host virtual memory of two local processes](docs/C/images/ESCAPE_host_virtual_memory.png)
 
@@ -28,19 +28,19 @@ To measure raw shared memory performance without the ESCAPE board, we also bench
 
 ### Benchmarking Tool
 
-The benchmarking tool is a C program with two main files:  
+The [Benchmarking tool](https://github.com/gaps-closure/hal/tree/multi-threaded/escape/perftests)
+is a C program with two main files:  
 
-- The top-level program 
+- The main program
 [memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c)
 that runs through the [testing parameter combinations](#benchmarking-tool-variables).
 - The worker thread pool 
 [thread_pool.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/thread_pool.c)
-that creates and manages all the worker threads.
+that creates and manages the worker threads that perform the copying.
 
 #### Benchmarking Tool Parameters
 
-The parameter options available to the benchmarking tool can be discovered using the
-help option as shown below:
+The benchmarking tool provides experiment setup options that can be discovered using the help option as shown below:
 ```
 amcauley@jaga:~/gaps/build/hal/escape/perftests$ ./memcpy_test -h
 Shared Memory performance test tool for GAPS CLOSURE project
@@ -69,23 +69,23 @@ EXAMPLES:
 
 #### Benchmarking Tool Variables
 
-The [Benchmarking tool](https://github.com/gaps-closure/hal/tree/multi-threaded/escape/perftests)
-runs a series of throughput performance measurements for combinations of four variables:
+The benchmarking tool runs a series of throughput performance measurements for combinations of four variables:
 1) memory type, 2) payload length, 3) copy function, and 4) number of worker threads.
 
 ##### **Variable 1)** Memory Types
 
-The Benchmarking tool copies data between its local heap memory created using malloc() and one of three types of memory:
+The Benchmarking tool copies data between its local heap memory created using malloc() and three types of memory:
 
 - **Host heap**: Allocates memory from the host using malloc(). This test allows measuring raw memory bandwidth, but  only allows a single process to write or read the memory. 
 - **Host mmap**: Allocates memory by opening /dev/mem followed by an mmap() of host memory. The resultant mapped memory can be used to communicate data between two independent processes on the same host.
 - **ESCAPE mmap**: Allocates memory by opening /dev/mem followed by an mmap() of FPGA memory. For the ESCAPE system this starts at address 130 GB = 0x2080000000 (as described above), though this address can be changed by modifying the MMAP_ADDR_ESCAPE definition in [memcpy_test.c](https://github.com/gaps-closure/hal/blob/multi-threaded/escape/perftests/memcpy_test.c).
 
-By default, in one run, the benchmark tool reads and writes to each of the three types of memory, creating a total of 2 x 3 = 6 different experiments. Each experiment has an ID from 0 to 5, allowing the user to specify a [list of experiment types](#benchmarking-tool-parameters) to run.
+By default, in one run, the benchmark tool reads and writes to each of the three types of memory, creating a total of 2 x 3 = 6 different experiments. Each experiment has an ID from 0 to 5, allowing the user to [list of IDs](#benchmarking-tool-parameters) to specify any subset of the six experiments to run.
 
 ##### **Variable 2)** Payload Lengths
 
-For each of the six memory write/read types in a run, the benchmark tool measures the throughput with a series of increasing payload lengths (number of bytes of data that are written or read). 
+For each of the six memory write/read types in a run, the benchmark tool measures the throughput 
+with a series of increasing payload lengths (number of bytes of data that are written or read). 
 It's default is to test with 10 different payload lengths from 16 bytes up to 16 MB 
 (except for *host mmap* memory, which linux limits to 512 KB).
 However, the number of lengths test can be reduced using the '-n' [parameter option](#benchmarking-tool-parameters) when calling the tool. 
@@ -95,13 +95,14 @@ global array *copy_size_list* in [memcpy_test.c](https://github.com/gaps-closure
 
 ##### **Variable 3)** Copy Functions
 
-For each payload length in a run, the benchmarking tool tests with three different copy functions.
-The tool uses the copy function to read or write data between the tool and memory:
+For each payload length in a run, the benchmarking tool uses the copy functions 
+to read or write data between the tool and memory. It currently tests with three different copy functions:
 
 - **glibc memory copy**: memcpy().
 - **naive memory copy**: using incrementing unsigned long C pointers that point to the destination and source (*d++ = *s++).
 - **Apex memory copy**: A [fast memory copy](https://www.codeproject.com/Articles/1110153/Apex-memmove-the-fastest-memcpy-memmove-on-x-x-EVE)
 , with available source code.
+
 
 The benchmark tool runs the test multiple times for each copy function tested. 
 The default number of tests is 5, but the value can be changed by specifying the
@@ -184,7 +185,8 @@ run_per_mem_type_pair Done
 Deallocating memory: fd=-1 pa_virt_addr=0x7fb54c46b010 pa_map_len=0x10000000 mem_typ_pair_indexM=1
 ```
 
-The tabulated results (used by the plotting script) are put into a single csv file: by default *results.csv*
+The tool put the tabulated results (used by the plotting script)into a single csv file: 
+by default *results.csv*
 The first line describes the content of each of the six columns 
 and the remaining lines gives the variable values and performance for each run.
 Below shows an example of initial lines of a run:
@@ -216,12 +218,16 @@ More plots with different x, y and z variables can be generated by adding lines 
 
 ### RESULTS
 
-We used the  benchmarking script to test the performance of mmap() for reading/writing from ESCAPE FPGA:
+We used the benchmarking script to test the performance of:
 
-- Using different memcpy: a) functions (glibc, naïve, apex), b) length of data, and c) number of worker threads
-- Using different memory locations: a) ESCAPE FPGA mmap’ed, b) Host mmap’ed, and c) Host heap
+- Intel ESCAPE GAPS Security Engine (ESCAPE FPGA mmap’ed shared memory) to communicate between two hosts.
+- Host shared Memory (Host mmap’ed) to communicate among independent applications on the same host 
+- Host heap memory used by a single application 
 
-This section summarizes these results on the ESCAPE testbed with the three x,y,z plots:
+For each we looked at different: a) memory copy functions (glibc, naïve, apex), 
+b) lengths of data, and c) number of worker threads
+
+This section summarizes these results on the ESCAPE testbed with the three x, y, z plots:
 
 A) The first (default) plot has:
 
@@ -234,7 +240,7 @@ even without threads, but ESCAPE is two order of magnitude slower even with 64 t
 
 ![ESCAPE Throughput versus Threads for Different Data Lengths](docs/C/images/ESCAPE_plot_A_BW_v_threads_and_copy_leng.png)
 
-B) An alternative plot has:
+B) An second plot has:
  
 - x-axis: Number worker threads.
 - y-axis: Throughput.
@@ -254,6 +260,7 @@ C) An final alternative plot has:
 
 It shows that copy function type can significantly impact performance. 
 The winner between glibc and naïve/apex memcpy varies significantly based on the copy length
+
 
 ### CONCLUSION
 
