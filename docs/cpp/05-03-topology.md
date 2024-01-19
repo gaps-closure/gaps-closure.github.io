@@ -1,4 +1,4 @@
-## The cross-domain cut specification: topology.json [TODO: TA] {#topology.json}
+## The cross-domain cut specification: topology.json {#topology.json}
 
 XXX: put a C++ topology json here
 

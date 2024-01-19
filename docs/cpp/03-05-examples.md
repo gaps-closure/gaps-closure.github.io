@@ -1,6 +1,6 @@
-## Example applications [TODO: TA + BEN] {#examples} 
+## Example applications {#examples} 
 
-### Example 2 (Ta)
+### Example 2
 
 Discuss the example at a high level. what is the intended structure? what is the cross domain policy? What is annotated why? Provide some src.
 
