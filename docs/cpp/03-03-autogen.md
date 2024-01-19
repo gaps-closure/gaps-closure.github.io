@@ -1,7 +1,8 @@
-## RPC Generation [TODO: TA]
+## RPC Generation
 Discuss what/how you manually generated the RPCs. Discuss how this can be automated in code generation.
 
-The CLOSURE C toolchain generates several artifacts, including 
+The CLOSURE C++ RPC generation is expected to be built as an extention of 
+the C toolchain, which generates the following artifacts.
 
 - GEDL, a JSON document specifying all the cross domain calls and their associated data including the arguments and return type. This gedl is generated in an llvm `opt` pass which analyzes the divvied code.
 
@@ -9,7 +10,7 @@ The CLOSURE C toolchain generates several artifacts, including
 The IDL syntax is based on C; an IDL file contains one or more C struct datatypes. Two structs are
 generated for each TAG request and response pair, with the in arguments in the request and the out arguments in the response. The `idl_generator` script takes a gedl JSON and produces the idl. 
 
-- CODEC. For each struct in the IDL, a codecs is generated to facilitate serialization to the remote enclave. The codecs consist of
+- CODEC. For each struct in the IDL, a set of coding and decoding functions is generated to facilitate serialization to the remote enclave. The codecs consist of
 encode, decode, print functions for each of the structs, which handle byte order conversions between host and network byte order. The codecs can be generated using `hal_autogen`.
 
 - RPC, remote procedure code that
@@ -22,8 +23,7 @@ a way to describe binary formats and easily encode/decode from binary to an xml 
 CLOSURE has the ability to create DFDL schemas for each cross domain request/response pair
 with use of the `hal_autogen`. 
 
-- HAL Configurations. 
-The `hal_autoconfig.py` produces a *HAL-Daemon* configuration.
+- HAL Configurations. The `hal_autoconfig.py` produces a *HAL-Daemon* configuration.
 
 All of these, with enhancements, are expected to be used in the C++ toolchain, which
 is under active development. Before they become fully available, a few manual steps are taken
@@ -32,7 +32,15 @@ a sample C++ program. From that IDL, codec functions are produced using the exis
 Furthermore, RPC code and HAL configurations are also manually written, according to the needs of 
 the sample program to work in the usual CLOSURE environment.
 
+To work with the richer language contructs in C++, the RPC generator needs to be enhanced. 
+It is expected that it needs to play the role of the AspectJ compiler in the Java toolchain.
+In addition, the CLOSURE library classes such as HalZmq and ClosureShadow and others will need
+to be implemented correspondingly in the C++ toolchain.
 
+## Marshalling/Serialization of Data Types
 
-## Marshalling/Serialization of Data Types [TODO: TA]
-Discuss what/how you manually generated the data formats. Discuss steps that can be automated in the toolchain. Discuss how we might deal with more complex data types (classes, structs, typdefs)
+The general idea of marshalling/unmarshalling and serialization/deserialization of cross domain constructs remains 
+the same as in the C toolchain.
+However, the current `idl_generator` and the `hal_autogen` scripts can handle a flattened structure containing primitive types. They need to be extended to handle complex data types such as classes and nested structures. A depth-first tree traversal algorithm needs to be implemented to serialize and deserialize nested structures. 
+For typedefs, the toolchain needs to take advantage of type information in llvm opt, and makes 
+the actual types available to in gedl. Tools in the later phase are not expected to deal with typedefs directly.
