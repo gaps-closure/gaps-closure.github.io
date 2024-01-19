@@ -43,4 +43,4 @@ The general idea of marshalling/unmarshalling and serialization/deserialization 
 the same as in the C toolchain.
 However, the current `idl_generator` and the `hal_autogen` scripts can handle a flattened structure containing primitive types. They need to be extended to handle complex data types such as classes and nested structures. A depth-first tree traversal algorithm needs to be implemented to serialize and deserialize nested structures. 
 For typedefs, the toolchain needs to take advantage of type information in llvm opt, and makes 
-the actual types available to in gedl. Tools in the later phase are not expected to deal with typedefs directly.
+the actual types available to in gedl. Tools in the later phase are not expected to deal with typedefs directly. 
