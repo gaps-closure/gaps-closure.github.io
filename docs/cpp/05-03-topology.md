@@ -1,7 +1,5 @@
 ## The cross-domain cut specification: topology.json {#topology.json}
 
-XXX: put a C++ topology json here
-
 The `topology.json` file is a description of level and enclave assignments produced
 by the [conflict analyzer](#conflict-analyzer) and is used as input for the
 [code generator](#autogen). It also contains information about the callee
