@@ -46,7 +46,7 @@ between the program partitions.
 
 ### CLOSURE for C Language
 
-CLOSURE Toolchain User Manual for C Language, Peraton Labs, Release version 2.0, August 23, 2022 \[[PDF](./cdoc.pdf) [HTML](./cdoc.html)\]
+CLOSURE Toolchain User Manual for C Language, Peraton Labs, Release version 3.0, February 16, 2024 \[[PDF](./cdoc.pdf) [HTML](./cdoc.html)\]
 
 Docker container with CLOSURE toolchain installed:
 
