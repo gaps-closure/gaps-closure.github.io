@@ -51,7 +51,7 @@ CLOSURE Toolchain User Manual for C Language, Peraton Labs, Release version 3.0,
 Docker container with CLOSURE toolchain installed:
 
 ```
-docker pull gapsclosure/closuredev:master
+docker pull gapsclosure/closuredev:develop
 ```
 
 Source Code Release, Peraton Labs, Release version 2.0, August 23, 2022: \[[Release](https://github.com/gaps-closure/build/releases/tag/v2.0)\] 
