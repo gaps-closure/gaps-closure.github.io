@@ -55,6 +55,7 @@ docker pull gapsclosure/closuredev:develop
 ```
 
 Source Code Release, Peraton Labs, Release version 2.0, August 23, 2022: \[[Release](https://github.com/gaps-closure/build/releases/tag/v2.0)\] 
+** Release 3 to be available later this month, see [github source](https://github.com/gaps-closure/build) for Phase 3 sources and models.
 
 ### CLOSURE for Java 
 
