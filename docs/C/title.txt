@@ -1,8 +1,8 @@
 ---
 title: CLOSURE Toolchain User Manual for C Language
 author: Peraton Labs 
-subtitle: Release version 2.0
-date: August 23, 2022 
+subtitle: Release version 3.0
+date: February 16, 2024 
 keywords: [books,programming,GAPS,CLOSURE,CLE,partitioning,cross-domain,multi-level-security]
 language: en-US
 titlepage: true
