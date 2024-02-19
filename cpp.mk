@@ -1,9 +1,10 @@
 PANDOC ?= pandoc
-DOCS != find docs/cpp -name '*.md' | sort 
+DOCS := $(shell find docs/cpp -name '*.md' | sort)
 TITLE = docs/cpp/title.txt 
 BIB = docs/cpp/bibliography.bib
 CSL= docs/cpp/bibliography.csl 
-FLAGS = --number-sections \
+FLAGS = --from=markdown+lists_without_preceding_blankline \
+		--number-sections \
 		--resource-path docs/cpp \
  		--toc --toc-depth=2 \
 		--standalone \

@@ -1,9 +1,10 @@
 PANDOC ?= pandoc
-DOCS != find docs/Java -name '*.md' | sort 
+DOCS := $(shell find docs/Java -name '*.md' | sort)
 TITLE = docs/Java/title.txt 
 BIB = docs/Java/bibliography.bib
 CSL= docs/Java/bibliography.csl 
-FLAGS = --number-sections \
+FLAGS = --from=markdown+lists_without_preceding_blankline \
+		--number-sections \
 		--resource-path docs/Java \
  		--toc --toc-depth=2 \
 		--standalone \

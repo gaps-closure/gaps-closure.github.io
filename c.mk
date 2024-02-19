@@ -1,9 +1,10 @@
 PANDOC ?= pandoc
-DOCS != find docs/C -name '*.md' | sort 
+DOCS := $(shell find docs/C -name '*.md' | sort) 
 TITLE = docs/C/title.txt 
 BIB = docs/C/bibliography.bib
 CSL= docs/C/bibliography.csl 
-FLAGS = --number-sections \
+FLAGS = --from=markdown+lists_without_preceding_blankline \
+		--number-sections \
 		--resource-path docs/C \
  		--toc --toc-depth=2 \
 		--standalone \
